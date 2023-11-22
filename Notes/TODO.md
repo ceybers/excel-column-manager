@@ -31,7 +31,6 @@
 - [x] Remove selected state.
 - [x] Remove all states.
 - [ ] Serialize Freeze state of worksheet.
-  - `ActiveWindow.FreezePanes`, `ActiveWindow.SplitRow`, and `ActiveWindow.SplitColumn`
 - [ ] Consider serializing Outline levels.
 - [ ] Store generic column states in User-level persistence (i.e., for applying to new/unsaved files).
 - [ ] Dedicated Memory Recall/Store state for direct use from Ribbon (i.e., no UserForm).
