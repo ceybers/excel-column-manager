@@ -121,27 +121,27 @@ Private Sub TestColumnsStateSerialize()
     
     Dim SerialString As String
     
-    SerialString = "Table1:Q29sQQ==,4,2;Q29sQg==,8,2;Q29sQw==,8,2"
+    SerialString = "Table1:Q29sQQ==,4,0;Q29sQg==,8,0;Q29sQw==,8,0"
     lc.Range.ColumnWidth = 4
     Set State = ColumnsState2.Create(lo)
     If SerialString <> State.Serialize Then
-        Err.Description = "Serialize 4,2"
+        Err.Description = "Serialize 4,0"
         GoTo TestFail
     End If
     
-    SerialString = "Table1:Q29sQQ==,0,2;Q29sQg==,8,2;Q29sQw==,8,2"
+    SerialString = "Table1:Q29sQQ==,0,-1;Q29sQg==,8,0;Q29sQw==,8,0"
     lc.Range.EntireColumn.Hidden = True
     Set State = ColumnsState2.Create(lo)
     If SerialString <> State.Serialize Then
-        Err.Description = "Serialize 0,2"
+        Err.Description = "Serialize 0,-1"
         GoTo TestFail
     End If
     
-    SerialString = "Table1:Q29sQQ==,8,2;Q29sQg==,8,2;Q29sQw==,8,2"
+    SerialString = "Table1:Q29sQQ==,8,0;Q29sQg==,8,0;Q29sQw==,8,0"
     lc.Range.ColumnWidth = 8
     Set State = ColumnsState2.Create(lo)
     If SerialString <> State.Serialize Then
-        Err.Description = "Serialize 8,2"
+        Err.Description = "Serialize 8,0"
         GoTo TestFail
     End If
     
@@ -170,7 +170,7 @@ Private Sub TestColumnsStateDeserialize()
     Dim State As ISerializable
     Dim SerialString As String
     
-    SerialString = "Table1:Q29sQQ==,0,2;Q29sQg==,8,2;Q29sQw==,8,2"
+    SerialString = "Table1:Q29sQQ==,0,-1;Q29sQg==,8,0;Q29sQw==,8,0"
     lc.Range.EntireColumn.Hidden = True
     Set State = ColumnsState2.Create(lo)
     
@@ -187,7 +187,7 @@ Private Sub TestColumnsStateDeserialize()
         GoTo TestFail
     End If
     
-    SerialString = "Table1:Q29sQQ==,8,0;Q29sQg==,8,2;Q29sQw==,8,2"
+    SerialString = "Table1:Q29sQQ==,8,0;Q29sQg==,8,0;Q29sQw==,8,0"
     lc.Range.ColumnWidth = 8
     Set State = ColumnsState2.Create(lo)
     
@@ -230,7 +230,7 @@ Private Sub TestColumnsStateApply()
     Dim SerialString As String
     Dim State As IState
     
-    SerialString = "Table1:Q29sQQ==,0,2;Q29sQg==,8,2;Q29sQw==,8,2"
+    SerialString = "Table1:Q29sQQ==,0,-1;Q29sQg==,8,0;Q29sQw==,8,0"
     Set SerialState = New ColumnsState2
     SerialState.Deserialize SerialString
     Set State = SerialState
@@ -247,7 +247,7 @@ Private Sub TestColumnsStateApply()
         GoTo TestFail
     End If
     
-    SerialString = "Table1:Q29sQQ==,8,0;Q29sQg==,8,2;Q29sQw==,8,2"
+    SerialString = "Table1:Q29sQQ==,8,0;Q29sQg==,8,0;Q29sQw==,8,0"
     Set SerialState = New ColumnsState2
     SerialState.Deserialize SerialString
     Set State = SerialState

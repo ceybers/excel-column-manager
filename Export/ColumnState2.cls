@@ -93,7 +93,7 @@ End Function
 ' ISerializable
 Private Function ISerializable_Serialize() As String
     Dim Result As String
-    Result = StringtoBase64(Name) & "," & CDbl(Width) & "," & CStr(CLng(Hidden))
+    Result = StringtoBase64(Name) & "," & CDbl(Width) & "," & CStr(CLng(This.Hidden))
     ISerializable_Serialize = Result
 End Function
 
@@ -103,7 +103,6 @@ Private Function ISerializable_Deserialize(ByVal SerialString As String) As Bool
     If UBound(SplitText) <> 2 Then Exit Function
     
     With This
-        Debug.Print SerialString
         Set .ListColumn = Nothing
         .Name = Base64toString(SplitText(0))
         .Width = CDbl(SplitText(1))
