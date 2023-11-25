@@ -76,3 +76,4 @@ Public Sub UpdateOrphans(ByVal Target As ListObject)
         Child.Orphan = Not ListObjectHelpers.HasListColumn(Target, Child.Name)
     Next Child
 End Sub
+

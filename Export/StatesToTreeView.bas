@@ -4,11 +4,14 @@ Option Explicit
 
 Private Const ROOT_CAPTION As String = "Column States"
 Private Const CURRENT_SUFFIX_CAPTION As String = " (current)"
+Private Const UNSAVED_CAPTION As String = "(current)"
 Private Const ORPHANS_CAPTION As String = "Orphans"
+Private Const NO_STATES_CAPTION As String = "No saved Column States found."
 
 Private Const ROOT_KEY As String = "::ROOT"
 Private Const ORPHAN_KEY As String = "::ORPHAN"
-Private Const LO_KEY_PREFIX As String = "lo::"
+Private Const UNSAVED_KEY As String = "::UNSAVED"
+Private Const NO_STATES_KEY As String = "::NOSTATES"
 
 Public Sub Initialize(ByVal TreeView As TreeView)
     Dim il As ImageList
@@ -16,17 +19,18 @@ Public Sub Initialize(ByVal TreeView As TreeView)
     With il
         .ImageWidth = 16
         .ImageHeight = 16
-        .ListImages.Add Key:="DDD", Picture:=Application.CommandBars.GetImageMso("TableInsert", 16, 16)
-        .ListImages.Add Key:="EEE", Picture:=Application.CommandBars.GetImageMso("Help", 16, 16)
-        .ListImages.Add Key:="AAA", Picture:=Application.CommandBars.GetImageMso("TableRowSelect", 16, 16)
-        .ListImages.Add Key:="BBB", Picture:=Application.CommandBars.GetImageMso("TableSelect", 16, 16)
-        .ListImages.Add Key:="CCC", Picture:=Application.CommandBars.GetImageMso("TableAutoFitFixedColumnWidth", 16, 16)
+        .ListImages.Add Key:="msoUnsaved", Picture:=Application.CommandBars.GetImageMso("TableStyleBandedColumns", 16, 16)
+        .ListImages.Add Key:="msoTable", Picture:=Application.CommandBars.GetImageMso("TableInsert", 16, 16)
+        .ListImages.Add Key:="msoOrphan", Picture:=Application.CommandBars.GetImageMso("Help", 16, 16)
+        .ListImages.Add Key:="msoItem", Picture:=Application.CommandBars.GetImageMso("TableRowSelect", 16, 16)
+        .ListImages.Add Key:="msoSelected", Picture:=Application.CommandBars.GetImageMso("TableSelect", 16, 16)
+        .ListImages.Add Key:="msoRoot", Picture:=Application.CommandBars.GetImageMso("TableAutoFitFixedColumnWidth", 16, 16)
     End With
     
     With TreeView
         Set .ImageList = il
         .Nodes.Clear
-        .Nodes.Add Key:="ROOT", Text:="States", Image:="CCC"
+        .Nodes.Add Key:="ROOT", Text:="States", Image:="msoRoot"
         .Nodes.Item(1).Expanded = True
         .FullRowSelect = False
         .HideSelection = False
@@ -39,14 +43,16 @@ End Sub
 Public Sub Load(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewModel)
     AddParentNode TreeView, ViewModel
     AddTables TreeView, ViewModel
+    AddUnsavedState TreeView, ViewModel
     AddStates TreeView, ViewModel
+    CheckNoResults TreeView, ViewModel
 End Sub
 
 Private Sub AddParentNode(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewModel)
     Dim ParentNode As Node
     With TreeView.Nodes
         .Remove (1)
-        Set ParentNode = .Add(Key:=ROOT_KEY, Text:=ROOT_CAPTION, Image:="CCC")
+        Set ParentNode = .Add(Key:=ROOT_KEY, Text:=ROOT_CAPTION, Image:="msoRoot")
         .Item(1).Expanded = True
     End With
 End Sub
@@ -83,17 +89,34 @@ Private Sub AddTables(ByVal TreeView As TreeView, ByVal ViewModel As StateManage
     Dim TableToCreate As Variant
     For Each TableToCreate In TableNames
         TreeView.Nodes.Add Relative:=ParentNode, Relationship:=tvwChild, _
-                           Key:=LO_KEY_PREFIX & TableToCreate, Text:=TableToCreate, Image:="DDD"
+                           Key:=LO_KEY_PREFIX & TableToCreate, Text:=TableToCreate, _
+                           Image:="msoTable"
     Next TableToCreate
         
     If HasOrphans Then
         TreeView.Nodes.Add Relative:=ParentNode, Relationship:=tvwChild, _
-                           Key:=ORPHAN_KEY, Text:=ORPHANS_CAPTION, Image:="EEE"
+                           Key:=ORPHAN_KEY, Text:=ORPHANS_CAPTION, _
+                           Image:="msoOrphan"
     End If
 End Sub
 
 Private Sub SetOrphan(ByVal OrphanState As IListable)
     OrphanState.ParentKey = ORPHAN_KEY
+End Sub
+
+Private Sub AddUnsavedState(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewModel)
+    Dim Current As ColumnsState2
+    Set Current = ViewModel.Current.State
+    
+    Dim TableNode As Node
+    Set TableNode = TreeView.Nodes.Item(LO_KEY_PREFIX & Current.Name)
+    
+    Dim Node As Node
+    Set Node = TreeView.Nodes.Add(Relative:=TableNode, Relationship:=tvwChild, _
+                                  Key:=UNSAVED_KEY, Text:=UNSAVED_CAPTION, _
+                                  Image:="msoItem", SelectedImage:="msoUnsaved")
+    Node.Bold = True
+    Node.Selected = True
 End Sub
 
 Private Sub AddStates(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewModel)
@@ -102,9 +125,31 @@ Private Sub AddStates(ByVal TreeView As TreeView, ByVal ViewModel As StateManage
         Dim TableNode As Node
         Set TableNode = TreeView.Nodes.Item(State.ParentKey)
         TableNode.Expanded = True
-        TreeView.Nodes.Add Relative:=TableNode, Relationship:=tvwChild, _
-                           Key:=State.Key, Text:=State.Caption, Image:="AAA", SelectedImage:="BBB"
+        
+        Dim Node As Node
+        Set Node = TreeView.Nodes.Add(Relative:=TableNode, Relationship:=tvwChild, _
+                                      Key:=State.Key, Text:=State.Caption, _
+                                      Image:="msoItem", SelectedImage:="msoSelected")
+                           
+        If MatchesCurrent(ViewModel, State) Then
+            TreeView.Nodes.Remove UNSAVED_KEY
+            Node.Bold = True
+            Node.Selected = True
+        End If
     Next State
+End Sub
+
+Private Function MatchesCurrent(ViewModel As StateManagerViewModel, ByVal State As IState) As Boolean
+    MatchesCurrent = State.Equals(ViewModel.Current.State)
+End Function
+
+Private Sub CheckNoResults(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewModel)
+    If TreeView.Nodes.Count > 2 Then Exit Sub
+    
+    Dim Node As Node
+    Set Node = TreeView.Nodes.Add(Relative:=TreeView.Nodes.Item(1), Relationship:=tvwChild, _
+                                  Key:=NO_STATES_KEY, Text:=NO_STATES_CAPTION)
+    Node.ForeColor = modConstants.GREY_TEXT_COLOR
 End Sub
 
 

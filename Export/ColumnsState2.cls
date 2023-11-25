@@ -33,6 +33,7 @@ End Property
 
 '@DefaultMember
 Public Property Get Name() As String
+Attribute Name.VB_UserMemId = 0
     Name = This.Name
 End Property
 
@@ -220,4 +221,3 @@ Private Function GetCaption() As String
     
     GetCaption = Result
 End Function
-

@@ -55,7 +55,7 @@ Private Sub AddItem(ByVal ListView As ListView, ByVal Child As IListable)
         .Add Text:=Child.Caption
 
         If IsColumnHidden(Child) Then
-            .Add Text:="" 'width
+            .Add Text:=""                        'width
             .Add Text:="Hidden"
         Else
             .Add Text:=ColumnWidth(Child)
@@ -77,3 +77,4 @@ End Function
 Private Function IsOrphan(ByVal State As ColumnState2)
     IsOrphan = State.Orphan
 End Function
+

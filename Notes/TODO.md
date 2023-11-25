@@ -4,8 +4,8 @@
 - [x] Allow saving current State, if not already saved.
 ## States (LHS)
 - [x] List all saved Column States.
-- [ ] List current (unsaved) State.
-- [ ] Auto-selects a saved state if it matches the current state.
+- [x] List current (unsaved) State.
+- [x] Auto-selects a saved state if it matches the current state.
 - [x] Target ListObject is top of the tree.
 - [x] Orphaned items are bottom of the tree.
 - [ ] Consider adding meta states for "Show all (default)", "Show all (autofit)", and "Show first only".
@@ -35,6 +35,7 @@
 - [ ] Search Match Whole Word
 - [ ] Default values for all options if no CustomXML found.
 ## Nice-to-Haves
+- [ ] Inform user if search returned no results instead of just showing an empty tree/list.
 - [ ] Use nicer icons. Probably use .PNG and store them in a hidden UserForm.
 - [ ] Serialize Freeze Pane state of worksheet.
 - [ ] Consider serializing Outline levels.

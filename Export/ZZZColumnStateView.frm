@@ -154,8 +154,8 @@ Private Function IView_ShowDialog(ByVal ViewModel As Object) As Boolean
 End Function
 
 Private Sub InitalizeFromViewModel()
-    ZZZColumnStateToTreeView.InitializeTreeView Me.tvStates
-    ZZZColumnStateToListView.InitializeListView Me.lvPreview
+    'ZZZColumnStateToTreeView.InitializeTreeView Me.tvStates
+    'ZZZColumnStateToListView.InitializeListView Me.lvPreview
     
     UpdateControls
     
@@ -179,7 +179,7 @@ Private Sub UpdateSelectedTable()
 End Sub
 
 Private Sub UpdateTreeView()
-    ZZZColumnStateToTreeView.Load This.ViewModel, Me.tvStates
+    'ZZZColumnStateToTreeView.Load This.ViewModel, Me.tvStates
     
     Me.cmbPrune.Enabled = This.ViewModel.CanPrune
     Me.cmbRemove.Enabled = False
@@ -187,7 +187,7 @@ Private Sub UpdateTreeView()
 End Sub
 
 Private Sub UpdateListView()
-    ZZZColumnStateToListView.Load This.ViewModel, Me.lvPreview
+    'ZZZColumnStateToListView.Load This.ViewModel, Me.lvPreview
     
     Me.cmbApply.Caption = "Apply"
     Me.cmbApply.Enabled = False
