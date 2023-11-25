@@ -35,13 +35,11 @@ End Property
 
 '@DefaultMember
 Public Property Get Name() As String
-Attribute Name.VB_UserMemId = 0
     Name = This.Name
 End Property
 
 '@Description "Returns True if this ListObject of this state cannot be found in the VM's workbook."
 Public Property Get Orphan() As Boolean
-Attribute Orphan.VB_Description = "Returns True if this ListObject of this state cannot be found in the VM's workbook."
     Orphan = This.Orphan
 End Property
 
@@ -239,3 +237,4 @@ Private Function GetCaption() As String
     
     GetCaption = Result
 End Function
+

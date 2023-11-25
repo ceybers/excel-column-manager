@@ -18,6 +18,7 @@ Private Type TState
     Current As CurrentStateViewModel
     Selected As SelectedStateViewModel
     States As StatesViewModel
+    Options As OptionsViewModel
     
     Model As StatesModel
 End Type
@@ -49,11 +50,13 @@ Private Sub Class_Initialize()
     Set This.Current = New CurrentStateViewModel
     Set This.Selected = New SelectedStateViewModel
     Set This.States = New StatesViewModel
+    Set This.Options = New OptionsViewModel
 End Sub
 
 Public Sub Load(ByVal Model As StatesModel)
     Set This.Model = Model
-    This.States.Load Model
+    This.Options.Load Model
+    This.States.Load Model, This.Options
 End Sub
 
 Public Sub TrySelect(ByVal Key As String)
@@ -80,7 +83,7 @@ End Function
 Public Sub Save()
     This.Model.Add This.Current.State
     This.Model.Save
-    This.States.Load This.Model
+    This.States.Reload
 End Sub
 
 Public Function CanApply() As Boolean
@@ -106,7 +109,7 @@ End Function
 Public Sub Prune()
     This.States.RemoveOrphans This.Model
     This.Model.Save
-    This.States.Load This.Model
+    This.States.Reload
 End Sub
 
 Public Function CanRemove() As Boolean
@@ -118,7 +121,7 @@ Public Function Remove() As Boolean
     This.Model.Remove This.Selected.State
     This.Model.Save
     Set This.Selected.State = Nothing
-    This.States.Load This.Model
+    This.States.Reload
 End Function
 
 Public Function CanRemoveAll() As Boolean
@@ -130,7 +133,7 @@ Public Function RemoveAll() As Boolean
     This.Model.RemoveAll
     This.Model.Save
     Set This.Selected.State = Nothing
-    This.States.Load This.Model
+    This.States.Reload
 End Function
 
 Public Function CanExport() As Boolean
@@ -153,8 +156,15 @@ Public Function TryImport(ByVal SerialString As String, ByRef OutState As IState
     This.Model.Add State
     This.Model.Save
     Set This.Selected.State = State
-    This.States.Load This.Model
+    This.States.Reload
 
     TryImport = True
 End Function
+
+Public Sub ShowOptions()
+    Dim View As IView
+    Set View = New OptionsView
+    
+    View.ShowDialog This.Options
+End Sub
 

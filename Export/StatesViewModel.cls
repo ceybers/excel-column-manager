@@ -16,6 +16,9 @@ Private Type TState
     HasOrphans As Boolean
     
     Filter As String
+    
+    Model As StatesModel
+    Options As OptionsViewModel
 End Type
 
 Private This As TState
@@ -42,14 +45,20 @@ Private Sub Class_Initialize()
     Set This.CollectionView = New Collection
 End Sub
 
-Public Sub Load(ByVal Model As StatesModel)
+Public Sub Load(ByVal Model As StatesModel, Options As OptionsViewModel)
+    Set This.Options = Options
+    Set This.Model = Model
+    Reload
+End Sub
+
+Public Sub Reload()
     Dim i As Long
     i = 1
     
     CollectionHelpers.CollectionClear This.Items
     
     Dim State As IState
-    For Each State In Model.Items
+    For Each State In This.Model.Items
         Dim StateListable As IListable
         Set StateListable = State
         StateListable.Key = "K" & Format(i, "000") ' WARNING this means only one model can assign keys!
@@ -68,17 +77,27 @@ Private Sub UpdateCollectionView()
     Dim FilterString As String
     If This.Filter = vbNullString Then
         FilterString = "*"
+    ElseIf DoMatchWhole Then
+        FilterString = This.Filter
     Else
         FilterString = "*" & This.Filter & "*"
     End If
     
     Dim StateListable As IListable
     For Each StateListable In This.Items
-        If StateListable.Caption Like FilterString Then
+        If DoFilter(StateListable.Caption, FilterString) Then
             This.CollectionView.Add Item:=StateListable, Key:=StateListable.Key
         End If
     Next StateListable
 End Sub
+
+Private Function DoFilter(ByVal LHS As String, ByVal RHS As String) As Boolean
+    If DoMatchCase Then
+        DoFilter = LHS Like RHS
+    Else
+        DoFilter = UCase(LHS) Like UCase(RHS)
+    End If
+End Function
 
 Public Sub UpdateOrphans(ByVal Workbook As Workbook)
     This.HasOrphans = False
@@ -109,4 +128,12 @@ Public Sub RemoveOrphans(ByVal Model As StatesModel)
         End If
     Next State
 End Sub
+
+Private Function DoMatchCase() As Boolean
+    DoMatchCase = This.Options.GetFlag(modOptionsConst.DO_SEARCH_CASE)
+End Function
+
+Private Function DoMatchWhole() As Boolean
+    DoMatchWhole = This.Options.GetFlag(modOptionsConst.DO_SEARCH_WHOLE)
+End Function
 

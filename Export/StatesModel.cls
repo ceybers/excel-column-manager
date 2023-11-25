@@ -24,13 +24,16 @@ End Type
 
 Private This As TState
 
+Public Property Get Settings() As ISettingsModel
+    Set Settings = This.Settings
+End Property
+
 Public Property Get Items()
     Set Items = This.Items
 End Property
 
 '@Description "Loads State objects from persistent serial store."
 Public Sub Load(ByVal Workbook As Workbook)
-Attribute Load.VB_Description = "Loads State objects from persistent serial store."
     Dim WorkbookSettings As XMLSettings
     Set WorkbookSettings = XMLSettingsFactory.CreateWorkbookSettings( _
                            Workbook:=Workbook, _
@@ -66,7 +69,6 @@ End Sub
 
 '@Description "Saves State objects into persistent serial store."
 Public Sub Save()
-Attribute Save.VB_Description = "Saves State objects into persistent serial store."
     Dim SerialStrings As Collection
     Set SerialStrings = New Collection
     
@@ -84,7 +86,6 @@ End Sub
 
 '@Description "Returns true if State object exists in model's collection."
 Public Function Exists(ByVal State As IState) As Boolean
-Attribute Exists.VB_Description = "Returns true if State object exists in model's collection."
     Dim RHSState As IState
     For Each RHSState In This.Items
         If State.Equals(RHSState) Then
@@ -95,7 +96,6 @@ End Function
 
 '@Description "Adds a State object to the model's collection if it is not already there."
 Public Sub Add(ByVal State As IState)
-Attribute Add.VB_Description = "Adds a State object to the model's collection if it is not already there."
     If Not Exists(ColumnsState2) Then
         This.Items.Add State
     End If
@@ -103,7 +103,6 @@ End Sub
 
 '@Description "Removes a State object from the model's collection."
 Public Sub Remove(ByVal State As IState)
-Attribute Remove.VB_Description = "Removes a State object from the model's collection."
     Dim i As Long
     For i = This.Items.Count To 1 Step -1
         Dim RHSState As IState
@@ -117,9 +116,10 @@ End Sub
 
 '@Description "Removes all State objects from the model's collection."
 Public Sub RemoveAll()
-Attribute RemoveAll.VB_Description = "Removes all State objects from the model's collection."
     Dim i
     For i = This.Items.Count To 1 Step -1
         This.Items.Remove (i)
     Next i
 End Sub
+
+

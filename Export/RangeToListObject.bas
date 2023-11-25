@@ -4,7 +4,6 @@ Option Explicit
 
 '@Description "Returns the name of a ListColumn if a Range intersects with a given ListObject."
 Public Function TryRangeToListHeader(ByVal ListObject As ListObject, ByVal Range As Range, ByRef OutHeader As String) As Boolean
-Attribute TryRangeToListHeader.VB_Description = "Returns the name of a ListColumn if a Range intersects with a given ListObject."
     Dim Result As String
     Result = RangeToListHeader(ListObject, Range)
     If Result <> Empty Then
@@ -30,3 +29,4 @@ Private Function RangeToListHeader(ByVal ListObject As ListObject, ByVal Range A
     
     RangeToListHeader = Result
 End Function
+

@@ -57,6 +57,10 @@ Private Sub cmbRemoveAll_Click()
     TryRemoveAll
 End Sub
 
+Private Sub cmbOptions_Click()
+    TryShowOptions
+End Sub
+
 Private Sub cmbAbout_Click()
     frmAbout.Show
 End Sub
@@ -211,7 +215,6 @@ Private Sub TryExport()
 End Sub
 
 Private Sub TryImport()
-    
     Dim SerialString As String
     SerialString = InputBox("Serial string for selected state", "Export State to Serial String", _
                             "Table1:Q29sRA==,8,0;Q29sQg==,16,0;Q29sQw==,102,0")
@@ -234,6 +237,13 @@ Private Sub TryImport()
             MsgBox "Import FAIL! Already exists", vbCritical + vbOKOnly, MSG_TITLE
         End If
     End If
+End Sub
+
+Private Sub TryShowOptions()
+    This.ViewModel.ShowOptions
+    UpdateListViewLHS
+    UpdateListViewRHS
+    UpdateButtons
 End Sub
 
 
