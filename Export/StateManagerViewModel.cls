@@ -29,10 +29,9 @@ Public Property Get Target() As ListObject
     Set Target = This.Target
 End Property
 
-Public Property Set Target(ByVal vNewValue As ListObject)
-    Set This.Target = vNewValue
-    UpdateCurrent
-End Property
+'Public Property Set Target(ByVal vNewValue As ListObject)
+'    Set This.Target = vNewValue
+'End Property
 
 Public Property Get Current() As CurrentStateViewModel
     Set Current = This.Current
@@ -53,10 +52,13 @@ Private Sub Class_Initialize()
     Set This.Options = New OptionsViewModel
 End Sub
 
-Public Sub Load(ByVal Model As StatesModel)
+Public Sub Load(ByVal Model As StatesModel, ByVal Target As ListObject)
+    Set This.Target = Target
+    UpdateCurrent
+        
     Set This.Model = Model
     This.Options.Load Model
-    This.States.Load Model, This.Options
+    This.States.Load Model, This.Options, This.Target.Parent.Parent
 End Sub
 
 Public Sub TrySelect(ByVal Key As String)
@@ -99,7 +101,30 @@ End Sub
 
 Private Function ApplyStateToTarget(ByVal State As IState)
     State.Apply This.Target
+    TryAssociateOrphan State
+
     UpdateCurrent
+End Function
+
+Private Sub TryAssociateOrphan(ByVal State As ColumnsState2)
+    If Not State.Orphan Then Exit Sub
+    If Not This.Options.GetFlag(modOptionsConst.DO_ASSOCIATE_ORPHAN_STATES) Then Exit Sub
+    
+    Dim NewState As ColumnsState2
+    Set NewState = CloneState(State)
+    NewState.Name = This.Target.Name
+    
+    This.Model.Remove State
+    This.Model.Add NewState
+    This.Model.Save
+    This.States.Reload
+End Sub
+
+Private Function CloneState(ByVal OrphanState As ISerializable) As ColumnsState2
+    Dim Result As ISerializable
+    Set Result = New ColumnsState2
+    Result.Deserialize OrphanState.Serialize
+    Set CloneState = Result
 End Function
 
 Public Function CanPrune() As Boolean

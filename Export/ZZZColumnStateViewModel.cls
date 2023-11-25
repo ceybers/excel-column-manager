@@ -144,12 +144,14 @@ End Sub
 
 Private Sub ApplyDefaultSettings()
     With This.Settings.Workbook
-        .SetFlag DO_ASSOCIATE_ON_APPLY, True
-        .SetFlag DO_PARTIAL_MATCH, True
-        .SetFlag DO_PARTIAL_APPLY, True
-        .SetFlag DO_CLOSE_ON_APPLY, True
-        .SetFlag DO_HIDE_UNMATCHED, True
-        .SetFlag DO_FILTER_UNMATCHED, False
+        .SetFlag DO_SHOW_ORPHAN_STATES, True
+        .SetFlag DO_ASSOCIATE_ORPHAN_STATES, True
+        .SetFlag DO_SHOW_PARTIAL_MATCH, True
+        .SetFlag DO_ALLOW_APPLY_PARTIAL_MATCH, True
+        .SetFlag DO_SHOW_NONMATCHING_COLS, True
+        .SetFlag DO_SEARCH_CASE, False
+        .SetFlag DO_SEARCH_WHOLE, False
+        .SetFlag DO_CLOSE_ON_APPLY, False
         .SetSetting SETTING_LAST_UPDATED, CStr(Now())
     End With
 End Sub

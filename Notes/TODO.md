@@ -23,8 +23,9 @@
 - [x] Remove selected state.
 - [x] Remove all states.
 ## Options (sub UserForm)
-- [ ] Create child ViewModel to contain all these flags.
-- [ ] Option to Associate on applying orphan.
+- [x] Create child ViewModel to contain all these flags.
+- [x] Show/hide orphaned states.
+- [x] Option to Associate on applying orphan.
 - [ ] Option to Close on Apply.
 - [ ] Option to Allow/Prohibit displaying Partial matches.
 - [ ] Option to Allow/Prohibit applying Partial matches.
@@ -32,9 +33,9 @@
   - (i.e., hide unless specifically stated to Show).
   - Default behaviour is to leave columns not in the state as-is.
 - [ ] Filter to only show existing columns in State preview.
-- [ ] Search Match Case
-- [ ] Search Match Whole Word
-- [ ] Default values for all options if no CustomXML found.
+- [x] Search Match Case
+- [x] Search Match Whole Word
+- [x] Default values for all options if no CustomXML found.
 ## Nice-to-Haves
 - [ ] Inform user if search returned no results instead of just showing an empty tree/list.
 - [ ] Use nicer icons. Probably use .PNG and store them in a hidden UserForm.

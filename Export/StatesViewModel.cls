@@ -19,6 +19,7 @@ Private Type TState
     
     Model As StatesModel
     Options As OptionsViewModel
+    Workbook As Workbook
 End Type
 
 Private This As TState
@@ -45,9 +46,10 @@ Private Sub Class_Initialize()
     Set This.CollectionView = New Collection
 End Sub
 
-Public Sub Load(ByVal Model As StatesModel, Options As OptionsViewModel)
+Public Sub Load(ByVal Model As StatesModel, Options As OptionsViewModel, ByVal Workbook As Workbook)
     Set This.Options = Options
     Set This.Model = Model
+    Set This.Workbook = Workbook
     Reload
 End Sub
 
@@ -74,6 +76,8 @@ Private Sub UpdateCollectionView()
     ' Won't preserve checked/selected status, or active ListItem in control, or caret focus.
     CollectionHelpers.CollectionClear This.CollectionView
     
+    UpdateOrphans This.Workbook
+    
     Dim FilterString As String
     If This.Filter = vbNullString Then
         FilterString = "*"
@@ -85,17 +89,25 @@ Private Sub UpdateCollectionView()
     
     Dim StateListable As IListable
     For Each StateListable In This.Items
-        If DoFilter(StateListable.Caption, FilterString) Then
+        If DoFilter(StateListable, FilterString) Then
             This.CollectionView.Add Item:=StateListable, Key:=StateListable.Key
         End If
     Next StateListable
 End Sub
 
-Private Function DoFilter(ByVal LHS As String, ByVal RHS As String) As Boolean
+Private Function DoFilter(ByVal StateListable As IListable, ByVal FilterString As String) As Boolean
     If DoMatchCase Then
-        DoFilter = LHS Like RHS
+        DoFilter = StateListable.Caption Like FilterString
     Else
-        DoFilter = UCase(LHS) Like UCase(RHS)
+        DoFilter = UCase(StateListable.Caption) Like UCase(FilterString)
+    End If
+    
+    If Not DoShowOrphanStates Then
+        Dim State As ColumnsState2
+        Set State = StateListable
+        If State.Orphan Then
+            DoFilter = False
+        End If
     End If
 End Function
 
@@ -135,5 +147,9 @@ End Function
 
 Private Function DoMatchWhole() As Boolean
     DoMatchWhole = This.Options.GetFlag(modOptionsConst.DO_SEARCH_WHOLE)
+End Function
+
+Private Function DoShowOrphanStates() As Boolean
+    DoShowOrphanStates = This.Options.GetFlag(modOptionsConst.DO_SHOW_ORPHAN_STATES)
 End Function
 

@@ -114,8 +114,12 @@ Private Sub AddUnsavedState(ByVal TreeView As TreeView, ByVal ViewModel As State
 End Sub
 
 Private Sub AddStates(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewModel)
+    Dim RemoveUnsaved As Boolean
+    
     Dim State As IListable
     For Each State In ViewModel.States.CollectionView
+        'Debug.Assert State.ParentKey <> modConstants.ORPHAN_KEY
+    
         Dim TableNode As Node
         Set TableNode = TreeView.Nodes.Item(State.ParentKey)
         TableNode.Expanded = True
@@ -126,11 +130,15 @@ Private Sub AddStates(ByVal TreeView As TreeView, ByVal ViewModel As StateManage
                                       Image:="msoItem", SelectedImage:="msoSelected")
                            
         If MatchesCurrent(ViewModel, State) Then
-            TreeView.Nodes.Remove UNSAVED_KEY
-            Node.Bold = True
-            Node.Selected = True
+            RemoveUnsaved = True
         End If
     Next State
+    
+    If RemoveUnsaved Then
+        TreeView.Nodes.Remove UNSAVED_KEY
+        Node.Bold = True
+        Node.Selected = True
+    End If
 End Sub
 
 Private Function MatchesCurrent(ViewModel As StateManagerViewModel, ByVal State As IState) As Boolean

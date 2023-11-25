@@ -45,9 +45,9 @@ Public Sub Load(ByVal Workbook As Workbook)
     
     Set This.Settings = ASettingsModel
     
-    'If This.Settings.Workbook.GetSetting(SETTING_LAST_UPDATED) = Empty Then
-    '    ApplyDefaultSettings
-    'End If
+    If This.Settings.Workbook.GetSetting(SETTING_LAST_UPDATED) = Empty Then
+        ApplyDefaultSettings
+    End If
     
     CollectionHelpers.CollectionClear This.Items
     
@@ -65,6 +65,20 @@ Private Sub LoadOne(ByVal SerialString As String)
     Set State = New ColumnsState2
     State.Deserialize SerialString
     This.Items.Add State
+End Sub
+
+Private Sub ApplyDefaultSettings()
+    With This.Settings.Workbook
+        .SetFlag DO_SHOW_ORPHAN_STATES, True
+        .SetFlag DO_ASSOCIATE_ORPHAN_STATES, True
+        .SetFlag DO_SHOW_PARTIAL_MATCH, True
+        .SetFlag DO_ALLOW_APPLY_PARTIAL_MATCH, True
+        .SetFlag DO_SHOW_NONMATCHING_COLS, True
+        .SetFlag DO_SEARCH_CASE, False
+        .SetFlag DO_SEARCH_WHOLE, False
+        .SetFlag DO_CLOSE_ON_APPLY, False
+        .SetSetting SETTING_LAST_UPDATED, CStr(Now())
+    End With
 End Sub
 
 '@Description "Saves State objects into persistent serial store."

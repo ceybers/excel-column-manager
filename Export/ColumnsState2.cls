@@ -38,6 +38,11 @@ Public Property Get Name() As String
     Name = This.Name
 End Property
 
+Public Property Let Name(ByVal vNewValue As String)
+    This.Name = vNewValue
+    This.ParentKey = LO_KEY_PREFIX & vNewValue
+End Property
+
 '@Description "Returns True if this ListObject of this state cannot be found in the VM's workbook."
 Public Property Get Orphan() As Boolean
     Orphan = This.Orphan
@@ -77,8 +82,7 @@ Private Function IState_From(ByVal Object As Object) As Boolean
     If Not TypeOf Object Is ListObject Then Exit Function
     
     Set This.ListObject = Object
-    This.Name = This.ListObject.Name
-    This.ParentKey = "lo::" & This.Name
+    Name = This.ListObject.Name
     
     Dim ListColumn As ListColumn
     For Each ListColumn In This.ListObject.ListColumns
