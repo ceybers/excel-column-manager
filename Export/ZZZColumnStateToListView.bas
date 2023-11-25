@@ -1,4 +1,4 @@
-Attribute VB_Name = "ColumnStateToListView"
+Attribute VB_Name = "ZZZColumnStateToListView"
 '@Folder("MVVM.ColumnState.ValueConverters")
 Option Explicit
 
@@ -26,20 +26,20 @@ Public Sub InitializeListView(ByVal ListView As ListView)
     End With
 End Sub
 
-Public Sub Load(ByVal ViewModel As ColumnStateViewModel, ByVal ListView As ListView)
+Public Sub Load(ByVal ViewModel As ZZZColumnStateViewModel, ByVal ListView As ListView)
     ListView.ListItems.Clear
     If ViewModel.SelectedState Is Nothing Then Exit Sub
     
     Dim FilterUnmatched As Boolean
     FilterUnmatched = ViewModel.DoFilterUnmatched
     
-    Dim ColumnState As ColumnStateSingle
+    Dim ColumnState As ZZZColumnStateSingle
     For Each ColumnState In ViewModel.SelectedState.ColumnStates
         LoadColumnStateToListView ListView, ColumnState, FilterUnmatched
     Next ColumnState
 End Sub
 
-Private Sub LoadColumnStateToListView(ByVal ListView As ListView, ByVal ColumnState As ColumnStateSingle, ByVal FilterUnmatched As Boolean)
+Private Sub LoadColumnStateToListView(ByVal ListView As ListView, ByVal ColumnState As ZZZColumnStateSingle, ByVal FilterUnmatched As Boolean)
     If FilterUnmatched Then
         If ColumnState.Exists = False Then
             Exit Sub

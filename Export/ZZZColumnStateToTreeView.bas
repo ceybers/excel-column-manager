@@ -1,4 +1,4 @@
-Attribute VB_Name = "ColumnStateToTreeView"
+Attribute VB_Name = "ZZZColumnStateToTreeView"
 '@Folder "MVVM.ColumnState.ValueConverters"
 Option Explicit
 
@@ -26,7 +26,7 @@ Public Sub InitializeTreeView(ByVal TreeView As TreeView)
     End With
 End Sub
 
-Public Sub Load(ByVal ViewModel As ColumnStateViewModel, ByVal TreeView As TreeView)
+Public Sub Load(ByVal ViewModel As ZZZColumnStateViewModel, ByVal TreeView As TreeView)
     TreeView.Nodes.Clear
     LoadWorkbookNode ViewModel, TreeView
     LoadListObjectNodes ViewModel, TreeView
@@ -38,13 +38,13 @@ Public Sub Load(ByVal ViewModel As ColumnStateViewModel, ByVal TreeView As TreeV
     TrySelectSelectedNode ViewModel, TreeView
 End Sub
 
-Private Sub LoadWorkbookNode(ByVal ViewModel As ColumnStateViewModel, ByVal TreeView As TreeView)
+Private Sub LoadWorkbookNode(ByVal ViewModel As ZZZColumnStateViewModel, ByVal TreeView As TreeView)
     Dim Node As Node
     Set Node = TreeView.Nodes.Add(Key:="ROOT", Text:=ViewModel.Workbook.Name, Image:=MSO_WORKBOOK)
     Node.Expanded = True
 End Sub
 
-Private Sub LoadListObjectNodes(ByVal ViewModel As ColumnStateViewModel, ByVal TreeView As TreeView)
+Private Sub LoadListObjectNodes(ByVal ViewModel As ZZZColumnStateViewModel, ByVal TreeView As TreeView)
     Dim ListObjectNames As Collection
     Set ListObjectNames = New Collection
     ListObjectNames.Add ViewModel.ListObject.Name
@@ -54,7 +54,7 @@ Private Sub LoadListObjectNodes(ByVal ViewModel As ColumnStateViewModel, ByVal T
     
     Dim HasOrphans As Boolean
     Dim ListObjectName As String
-    Dim ColumnState As ColumnStateTable
+    Dim ColumnState As ZZZColumnStateTable
     For Each ColumnState In ViewModel.States
         ListObjectName = ColumnState.ListObjectName
         If Not ExistsInCollection(ListObjectNames, ListObjectName) Then
@@ -90,7 +90,7 @@ Private Sub LoadListObjectNodes(ByVal ViewModel As ColumnStateViewModel, ByVal T
     End If
 End Sub
 
-Private Sub AddUnsavedSortStateNode(ByVal ViewModel As ColumnStateViewModel, ByVal TreeView As TreeView)
+Private Sub AddUnsavedSortStateNode(ByVal ViewModel As ZZZColumnStateViewModel, ByVal TreeView As TreeView)
     Dim Node As Node
     Set Node = TreeView.Nodes.Add(Relative:=TreeView.Nodes.Item(2), _
                                   Relationship:=tvwChild, _
@@ -103,11 +103,11 @@ Private Sub AddUnsavedSortStateNode(ByVal ViewModel As ColumnStateViewModel, ByV
     ViewModel.TrySelect "UNSAVED"
 End Sub
 
-Private Sub LoadColumnStateNodes(ByVal ViewModel As ColumnStateViewModel, ByVal TreeView As TreeView)
+Private Sub LoadColumnStateNodes(ByVal ViewModel As ZZZColumnStateViewModel, ByVal TreeView As TreeView)
     Dim AllListObjects As Collection
     Set AllListObjects = GetAllListObjects(ViewModel.Workbook)
     
-    Dim ColumnState As ColumnStateTable
+    Dim ColumnState As ZZZColumnStateTable
     For Each ColumnState In ViewModel.States
         Dim ParentNode As Node
         If ExistsInCollection(AllListObjects, ColumnState.ListObjectName) Then
@@ -200,7 +200,7 @@ Private Sub RemoveEmptyListObjectNodes(ByVal TreeView As TreeView)
     Next NodeKey
 End Sub
 
-Private Sub TrySelectSelectedNode(ByVal ViewModel As ColumnStateViewModel, ByVal TreeView As TreeView)
+Private Sub TrySelectSelectedNode(ByVal ViewModel As ZZZColumnStateViewModel, ByVal TreeView As TreeView)
     If Not TreeView.SelectedItem Is Nothing Then
         ViewModel.TrySelect TreeView.SelectedItem.Key
     End If

@@ -1,14 +1,14 @@
 VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmColumnStateView 
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ZZZColumnStateView 
    Caption         =   "Persistent Column State Tool"
    ClientHeight    =   7815
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   9360.001
-   OleObjectBlob   =   "frmColumnStateView.frx":0000
+   OleObjectBlob   =   "ZZZColumnStateView.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
-Attribute VB_Name = "frmColumnStateView"
+Attribute VB_Name = "ZZZColumnStateView"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -26,7 +26,7 @@ Private Const MSG_EXPORT_STATE As String = "Column State in Base64 format:"
 
 Private Type TState
     IsCancelled As Boolean
-    ViewModel As ColumnStateViewModel
+    ViewModel As ZZZColumnStateViewModel
 End Type
 
 Private This As TState
@@ -154,8 +154,8 @@ Private Function IView_ShowDialog(ByVal ViewModel As Object) As Boolean
 End Function
 
 Private Sub InitalizeFromViewModel()
-    ColumnStateToTreeView.InitializeTreeView Me.tvStates
-    ColumnStateToListView.InitializeListView Me.lvPreview
+    ZZZColumnStateToTreeView.InitializeTreeView Me.tvStates
+    ZZZColumnStateToListView.InitializeListView Me.lvPreview
     
     UpdateControls
     
@@ -179,7 +179,7 @@ Private Sub UpdateSelectedTable()
 End Sub
 
 Private Sub UpdateTreeView()
-    ColumnStateToTreeView.Load This.ViewModel, Me.tvStates
+    ZZZColumnStateToTreeView.Load This.ViewModel, Me.tvStates
     
     Me.cmbPrune.Enabled = This.ViewModel.CanPrune
     Me.cmbRemove.Enabled = False
@@ -187,7 +187,7 @@ Private Sub UpdateTreeView()
 End Sub
 
 Private Sub UpdateListView()
-    ColumnStateToListView.Load This.ViewModel, Me.lvPreview
+    ZZZColumnStateToListView.Load This.ViewModel, Me.lvPreview
     
     Me.cmbApply.Caption = "Apply"
     Me.cmbApply.Enabled = False

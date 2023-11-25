@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ColumnStateTable"
+Attribute VB_Name = "ZZZColumnStateTable"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -54,8 +54,8 @@ Private Sub LoadColumns()
 End Sub
 
 Private Sub LoadColumn(ByVal ListColumn As ListColumn)
-    Dim ColumnStateSingle As ColumnStateSingle
-    Set ColumnStateSingle = New ColumnStateSingle
+    Dim ColumnStateSingle As ZZZColumnStateSingle
+    Set ColumnStateSingle = New ZZZColumnStateSingle
     ColumnStateSingle.Load ListColumn
     This.ColumnStates.Add Item:=ColumnStateSingle
 End Sub
@@ -69,7 +69,7 @@ Public Function ToString() As String
 End Function
 
 Public Sub DebugPrint()
-    Dim ColumnStateSingle As ColumnStateSingle
+    Dim ColumnStateSingle As ZZZColumnStateSingle
     For Each ColumnStateSingle In This.ColumnStates
         Debug.Print ColumnStateSingle.ToBase64
         'Debug.Print ColumnStateSingle.ToString
@@ -85,7 +85,7 @@ Public Function ToBase64() As String
     'Result = Result & This.WorksheetName & ":"
     Result = Result & This.ListObjectName & ":"
     
-    Dim ColumnStateSingle As ColumnStateSingle
+    Dim ColumnStateSingle As ZZZColumnStateSingle
     For Each ColumnStateSingle In This.ColumnStates
         Result = Result & ColumnStateSingle.ToBase64() & ";"
     Next ColumnStateSingle
@@ -105,8 +105,8 @@ Public Sub LoadFromBase64(ByVal Base64Value As String, ByVal ListObject As ListO
     
     Dim i As Long
     For i = 0 To UBound(ColumnStateSingles)
-        Dim ColumnStateSingle As ColumnStateSingle
-        Set ColumnStateSingle = New ColumnStateSingle
+        Dim ColumnStateSingle As ZZZColumnStateSingle
+        Set ColumnStateSingle = New ZZZColumnStateSingle
         ColumnStateSingle.LoadFromBase64 ColumnStateSingles(i)
         ColumnStateSingle.Index = (i + 1)
         ColumnStateSingle.UpdateExists ListObject
@@ -121,7 +121,7 @@ Public Function GetCaption() As String
     TotalColumns = This.ColumnStates.Count
     
     Dim VisibleColumns As Long
-    Dim ColumnStateSingle As ColumnStateSingle
+    Dim ColumnStateSingle As ZZZColumnStateSingle
     For Each ColumnStateSingle In This.ColumnStates
         If Not ColumnStateSingle.Hidden Then
             VisibleColumns = VisibleColumns + 1
@@ -133,7 +133,7 @@ Public Function GetCaption() As String
 End Function
 
 Public Function CanApply(ByVal ListObject As ListObject) As Boolean
-    Dim ColumnStateSingle As ColumnStateSingle
+    Dim ColumnStateSingle As ZZZColumnStateSingle
     
     For Each ColumnStateSingle In This.ColumnStates
         If ListObjectHelpers.HasListColumn(ListObject, ColumnStateSingle.Name) Then
@@ -144,7 +144,7 @@ Public Function CanApply(ByVal ListObject As ListObject) As Boolean
 End Function
 
 Public Function IsPartialMatch(ByVal ListObject As ListObject) As Boolean
-    Dim ColumnState As ColumnStateSingle
+    Dim ColumnState As ZZZColumnStateSingle
     
     Dim n As Long
     
@@ -158,7 +158,7 @@ Public Function IsPartialMatch(ByVal ListObject As ListObject) As Boolean
 End Function
 
 Public Function Apply(ByVal ListObject As ListObject) As Boolean
-    Dim ColumnStateSingle As ColumnStateSingle
+    Dim ColumnStateSingle As ZZZColumnStateSingle
     For Each ColumnStateSingle In This.ColumnStates
         ApplyState ColumnStateSingle, ListObject
     Next ColumnStateSingle
@@ -166,7 +166,7 @@ Public Function Apply(ByVal ListObject As ListObject) As Boolean
     Apply = True
 End Function
 
-Private Sub ApplyState(ByVal ColumnStateSingle As ColumnStateSingle, ByVal ListObject As ListObject)
+Private Sub ApplyState(ByVal ColumnStateSingle As ZZZColumnStateSingle, ByVal ListObject As ListObject)
     If ColumnStateSingle.Exists = False Then Exit Sub
     
     Dim ListColumn As ListColumn
@@ -182,7 +182,7 @@ Private Sub ApplyState(ByVal ColumnStateSingle As ColumnStateSingle, ByVal ListO
     End With
 End Sub
 
-Public Function Equals(ByVal RHS As ColumnStateTable) As Boolean
+Public Function Equals(ByVal RHS As ZZZColumnStateTable) As Boolean
     Debug.Assert Not RHS Is Nothing
     Equals = (Me.ToBase64 = RHS.ToBase64)
 End Function

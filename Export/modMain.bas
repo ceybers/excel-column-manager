@@ -61,12 +61,12 @@ Public Sub PersistentColumnStateTool()
         Exit Sub
     End If
     
-    Dim ViewModel As ColumnStateViewModel
-    Set ViewModel = New ColumnStateViewModel
+    Dim ViewModel As ZZZColumnStateViewModel
+    Set ViewModel = New ZZZColumnStateViewModel
     ViewModel.Load Selection.ListObject
     
     Dim ViewAsInterface As IView
-    Set ViewAsInterface = New frmColumnStateView
+    Set ViewAsInterface = New ZZZColumnStateView
     
     ViewAsInterface.ShowDialog ViewModel
 End Sub

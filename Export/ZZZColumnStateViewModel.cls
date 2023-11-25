@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ColumnStateViewModel"
+Attribute VB_Name = "ZZZColumnStateViewModel"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -24,7 +24,7 @@ Private Const DO_FILTER_UNMATCHED As String = "DO_FILTER_UNMATCHED"
 Private Type TState
     Workbook As Workbook
     ListObject As ListObject
-    SelectedState As ColumnStateTable
+    SelectedState As ZZZColumnStateTable
     States As Collection
     Settings As ISettingsModel
 End Type
@@ -85,14 +85,14 @@ Public Property Let DoCloseOnApply(ByVal vNewValue As Boolean)
     This.Settings.Workbook.SetSetting SETTING_LAST_UPDATED, CStr(Now())
 End Property
 
-Public Property Get CurrentState() As ColumnStateTable
-    Dim Result As ColumnStateTable
-    Set Result = New ColumnStateTable
+Public Property Get CurrentState() As ZZZColumnStateTable
+    Dim Result As ZZZColumnStateTable
+    Set Result = New ZZZColumnStateTable
     Result.Load This.ListObject
     Set CurrentState = Result
 End Property
 
-Public Property Get SelectedState() As ColumnStateTable
+Public Property Get SelectedState() As ZZZColumnStateTable
     Set SelectedState = This.SelectedState
 End Property
 
@@ -162,8 +162,8 @@ Private Sub Reload()
     
     Dim SerializedState As Variant
     For Each SerializedState In SerializedStates
-        Dim ColumnState As ColumnStateTable
-        Set ColumnState = New ColumnStateTable
+        Dim ColumnState As ZZZColumnStateTable
+        Set ColumnState = New ZZZColumnStateTable
         ColumnState.LoadFromBase64 SerializedState, This.ListObject
         This.States.Add ColumnState
     Next SerializedState
@@ -199,7 +199,7 @@ Public Sub RemoveSelected()
     
     Dim i As Long
     For i = This.States.Count To 1 Step -1
-        Dim State As ColumnStateTable
+        Dim State As ZZZColumnStateTable
         Set State = This.States.Item(i)
         If State Is This.SelectedState Then
             This.States.Remove i
@@ -223,8 +223,8 @@ Public Function CanSave() As Boolean
     CanSave = True                               'Not Exists(This.CurrentState)
 End Function
 
-Private Function Exists(ByVal ColumnState As ColumnStateTable) As Boolean
-    Dim RHSState As ColumnStateTable
+Private Function Exists(ByVal ColumnState As ZZZColumnStateTable) As Boolean
+    Dim RHSState As ZZZColumnStateTable
     For Each RHSState In This.States
         If ColumnState.Equals(RHSState) Then
             Exists = True
@@ -240,7 +240,7 @@ Public Function TrySelect(ByVal Key As String) As Boolean
         Exit Function
     End If
     
-    Dim ColumnState As ColumnStateTable
+    Dim ColumnState As ZZZColumnStateTable
     For Each ColumnState In This.States
         If ColumnState.ToBase64 = Key Then
             Set This.SelectedState = ColumnState
@@ -261,7 +261,7 @@ Public Sub Save()
     SaveStates
 End Sub
 
-Private Function IsStateOrphaned(ByVal ColumnStateTable As ColumnStateTable) As Boolean
+Private Function IsStateOrphaned(ByVal ColumnStateTable As ZZZColumnStateTable) As Boolean
     Dim AllListObjects As Collection
     Set AllListObjects = ListObjectHelpers.GetAllListObjects(This.Workbook)
     
@@ -275,7 +275,7 @@ Private Function IsStateOrphaned(ByVal ColumnStateTable As ColumnStateTable) As 
     IsStateOrphaned = True
 End Function
 
-Private Sub AssociateSortOrderState(ByVal State As ColumnStateTable)
+Private Sub AssociateSortOrderState(ByVal State As ZZZColumnStateTable)
     Dim OldKey As String
     OldKey = State.ToBase64
     
@@ -302,8 +302,8 @@ Private Sub AssociateSortOrderState(ByVal State As ColumnStateTable)
 End Sub
 
 Public Sub TryImport(ByVal StateString As String)
-    Dim ColumnStateTable As ColumnStateTable
-    Set ColumnStateTable = New ColumnStateTable
+    Dim ColumnStateTable As ZZZColumnStateTable
+    Set ColumnStateTable = New ZZZColumnStateTable
     ColumnStateTable.LoadFromBase64 StateString, This.ListObject
     
     If Exists(ColumnStateTable) Then
@@ -349,7 +349,7 @@ Private Sub SaveStates()
     Dim NewCollection As Collection
     Set NewCollection = New Collection
     
-    Dim State As ColumnStateTable
+    Dim State As ZZZColumnStateTable
     For Each State In This.States
         NewCollection.Add State.ToBase64
     Next State
