@@ -21,6 +21,7 @@ Private Type TState
     Name As String
     ListColumns As Collection
     Key As String
+    ParentKey As String
     Visible As Boolean
 End Type
 
@@ -66,6 +67,7 @@ Private Function IState_From(ByVal Object As Object) As Boolean
     
     Set This.ListObject = Object
     This.Name = This.ListObject.Name
+    This.ParentKey = "lo::" & This.Name
     
     Dim ListColumn As ListColumn
     For Each ListColumn In This.ListObject.ListColumns
@@ -123,6 +125,7 @@ Private Function ISerializable_Deserialize(ByVal SerialString As String) As Bool
     If UBound(SplitText) <> 1 Then Exit Function
     
     This.Name = SplitText(0)
+    This.ParentKey = "lo::" & This.Name
     
     DeserializeChildren SplitText(1)
     
@@ -141,19 +144,27 @@ Private Sub DeserializeChildren(ByVal ChildSerials As String)
         Set Child = New ColumnState2
         Child.Deserialize SplitSerials(i)
         This.ListColumns.Add Item:=Child, Key:="K" & Format(i, "000")
+        
+        Dim Listable As IListable
+        Set Listable = Child
+        Listable.Key = "K" & Format(i, "000")
     Next i
 End Sub
 
 Private Function IState_Equals(ByVal RHS As IState) As Boolean
     If RHS Is Nothing Then Exit Function
     If Not TypeOf RHS Is ColumnsState2 Then Exit Function
-    Dim State As ColumnsState2
-    Set State = RHS
-    IState_Equals = (Me.ToString = State.ToString)
+    
+    Dim LHSSerializable As ISerializable
+    Set LHSSerializable = Me
+    Dim RHSSerializable As ISerializable
+    Set RHSSerializable = RHS
+    
+    IState_Equals = (LHSSerializable.Serialize = RHSSerializable.Serialize)
 End Function
 
 Private Property Get IListable_Caption() As String
-    IListable_Caption = This.Name & " (" & VisibleCount() & "/" & This.ListColumns.Count & " visible)"
+    IListable_Caption = GetCaption
 End Property
 
 Private Property Get IListable_Key() As String
@@ -162,6 +173,14 @@ End Property
 
 Private Property Let IListable_Key(ByVal vNewValue As String)
     This.Key = vNewValue
+End Property
+
+Private Property Get IListable_ParentKey() As String
+    IListable_ParentKey = This.ParentKey
+End Property
+
+Private Property Let IListable_ParentKey(ByVal vNewValue As String)
+    This.ParentKey = vNewValue
 End Property
 
 Private Property Get IListable_Visible() As Boolean
@@ -178,5 +197,27 @@ Private Function VisibleCount() As Long
     For Each Child In This.ListColumns
         If Child.Width > 0 Then VisibleCount = VisibleCount + 1
     Next Child
+End Function
+
+Private Function GetCaption() As String
+    Dim Result As String
+    
+    Dim Child As ColumnState2
+    For Each Child In This.ListColumns
+        If Child.Width > 0 Then
+            Result = Result & Child.Name & ","
+        End If
+    Next Child
+    
+    If Len(Result) > 2 Then
+        Result = Left$(Result, Len(Result) - 1)
+    End If
+    
+    Dim Suffix As String
+    Suffix = " (" & VisibleCount() & "/" & This.ListColumns.Count & ")"
+    
+    Result = Result & Suffix
+    
+    GetCaption = Result
 End Function
 

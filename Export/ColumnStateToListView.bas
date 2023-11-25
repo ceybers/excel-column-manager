@@ -12,9 +12,9 @@ Public Sub InitializeListView(ByVal ListView As ListView)
         .ListItems.Clear
         .ColumnHeaders.Clear
         .ColumnHeaders.Add Text:="#", Width:=24
-        .ColumnHeaders.Add Text:="Column Name", Width:=80
+        .ColumnHeaders.Add Text:="Column Name", Width:=60
         .ColumnHeaders.Add Text:="Width", Width:=40
-        .ColumnHeaders.Add Text:="Visible", Width:=64
+        .ColumnHeaders.Add Text:="Visible", Width:=40
         .Appearance = cc3D
         .BorderStyle = ccNone
         .Gridlines = True

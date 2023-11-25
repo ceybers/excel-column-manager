@@ -57,7 +57,11 @@ Public Sub Load(ByVal Model As StatesModel)
 End Sub
 
 Public Sub TrySelect(ByVal Key As String)
-    If Key = "ROOT" Then
+    'If Key = "ROOT" Then
+    '    Set This.Selected.State = Nothing
+    '    Exit Sub
+    'End If
+    If Left$(Key, 1) <> "K" Then
         Set This.Selected.State = Nothing
         Exit Sub
     End If
@@ -68,6 +72,16 @@ Private Sub UpdateCurrent()
     Set This.Current.State = ColumnsState2.Create(This.Target)
 End Sub
 
+Public Function CanSave() As Boolean
+    CanSave = Not This.Model.Exists(This.Current.State)
+End Function
+
+Public Sub Save()
+    This.Model.Add This.Current.State
+    ' DEBUG This.Model.Save
+    This.States.Load This.Model
+End Sub
+
 Public Function CanApply() As Boolean
     If This.Selected.State Is Nothing Then Exit Function
     If This.Current.State.Equals(This.Selected.State) Then Exit Function
@@ -76,12 +90,21 @@ End Function
 
 Public Sub Apply()
     ApplyStateToTarget This.Selected.State
+    UpdateCurrent
 End Sub
 
 Private Function ApplyStateToTarget(ByVal State As IState)
     State.Apply This.Target
     UpdateCurrent
 End Function
+
+Public Function CanPrune() As Boolean
+    CanPrune = False
+End Function
+
+Public Sub Prune()
+    ' NYI
+End Sub
 
 Public Function CanRemove() As Boolean
     If This.Selected.State Is Nothing Then Exit Function
@@ -90,7 +113,19 @@ End Function
 
 Public Function Remove() As Boolean
     This.Model.Remove This.Selected.State
+    ' DEBUG This.Model.Save
     Set This.Selected.State = Nothing
     This.States.Load This.Model
+End Function
+
+Public Function RemoveAll() As Boolean
+    This.Model.RemoveAll
+    ' DEBUG This.Model.Save
+    Set This.Selected.State = Nothing
+    This.States.Load This.Model
+End Function
+
+Public Function CanExport() As Boolean
+    CanExport = Not This.Selected.State Is Nothing
 End Function
 

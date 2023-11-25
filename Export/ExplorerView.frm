@@ -26,6 +26,43 @@ End Type
 
 Private This As TState
 
+' Buttons for Actions
+Private Sub cmbSave_Click()
+    TrySave
+End Sub
+
+Private Sub cmbApply_Click()
+    TryApply
+End Sub
+
+Private Sub cmbExport_Click()
+    TryExport
+End Sub
+
+Private Sub cmbImport_Click()
+    TryImport
+End Sub
+
+Private Sub cmbPrune_Click()
+    This.ViewModel.Prune
+    UpdateListViewLHS
+    UpdateListViewRHS
+    UpdateButtons
+End Sub
+
+Private Sub cmbRemove_Click()
+    TryRemove
+End Sub
+
+Private Sub cmbRemoveAll_Click()
+    TryRemoveAll
+End Sub
+
+Private Sub cmbAbout_Click()
+    frmAbout.Show
+End Sub
+
+' ---
 Private Sub OnCancel()
     This.IsCancelled = True
     Me.Hide
@@ -51,15 +88,15 @@ End Sub
 
 Private Sub UserForm_Activate()
     Set Me.Label4.Picture = Application.CommandBars.GetImageMso("CreateTableInDesignView", 16, 16)
-    Set Me.CommandButton1.Picture = Application.CommandBars.GetImageMso("DataFormAddRecord", 16, 16)
-    Set Me.CommandButton2.Picture = Application.CommandBars.GetImageMso("QueryBuilder", 16, 16)
-    Set Me.CommandButton3.Picture = Application.CommandBars.GetImageMso("Copy", 16, 16)
-    Set Me.CommandButton4.Picture = Application.CommandBars.GetImageMso("Paste", 16, 16)
-    Set Me.CommandButton5.Picture = Application.CommandBars.GetImageMso("TextBoxLinkBreak", 16, 16) 'Prune
-    Set Me.CommandButton6.Picture = Application.CommandBars.GetImageMso("TableRowsDelete", 16, 16) ' Remove
-    Set Me.CommandButton7.Picture = Application.CommandBars.GetImageMso("TableDelete", 16, 16) ' Remove All
-    Set Me.CommandButton8.Picture = Application.CommandBars.GetImageMso("OmsViewAccountSetting", 16, 16)
-    Set Me.CommandButton9.Picture = Application.CommandBars.GetImageMso("Help", 16, 16)
+    Set Me.cmbSave.Picture = Application.CommandBars.GetImageMso("DataFormAddRecord", 16, 16)
+    Set Me.cmbApply.Picture = Application.CommandBars.GetImageMso("QueryBuilder", 16, 16)
+    Set Me.cmbExport.Picture = Application.CommandBars.GetImageMso("Copy", 16, 16)
+    Set Me.cmbImport.Picture = Application.CommandBars.GetImageMso("Paste", 16, 16)
+    Set Me.cmbPrune.Picture = Application.CommandBars.GetImageMso("TextBoxLinkBreak", 16, 16) 'Prune
+    Set Me.cmbRemove.Picture = Application.CommandBars.GetImageMso("TableRowsDelete", 16, 16) ' Remove
+    Set Me.cmbRemoveAll.Picture = Application.CommandBars.GetImageMso("TableDelete", 16, 16) ' Remove All
+    Set Me.cmbOptions.Picture = Application.CommandBars.GetImageMso("OmsViewAccountSetting", 16, 16)
+    Set Me.cmbAbout.Picture = Application.CommandBars.GetImageMso("Help", 16, 16)
 End Sub
 
 Private Function IView_ShowDialog(ByVal ViewModel As Object) As Boolean
@@ -86,24 +123,83 @@ Private Sub InitializeControls()
 End Sub
 
 Private Sub UpdateButtons()
-    'Me.cmbApply.Enabled = 'This.ViewModel.CanApply
-    'Me.cmbRemove.Enabled = 'This.ViewModel.CanRemove
+    Me.cmbSave.Enabled = This.ViewModel.CanSave
+    Me.cmbApply.Enabled = This.ViewModel.CanApply
+    Me.cmbExport.Enabled = This.ViewModel.CanExport
+    Me.cmbPrune.Enabled = This.ViewModel.CanPrune
+    Me.cmbRemove.Enabled = This.ViewModel.CanRemove
 End Sub
 
 Private Sub UpdateCurrentState()
-    Dim ListableState As IListable
+    Dim ListableState As ColumnsState2
     Set ListableState = This.ViewModel.Current.State
     
-    Me.cbbTarget.Text = ListableState.Caption
+    Me.cbbTarget.Text = ListableState.Name
 End Sub
 
 Private Sub UpdateListViewLHS()
-    StatesToTreeView.Load Me.tvStates, This.ViewModel.States
+    StatesToTreeView.Load Me.tvStates, This.ViewModel
     If Me.tvStates.SelectedItem Is Nothing Then Exit Sub
     This.ViewModel.TrySelect Me.tvStates.SelectedItem.Key
 End Sub
 
 Private Sub UpdateListViewRHS()
+    If This.ViewModel.Selected.State Is Nothing Then
+        If Me.tvStates.SelectedItem Is Nothing Then
+            Me.lblSelectedState.Caption = ""
+        Else
+            Me.lblSelectedState.Caption = "Contents of '" & Me.tvStates.SelectedItem.Text & "'"
+        End If
+    Else
+        Me.lblSelectedState.Caption = "Contents of '" & This.ViewModel.Selected.State.Caption & "'"
+    End If
     SelectedStateToListView.Load Me.lvState, This.ViewModel.Selected
+End Sub
+
+Private Sub TrySave()
+    This.ViewModel.Save
+    UpdateListViewLHS
+    UpdateListViewRHS
+    UpdateButtons
+End Sub
+
+Private Sub TryApply()
+    This.ViewModel.Apply
+    UpdateListViewLHS
+    UpdateListViewRHS
+    UpdateButtons
+End Sub
+
+Private Sub TryRemove()
+    If vbNo = MsgBox("Are you sure?", vbYesNo + vbDefaultButton2) Then
+        Exit Sub
+    End If
+    
+    This.ViewModel.Remove
+    UpdateListViewLHS
+    UpdateListViewRHS
+    UpdateButtons
+End Sub
+
+Private Sub TryRemoveAll()
+    If vbNo = MsgBox("Are you sure?", vbYesNo + vbDefaultButton2) Then
+        Exit Sub
+    End If
+    
+    This.ViewModel.RemoveAll
+    UpdateListViewLHS
+    UpdateListViewRHS
+    UpdateButtons
+End Sub
+
+Private Sub TryExport()
+    Dim State As ISerializable
+    Set State = This.ViewModel.Selected.State
+    If State Is Nothing Then Exit Sub
+    InputBox "Serial string for selected state", "Export State to Serial String", State.Serialize
+End Sub
+
+Private Sub TryImport()
+
 End Sub
 

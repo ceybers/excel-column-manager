@@ -119,7 +119,7 @@ Private Function IState_Equals(ByVal RHS As IState) As Boolean
 End Function
 
 Private Property Get IListable_Caption() As String
-    IListable_Caption = Me.ToString
+    IListable_Caption = This.Name & "(" & This.Key & ")"
 End Property
 
 Private Property Get IListable_Key() As String
@@ -128,6 +128,14 @@ End Property
 
 Private Property Let IListable_Key(ByVal vNewValue As String)
     This.Key = vNewValue
+End Property
+
+Private Property Get IListable_ParentKey() As String
+    IListable_ParentKey = vbNullString
+End Property
+
+Private Property Let IListable_ParentKey(ByVal vNewValue As String)
+    'This.ParentKey = vNewValue
 End Property
 
 Private Property Get IListable_Visible() As Boolean

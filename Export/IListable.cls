@@ -20,6 +20,12 @@ End Property
 Public Property Let Key(ByVal vNewValue As String)
 End Property
 
+Public Property Get ParentKey() As String
+End Property
+
+Public Property Let ParentKey(ByVal vNewValue As String)
+End Property
+
 Public Property Get Visible() As Boolean
 End Property
 
