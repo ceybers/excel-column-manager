@@ -57,15 +57,12 @@ Public Sub Load(ByVal Model As StatesModel)
 End Sub
 
 Public Sub TrySelect(ByVal Key As String)
-    'If Key = "ROOT" Then
-    '    Set This.Selected.State = Nothing
-    '    Exit Sub
-    'End If
     If Left$(Key, 1) <> "K" Then
         Set This.Selected.State = Nothing
         Exit Sub
     End If
     Set This.Selected.State = This.States.CollectionView.Item(Key)
+    This.Selected.UpdateOrphans This.Target
 End Sub
 
 Private Sub UpdateCurrent()

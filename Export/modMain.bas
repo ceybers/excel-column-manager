@@ -33,7 +33,7 @@ Public Sub ResetModel()
     Model.Add State
     
     Set State = New ColumnsState2
-    State.Deserialize ("Table1:Q29sQQ==,8,0;Q29sQg==,16,0;Q29sQw==,32,0")
+    State.Deserialize ("Table1:Q29sRA==,8,0;Q29sQg==,16,0;Q29sQw==,32,0")
     Model.Add State
     
     Set State = New ColumnsState2

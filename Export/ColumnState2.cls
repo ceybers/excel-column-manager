@@ -21,6 +21,8 @@ Private Type TState
     Name As String
     Width As Double
     Hidden As Boolean
+    Orphan As Boolean
+    ' IListable
     Key As String
     Visible As Boolean
 End Type
@@ -42,6 +44,22 @@ End Property
 
 Public Property Let Width(ByVal RHS As Double)
     This.Width = RHS
+End Property
+
+Public Property Get Hidden() As Boolean
+    Hidden = This.Hidden
+End Property
+
+Public Property Let Hidden(ByVal RHS As Boolean)
+    This.Hidden = RHS
+End Property
+
+Public Property Get Orphan() As Boolean
+    Orphan = This.Orphan
+End Property
+
+Public Property Let Orphan(ByVal RHS As Boolean)
+    This.Orphan = RHS
 End Property
 
 Public Property Get IsSmallColumn() As Boolean
@@ -69,6 +87,7 @@ Private Function IState_From(ByVal Object As Object) As Boolean
     This.Name = This.ListColumn.Name
     This.Width = This.ListColumn.Range.ColumnWidth
     This.Hidden = This.ListColumn.Range.EntireColumn.Hidden
+    This.Orphan = False
     
     IState_From = True
 End Function
@@ -119,7 +138,8 @@ Private Function IState_Equals(ByVal RHS As IState) As Boolean
 End Function
 
 Private Property Get IListable_Caption() As String
-    IListable_Caption = This.Name & "(" & This.Key & ")"
+    'IListable_Caption = This.Name & " (" & This.Key & ")"
+    IListable_Caption = This.Name
 End Property
 
 Private Property Get IListable_Key() As String
@@ -145,4 +165,3 @@ End Property
 Private Property Let IListable_Visible(ByVal vNewValue As Boolean)
     This.Visible = vNewValue
 End Property
-

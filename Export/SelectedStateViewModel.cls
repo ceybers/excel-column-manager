@@ -70,3 +70,9 @@ Private Sub UpdateHiddenItems()
     Next Child
 End Sub
 
+Public Sub UpdateOrphans(ByVal Target As ListObject)
+    Dim Child As ColumnState2
+    For Each Child In This.Items
+        Child.Orphan = Not ListObjectHelpers.HasListColumn(Target, Child.Name)
+    Next Child
+End Sub

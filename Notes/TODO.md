@@ -1,36 +1,48 @@
 # TODO
-## Target ListObject
-- [x] Show name of Target ListObject.
-- [ ] Give states names, defaulting to e.g., "(x/y) Untitled state (2023/01/01 09:00)".
+## Target (Top)
+- [x] Show Target ListObject name.
 - [x] Allow saving current State, if not already saved.
-- [ ] Check object references work OK with multiple workbooks.
-## TreeView
+## States (LHS)
 - [x] List all saved Column States.
-- [x] List current (unsaved) State.
-- [x] Auto-selects a saved state if it matches the current state.
+- [ ] List current (unsaved) State.
+- [ ] Auto-selects a saved state if it matches the current state.
 - [x] Target ListObject is top of the tree.
 - [x] Orphaned items are bottom of the tree.
 - [ ] Consider adding meta states for "Show all (default)", "Show all (autofit)", and "Show first only".
-## ListView
+## Selected (RHS)
 - [x] Show list of columns in a stored State.
 - [x] Indicate Hidden property with icon.
 - [x] Indicate Width property.
 - [x] Indicate whether column exists in target ListObject.
-## Options
-- [x] Option to Associate on applying orphan.
-- [x] Option to Close on Apply.
-- [x] Option to Allow/Prohibit displaying Partial matches.
-- [x] Option to Allow/Prohibit applying Partial matches.
-- [x] Option to hide columns in target that were not in the applied state (i.e., hide unless specifically stated to Show). (Default behaviour is to leave columns not in the state as-is).
-- [x] Filter to only show existing columns in State preview.
-- [x] Default values if no CustomXML found.
 ## Features
+- [ ] Give states names, defaulting to e.g., "(x/y) Untitled state (2023/01/01 09:00)".
 - [x] Apply selected state.
-- [x] Import/export manually using Base64 string.
-- [x] Prune orphaned states.
+- [ ] Import/export manually using Base64 string.
+- [ ] Prune orphaned states.
 - [x] Remove selected state.
 - [x] Remove all states.
-- [ ] Serialize Freeze state of worksheet.
+## Options (sub UserForm)
+- [ ] Create child ViewModel to contain all these flags.
+- [ ] Option to Associate on applying orphan.
+- [ ] Option to Close on Apply.
+- [ ] Option to Allow/Prohibit displaying Partial matches.
+- [ ] Option to Allow/Prohibit applying Partial matches.
+- [ ] Option to hide columns in target that were not in the applied state 
+  - (i.e., hide unless specifically stated to Show).
+  - Default behaviour is to leave columns not in the state as-is.
+- [ ] Filter to only show existing columns in State preview.
+- [ ] Search Match Case
+- [ ] Search Match Whole Word
+- [ ] Default values for all options if no CustomXML found.
+## Nice-to-Haves
+- [ ] Use nicer icons. Probably use .PNG and store them in a hidden UserForm.
+- [ ] Serialize Freeze Pane state of worksheet.
 - [ ] Consider serializing Outline levels.
-- [ ] Store generic column states in User-level persistence (i.e., for applying to new/unsaved files).
-- [ ] Dedicated Memory Recall/Store state for direct use from Ribbon (i.e., no UserForm).
+- [ ] Store generic column states in User-level persistence (i.e., for applying to new/unsaved file)
+- [ ] Status bar with history log.
+- [ ] Implement Table Picker to swap Target while UserForm is active.
+## Admin
+- Check object references work OK with multiple workbooks.
+- Implement unit tests for everything.
+- Document code.
+- Update README/Git page. 

@@ -12,7 +12,9 @@
 > `Table1:State Caption:Column1,Column1Width;Column2,Column2Width;Column3,Column3Width`
 - For Tuple properties, e.g. Row and Column, I will propably separate them using a period, e.g., `Row 1 Column 3` becomes `1.3`.
 ## Hidden Columns and Column Width
-- Hidden columns have their ColumnWidth property set to 0. In some cases, it is possible to get the width they will be restored to using the `.Previous.Width` property, but not always.
+- Hidden columns have their ColumnWidth property set to 0. 
+- ~~In some cases, it is possible to get the width they will be restored to using the `.Previous.Width` property, but not always.~~
+- Correct way is to disable `ScreenUpdating`, unhide the column, copy the `ColumnWidth`, then hide it again. Should occur fast enough that the user won't notice.
 ## Serializing Freeze Panes
 - Properties `ActiveWindow.FreezePanes`, `ActiveWindow.SplitRow`, and `ActiveWindow.SplitColumn`
 ## 📖API References
