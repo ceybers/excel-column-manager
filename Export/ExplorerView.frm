@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ExplorerView 
-   Caption         =   "Sample State Management Explorer"
+   Caption         =   "Column State Management Explorer"
    ClientHeight    =   4620
    ClientLeft      =   120
    ClientTop       =   465
@@ -23,6 +23,7 @@ Implements IView
 Private Const MSG_TITLE As String = "Column State Manager"
 Private Const RESIZE_WIDTH As Long = 480 '380
 Private Const RESIZE_HEIGHT As Long = 320 '260
+Private Const SEARCH_WATERMARK As String = "Search..."
 
 Private Type TState
     ViewModel As StateManagerViewModel
@@ -81,8 +82,24 @@ Private Sub tvStates_NodeClick(ByVal Node As MSComctlLib.Node)
 End Sub
 
 Private Sub txtFilterStates_Change()
+    If Me.txtFilterStates.Value = SEARCH_WATERMARK Then Exit Sub
+    
     This.ViewModel.States.Filter = Me.txtFilterStates.Value
     UpdateListViewLHS
+End Sub
+
+Private Sub txtFilterStates_Enter()
+    If Me.txtFilterStates.Text = SEARCH_WATERMARK Then
+        Me.txtFilterStates.Text = vbNullString
+        Me.txtFilterStates.ForeColor = RGB(0, 0, 0)
+    End If
+End Sub
+
+Private Sub txtFilterStates_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+    If Me.txtFilterStates.Text = vbNullString Then
+        Me.txtFilterStates.Text = SEARCH_WATERMARK
+        Me.txtFilterStates.ForeColor = modConstants.GREY_TEXT_COLOR
+    End If
 End Sub
 
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
@@ -117,8 +134,6 @@ Private Function IView_ShowDialog(ByVal ViewModel As Object) As Boolean
     UpdateListViewLHS
     UpdateListViewRHS
     UpdateButtons
-    
-    Me.txtFilterStates.SetFocus
     
     Me.Show
     
@@ -155,6 +170,8 @@ Private Sub ResizeWindow()
     Me.lvState.Height = Me.lvState.Height + DeltaY
 End Sub
 Private Sub InitializeControls()
+    Me.txtFilterStates.ForeColor = modConstants.GREY_TEXT_COLOR
+    
     '@Ignore ArgumentWithIncompatibleObjectType
     StatesToTreeView.Initialize Me.tvStates
     '@Ignore ArgumentWithIncompatibleObjectType
