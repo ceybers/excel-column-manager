@@ -7,10 +7,11 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+Attribute VB_Description = "Built-in state that displays only the first ListColumns in a single ListObject."
 '@PredeclaredId
 '@IgnoreModule SetAssignmentWithIncompatibleObjectType
 '@ModuleDescription "Built-in state that displays only the first ListColumns in a single ListObject."
-'@Folder("State.Entities")
+'@Folder "State.Builtin"
 Option Explicit
 Implements IState
 Implements ISerializable
@@ -32,6 +33,7 @@ Private This As TState
 
 '@DefaultMember
 Public Property Get Name() As String
+Attribute Name.VB_UserMemId = 0
     Name = This.Name
 End Property
 
@@ -49,6 +51,7 @@ End Property
 
 '@Description "Returns True if this ListObject of this state cannot be found in the VM's workbook."
 Public Property Get Orphan() As Boolean
+Attribute Orphan.VB_Description = "Returns True if this ListObject of this state cannot be found in the VM's workbook."
     Orphan = False
 End Property
 
@@ -128,4 +131,3 @@ End Property
 Private Property Let IListable_Visible(ByVal vNewValue As Boolean)
     This.Visible = vNewValue
 End Property
-

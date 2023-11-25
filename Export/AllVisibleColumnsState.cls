@@ -2,23 +2,22 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "AutofitColumnsState"
+Attribute VB_Name = "AllVisibleColumnsState"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Attribute VB_Description = "Built-in state that auto-fits all ListColumns in a single ListObject."
 '@PredeclaredId
 '@IgnoreModule SetAssignmentWithIncompatibleObjectType
-'@ModuleDescription "Built-in state that auto-fits all ListColumns in a single ListObject."
+'@ModuleDescription "Built-in state that shows all ListColumns in a single ListObject."
 '@Folder "State.Builtin"
 Option Explicit
 Implements IState
 Implements ISerializable
 Implements IListable
 
-Private Const BUILTIN_NAME As String = "(Auto-fit all columns)"
-Private Const THIS_KEY As String = "B::AutoFit"
+Private Const BUILTIN_NAME As String = "(Shows all columns)"
+Private Const THIS_KEY As String = "B::ShowAll"
 
 Private Type TState
     'ListObject As ListObject
@@ -33,7 +32,6 @@ Private This As TState
 
 '@DefaultMember
 Public Property Get Name() As String
-Attribute Name.VB_UserMemId = 0
     Name = This.Name
 End Property
 
@@ -51,7 +49,6 @@ End Property
 
 '@Description "Returns True if this ListObject of this state cannot be found in the VM's workbook."
 Public Property Get Orphan() As Boolean
-Attribute Orphan.VB_Description = "Returns True if this ListObject of this state cannot be found in the VM's workbook."
     Orphan = False
 End Property
 
@@ -64,7 +61,7 @@ End Function
 
 ' Requires PredeclaredId annotation
 Public Function Create() As IState
-    Set Create = New AutofitColumnsState
+    Set Create = New AllVisibleColumnsState
 End Function
 
 ' IState
@@ -82,11 +79,7 @@ Private Function IState_Apply(ByVal Target As Object) As Boolean
     
     Dim ListObject As ListObject
     Set ListObject = Target
-    
-    Dim ListColumn As ListColumn
-    For Each ListColumn In ListObject.ListColumns
-        ListColumn.Range.EntireColumn.AutoFit
-    Next ListColumn
+    ListObject.Range.EntireColumn.Hidden = False
     
     IState_Apply = True
 End Function
@@ -129,3 +122,4 @@ End Property
 Private Property Let IListable_Visible(ByVal vNewValue As Boolean)
     This.Visible = vNewValue
 End Property
+

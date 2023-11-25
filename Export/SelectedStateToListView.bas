@@ -84,7 +84,7 @@ Private Sub AddItem(ByVal ListView As ListView, ByVal Child As IListable, ByVal 
         .Add Text:=Child.Caption
 
         If IsColumnHidden(Child) Then
-            .Add Text:=vbNullString              'width
+            .Add Text:=ColumnWidth(Child)
             .Add Text:="Hidden"
         Else
             .Add Text:=ColumnWidth(Child)
@@ -102,7 +102,7 @@ Private Sub AddItem(ByVal ListView As ListView, ByVal Child As IListable, ByVal 
 End Sub
 
 Private Function IsColumnHidden(ByVal State As ColumnState) As Boolean
-    IsColumnHidden = (State.Width = 0)
+    IsColumnHidden = State.Hidden
 End Function
 
 Private Function ColumnWidth(ByVal State As ColumnState) As String

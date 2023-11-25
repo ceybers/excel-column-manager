@@ -11,14 +11,14 @@ Attribute VB_Description = "Built-in state that shows all ListColumns in a singl
 '@PredeclaredId
 '@IgnoreModule SetAssignmentWithIncompatibleObjectType
 '@ModuleDescription "Built-in state that shows all ListColumns in a single ListObject."
-'@Folder("State.Entities")
+'@Folder "State.Builtin"
 Option Explicit
 Implements IState
 Implements ISerializable
 Implements IListable
 
-Private Const BUILTIN_NAME As String = "(Show all columns)"
-Private Const THIS_KEY As String = "B::ShowAll"
+Private Const BUILTIN_NAME As String = "(Standard fit all columns)"
+Private Const THIS_KEY As String = "B::StdAll"
 
 Private Type TState
     'ListObject As ListObject
@@ -33,6 +33,7 @@ Private This As TState
 
 '@DefaultMember
 Public Property Get Name() As String
+Attribute Name.VB_UserMemId = 0
     Name = This.Name
 End Property
 
@@ -50,6 +51,7 @@ End Property
 
 '@Description "Returns True if this ListObject of this state cannot be found in the VM's workbook."
 Public Property Get Orphan() As Boolean
+Attribute Orphan.VB_Description = "Returns True if this ListObject of this state cannot be found in the VM's workbook."
     Orphan = False
 End Property
 
@@ -123,4 +125,3 @@ End Property
 Private Property Let IListable_Visible(ByVal vNewValue As Boolean)
     This.Visible = vNewValue
 End Property
-

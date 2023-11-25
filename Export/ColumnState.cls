@@ -31,6 +31,7 @@ Private This As TState
 
 '@DefaultMember
 Public Property Get Name() As String
+Attribute Name.VB_UserMemId = 0
     Name = This.Name
 End Property
 
@@ -86,7 +87,15 @@ Private Function IState_From(ByVal Object As Object) As Boolean
     
     This.Name = This.ListColumn.Name
     This.Width = This.ListColumn.Range.ColumnWidth
+    
     This.Hidden = This.ListColumn.Range.EntireColumn.Hidden
+    If This.Hidden Then
+        Application.ScreenUpdating = False
+        This.ListColumn.Range.EntireColumn.Hidden = False
+        This.Width = This.ListColumn.Range.ColumnWidth
+        This.ListColumn.Range.EntireColumn.Hidden = True
+        Application.ScreenUpdating = True
+    End If
     This.Orphan = False
     
     IState_From = True
@@ -168,4 +177,3 @@ End Property
 Private Property Let IListable_Visible(ByVal vNewValue As Boolean)
     This.Visible = vNewValue
 End Property
-
