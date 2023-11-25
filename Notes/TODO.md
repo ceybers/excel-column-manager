@@ -23,6 +23,9 @@
 - [x] Prune orphaned states.
 - [x] Remove selected state.
 - [x] Remove all states.
+- [ ] Serialize Width of hidden columns.
+## Fixes
+- [ ] Closing Options UserForm closes main Explorer UserForm.
 ## Options (sub UserForm)
 - [x] Create child ViewModel to contain all these flags.
 - [x] Show/hide orphaned states.
@@ -42,9 +45,12 @@
 - [ ] Use nicer icons. Probably use .PNG and store them in a hidden UserForm.
 - [ ] Serialize Freeze Pane state of worksheet.
 - [ ] Consider serializing Outline levels.
-- [ ] Store generic column states in User-level persistence (i.e., for applying to new/unsaved file)
+- [ ] Store generic (non-Workbook specific) column states in User-level persistence
+  - (i.e., for applying to new/unsaved file)
 - [ ] Status bar with history log.
 - [ ] Implement Table Picker to swap Target while UserForm is active.
+- [ ] Clean up `StateCast` workarounds to handle both `ColumnState` and built-in `IState` in the same Collection.
+
 ## Admin
 - Check object references work OK with multiple workbooks.
 - Implement unit tests for everything.

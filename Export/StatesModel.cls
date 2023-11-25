@@ -44,9 +44,7 @@ Public Sub Load(ByVal Workbook As Workbook)
     
     Set This.Settings = ASettingsModel
     
-    If This.Settings.Workbook.GetSetting(SETTING_LAST_UPDATED) = Empty Then
-        ApplyDefaultSettings
-    End If
+    TryApplyDefaultSettings
     
     CollectionHelpers.CollectionClear This.Items
     
@@ -74,7 +72,9 @@ Private Sub LoadBuiltinStates()
     This.Items.Add FirstOnlyColumnsState.Create
 End Sub
 
-Private Sub ApplyDefaultSettings()
+Private Sub TryApplyDefaultSettings()
+    If This.Settings.Workbook.GetSetting(SETTING_LAST_UPDATED) <> Empty Then Exit Sub
+
     With This.Settings.Workbook
         .SetFlag DO_SHOW_ORPHAN_STATES, True
         .SetFlag DO_ASSOCIATE_ORPHAN_STATES, True

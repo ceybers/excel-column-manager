@@ -2,6 +2,8 @@ Attribute VB_Name = "SelectedStateToListView"
 '@Folder("MVVM.ColumnState.ValueConverters")
 Option Explicit
 
+Private Const WIDTH_TO_AVOID_SCROLLBAR As Long = 8
+
 Public Sub Initialize(ByVal ListView As ListView)
     Dim il As ImageList
     Set il = New ImageList
@@ -29,6 +31,24 @@ Public Sub Initialize(ByVal ListView As ListView)
         .Gridlines = True
         .LabelEdit = lvwManual
     End With
+    
+    FillColumnHeaderWidth ListView, 2
+End Sub
+
+Private Sub FillColumnHeaderWidth(ByVal ListView As ListView, ByVal ColumnIndex As Long)
+    Dim TotalColumnWidth As Long
+    Dim ColumnHeader As ColumnHeader
+    For Each ColumnHeader In ListView.ColumnHeaders
+        TotalColumnWidth = TotalColumnWidth + ColumnHeader.Width
+    Next ColumnHeader
+    
+    Dim RemainingWidth As Long
+    RemainingWidth = ListView.Width - TotalColumnWidth
+    
+    Dim TargetColumnHeader As ColumnHeader
+    Set TargetColumnHeader = ListView.ColumnHeaders.Item(ColumnIndex)
+    
+    TargetColumnHeader.Width = TargetColumnHeader.Width + RemainingWidth - WIDTH_TO_AVOID_SCROLLBAR
 End Sub
 
 Public Sub Load(ByVal ListView As ListView, ByVal ViewModel As SelectedStateViewModel)

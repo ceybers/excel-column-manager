@@ -7,10 +7,11 @@ When dealing with large tables in Excel with many columns, it would be handy to 
 ![Screenshot of tool in action](images/Screenshot01.png)
 
 ## ⭐ Features
-- ✅ Save the state (visiblity, width) of Columns in a Table in workbooks persistently (using CustomXML object).
+- ✅ Save the state of a Table's Columns (visiblity, width) persistently in the Workbook (using CustomXML object).
 - ✅ Restore saved Column States.
 - ✅ Partially restore any Column State to a table if at least one column is present.
 - ✅ Re-associate orphaned Column States (i.e., Table name changed).
+- ✅ Some useful built-in states such as "Show all (standard)", "Show all (autofit)", and "Show first only".
 - ✅ Import and Export Column States manually (using Base64 encoded strings).
 
 ## 📝 Notes
@@ -18,4 +19,4 @@ When dealing with large tables in Excel with many columns, it would be handy to 
 - ☕ [Dev Notes](Notes/DevNotes.md)
 
 # 🙏 Thanks
-- Developed using [Rubberduck VBA](https://github.com/rubberduck-vba/Rubberduck).
+- Developed using [Rubberduck VBA](https://github.com/rubberduck-vba/Rubberduck) and greatly inspired by Mathieu Guindon's blog posts.

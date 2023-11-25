@@ -25,5 +25,7 @@ Private Sub UserForm_Activate()
     Dim Picture As IPictureDisp
     Set Picture = Application.CommandBars.GetImageMso("CreateTableInDesignView", 32, 32)
     Set Me.lblPicHeader.Picture = Picture
+    
+    Me.Label1.Caption = "Version 0.9" & vbCrLf & "Copyright © 2023 Craig Eybers"
 End Sub
 

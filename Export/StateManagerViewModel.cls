@@ -230,6 +230,8 @@ Public Sub ShowOptions()
     Set View = New OptionsView
     
     View.ShowDialog This.Options
+    
+    Set View = Nothing
 End Sub
 
 Private Sub SaveAndReload()

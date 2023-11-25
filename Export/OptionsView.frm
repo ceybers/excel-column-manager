@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} OptionsView 
    Caption         =   "Options"
-   ClientHeight    =   6015
+   ClientHeight    =   5985
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   4920
@@ -81,6 +81,7 @@ End Sub
 
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
     If CloseMode = VbQueryClose.vbFormControlMenu Then
+        Stop
         Cancel = True
         OnCancel
     End If

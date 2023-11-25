@@ -3,8 +3,8 @@ Attribute VB_Name = "StatesToTreeView"
 Option Explicit
 
 Private Const ROOT_CAPTION As String = "Column States"
-Private Const CURRENT_SUFFIX_CAPTION As String = " (current)"
-Private Const UNSAVED_CAPTION As String = "(current)"
+Private Const CURRENT_SUFFIX_CAPTION As String = " (active)"
+Private Const UNSAVED_CAPTION As String = "(current unsaved state)"
 Private Const ORPHANS_CAPTION As String = "Orphans"
 Private Const BUILTIN_CAPTION As String = "Built-in"
 Private Const NO_STATES_CAPTION As String = "No saved Column States found."
@@ -104,6 +104,12 @@ Private Sub AddTables(ByVal TreeView As TreeView, ByVal ViewModel As StateManage
                            Image:="msoTable"
     Next TableToCreate
         
+    ' Make first table (current) bold
+    Dim FirstTable As Node
+    Set FirstTable = TreeView.Nodes.Item(LO_KEY_PREFIX & TableNames.Item(1))
+    FirstTable.Bold = True
+    FirstTable.Text = FirstTable.Text & CURRENT_SUFFIX_CAPTION
+
     If HasOrphans Then
         TreeView.Nodes.Add Relative:=ParentNode, relationship:=tvwChild, _
                            Key:=ORPHAN_KEY, Text:=ORPHANS_CAPTION, _
@@ -152,15 +158,17 @@ Private Sub AddStates(ByVal TreeView As TreeView, ByVal ViewModel As StateManage
                                       Key:=State.Key, Text:=State.Caption, _
                                       Image:="msoItem", SelectedImage:="msoSelected")
                            
-        If MatchesCurrent(ViewModel, State) Then
-            RemoveUnsaved = True
+        If RemoveUnsaved = False Then
+            If MatchesCurrent(ViewModel, State) Then
+                RemoveUnsaved = True
+                Node.Bold = True
+                Node.Selected = True
+            End If
         End If
     Next State
     
     If RemoveUnsaved Then
         TreeView.Nodes.Remove UNSAVED_KEY
-        Node.Bold = True
-        Node.Selected = True
     End If
 End Sub
 

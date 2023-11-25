@@ -57,17 +57,16 @@ End Sub
 Private Sub UpdateItems()
     CollectionHelpers.CollectionClear This.Items
     
+    If This.State Is Nothing Then Exit Sub
     If Not TypeOf This.State Is ColumnsState Then Exit Sub
     
     Dim StateCast As ColumnsState
     Set StateCast = This.State
     
-    If Not This.State Is Nothing Then
-        Dim Child As IListable
-        For Each Child In StateCast.Items
-            This.Items.Add Item:=Child           ', Key:=Child.Key           ' No keys needed
-        Next Child
-    End If
+    Dim Child As IListable
+    For Each Child In StateCast.Items
+        This.Items.Add Item:=Child           ', Key:=Child.Key           ' No keys needed
+    Next Child
     
     UpdateHiddenItems
 End Sub

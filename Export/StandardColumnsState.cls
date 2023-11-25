@@ -80,11 +80,7 @@ Private Function IState_Apply(ByVal Target As Object) As Boolean
     
     Dim ListObject As ListObject
     Set ListObject = Target
-    
-    Dim ListColumn As ListColumn
-    For Each ListColumn In ListObject.ListColumns
-        ListColumn.Range.EntireColumn.ColumnWidth = 8.14
-    Next ListColumn
+    ListObject.Range.UseStandardWidth = True
     
     IState_Apply = True
 End Function

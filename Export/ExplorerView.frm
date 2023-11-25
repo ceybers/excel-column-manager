@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ExplorerView 
    Caption         =   "Sample State Management Explorer"
-   ClientHeight    =   4770
+   ClientHeight    =   4620
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   7470
+   ClientWidth     =   7395
    OleObjectBlob   =   "ExplorerView.frx":0000
    ShowModal       =   0   'False
    StartUpPosition =   1  'CenterOwner
@@ -21,6 +21,8 @@ Option Explicit
 Implements IView
 
 Private Const MSG_TITLE As String = "Column State Manager"
+Private Const RESIZE_WIDTH As Long = 480 '380
+Private Const RESIZE_HEIGHT As Long = 320 '260
 
 Private Type TState
     ViewModel As StateManagerViewModel
@@ -91,7 +93,7 @@ Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
 End Sub
 
 Private Sub UserForm_Activate()
-    Set Me.Label4.Picture = Application.CommandBars.GetImageMso("CreateTableInDesignView", 16, 16)
+    Set Me.lblTargetIcon.Picture = Application.CommandBars.GetImageMso("CreateTableInDesignView", 16, 16)
     Set Me.cmbSave.Picture = Application.CommandBars.GetImageMso("DataFormAddRecord", 16, 16)
     Set Me.cmbApply.Picture = Application.CommandBars.GetImageMso("QueryBuilder", 16, 16)
     Set Me.cmbExport.Picture = Application.CommandBars.GetImageMso("Copy", 16, 16)
@@ -104,6 +106,8 @@ Private Sub UserForm_Activate()
 End Sub
 
 Private Function IView_ShowDialog(ByVal ViewModel As Object) As Boolean
+    ResizeWindow
+    
     Set This.ViewModel = ViewModel
     This.IsCancelled = False
     
@@ -121,6 +125,35 @@ Private Function IView_ShowDialog(ByVal ViewModel As Object) As Boolean
     IView_ShowDialog = Not This.IsCancelled
 End Function
 
+Private Sub ResizeWindow()
+    If Me.Width > RESIZE_WIDTH Then Exit Sub
+    If Me.Height > RESIZE_HEIGHT Then Exit Sub
+    
+    Dim DeltaX As Long
+    Dim DeltaX2 As Long
+    DeltaX = RESIZE_WIDTH - Me.Width
+    DeltaX2 = DeltaX / 2
+    Dim DeltaY As Long
+    Dim DeltaY2 As Long
+    DeltaY = RESIZE_HEIGHT - Me.Height
+    DeltaY2 = DeltaY / 2
+    
+    Me.Width = RESIZE_WIDTH
+    Me.Height = RESIZE_HEIGHT
+    
+    Me.lblStatusBar.Top = Me.lblStatusBar.Top + DeltaY
+    Me.lblStatusBar.Width = Me.lblStatusBar.Width + DeltaX
+    
+    Me.tvStates.Width = Me.tvStates.Width + DeltaX2
+    Me.txtFilterStates.Width = Me.txtFilterStates.Width + DeltaX2
+    Me.tvStates.Height = Me.tvStates.Height + DeltaY
+    
+    Me.lvState.Left = Me.lvState.Left + DeltaX2
+    Me.lvState.Width = Me.lvState.Width + DeltaX2
+    Me.lblSelectedState.Left = Me.lblSelectedState.Left + DeltaX2
+    Me.lblSelectedState.Width = Me.lblSelectedState.Width + DeltaX2
+    Me.lvState.Height = Me.lvState.Height + DeltaY
+End Sub
 Private Sub InitializeControls()
     '@Ignore ArgumentWithIncompatibleObjectType
     StatesToTreeView.Initialize Me.tvStates
@@ -248,10 +281,12 @@ Private Sub TryImport()
 End Sub
 
 Private Sub TryShowOptions()
+    'Me.Hide
     This.ViewModel.ShowOptions
-    UpdateListViewLHS
-    UpdateListViewRHS
-    UpdateButtons
+    'Me.Show ' Doesn't help
+    'UpdateListViewLHS
+    'UpdateListViewRHS
+    'UpdateButtons
 End Sub
 
 
