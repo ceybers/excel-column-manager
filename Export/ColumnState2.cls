@@ -103,6 +103,7 @@ Private Function ISerializable_Deserialize(ByVal SerialString As String) As Bool
     If UBound(SplitText) <> 2 Then Exit Function
     
     With This
+        Debug.Print SerialString
         Set .ListColumn = Nothing
         .Name = Base64toString(SplitText(0))
         .Width = CDbl(SplitText(1))
