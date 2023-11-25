@@ -141,7 +141,7 @@ Private Sub AddStates(ByVal TreeView As TreeView, ByVal ViewModel As StateManage
     End If
 End Sub
 
-Private Function MatchesCurrent(ViewModel As StateManagerViewModel, ByVal State As IState) As Boolean
+Private Function MatchesCurrent(ByVal ViewModel As StateManagerViewModel, ByVal State As IState) As Boolean
     MatchesCurrent = State.Equals(ViewModel.Current.State)
 End Function
 

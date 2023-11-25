@@ -26,13 +26,13 @@
 - [x] Create child ViewModel to contain all these flags.
 - [x] Show/hide orphaned states.
 - [x] Option to Associate on applying orphan.
-- [ ] Option to Close on Apply.
-- [ ] Option to Allow/Prohibit displaying Partial matches.
-- [ ] Option to Allow/Prohibit applying Partial matches.
-- [ ] Option to hide columns in target that were not in the applied state 
+- [x] Option to Close on Apply.
+- [x] Option to Allow/Prohibit displaying Partial matches.
+- [x] Option to Allow/Prohibit applying Partial matches.
+- [x] Option to hide columns in target that were not in the applied state 
   - (i.e., hide unless specifically stated to Show).
   - Default behaviour is to leave columns not in the state as-is.
-- [ ] Filter to only show existing columns in State preview.
+- [x] Show/hide non-existing columns in State preview.
 - [x] Search Match Case
 - [x] Search Match Whole Word
 - [x] Default values for all options if no CustomXML found.

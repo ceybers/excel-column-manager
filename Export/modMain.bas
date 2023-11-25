@@ -28,20 +28,20 @@ Public Sub ResetModel()
     
     Dim State As ISerializable
     Set State = New ColumnsState2
-    'State.Deserialize ("Table1:Q29sQQ==,8,0;Q29sQg==,8,0;Q29sQw==,8,0")
-    'Model.Add State
+    State.Deserialize ("Table1:Q29sQQ==,8,0;Q29sQg==,8,0;Q29sQw==,8,0")
+    Model.Add State
     
     Set State = New ColumnsState2
-    'State.Deserialize ("Table1:Q29sRA==,8,0;Q29sQg==,16,0;Q29sQw==,32,0")
-    'Model.Add State
+    State.Deserialize ("Table1:Q29sRA==,8,0;Q29sQg==,16,0;Q29sQw==,32,0")
+    Model.Add State
     
     Set State = New ColumnsState2
-    'State.Deserialize ("Table1:Q29sQQ==,8,0;Q29sQg==,0,-1;Q29sQw==,3.43,0")
-    'Model.Add State
+    State.Deserialize ("Table1:Q29sQQ==,8,0;Q29sQg==,0,-1;Q29sQw==,3.43,0")
+    Model.Add State
     
     Set State = New ColumnsState2
-    'State.Deserialize ("Table2:Q29sQQ==,8,0;Q29sQg==,0,-1;Q29sQw==,3.43,0")
-    'Model.Add State
+    State.Deserialize ("Table2:QUFB,8,0;QkJC,0,-1;Q0ND,3.43,0")
+    Model.Add State
     
     Set State = New ColumnsState2
     State.Deserialize ("Orphan:Q29sQQ==,10,0;Q29sQg==,20,0;Q29sQw==,30,0")

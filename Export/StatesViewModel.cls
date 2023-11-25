@@ -11,6 +11,8 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Type TState
+    Target As ListObject
+    
     Items As Collection
     CollectionView As Collection
     HasOrphans As Boolean
@@ -23,6 +25,16 @@ Private Type TState
 End Type
 
 Private This As TState
+
+Public Property Get Target() As ListObject
+    Set Target = This.Target
+End Property
+
+Public Property Set Target(ByVal vNewValue As ListObject)
+    Set This.Target = vNewValue
+    UpdateMatchTarget
+    UpdateCollectionView
+End Property
 
 Public Property Get Count() As Long
     Count = This.Items.Count
@@ -46,7 +58,7 @@ Private Sub Class_Initialize()
     Set This.CollectionView = New Collection
 End Sub
 
-Public Sub Load(ByVal Model As StatesModel, Options As OptionsViewModel, ByVal Workbook As Workbook)
+Public Sub Load(ByVal Model As StatesModel, ByVal Options As OptionsViewModel, ByVal Workbook As Workbook)
     Set This.Options = Options
     Set This.Model = Model
     Set This.Workbook = Workbook
@@ -54,6 +66,8 @@ Public Sub Load(ByVal Model As StatesModel, Options As OptionsViewModel, ByVal W
 End Sub
 
 Public Sub Reload()
+    UpdateMatchTarget
+    
     Dim i As Long
     i = 1
     
@@ -63,7 +77,7 @@ Public Sub Reload()
     For Each State In This.Model.Items
         Dim StateListable As IListable
         Set StateListable = State
-        StateListable.Key = "K" & Format(i, "000") ' WARNING this means only one model can assign keys!
+        StateListable.Key = "K" & Format$(i, "000") ' WARNING this means only one model can assign keys!
         This.Items.Add Item:=StateListable, Key:=StateListable.Key
         i = i + 1
     Next State
@@ -99,13 +113,20 @@ Private Function DoFilter(ByVal StateListable As IListable, ByVal FilterString A
     If DoMatchCase Then
         DoFilter = StateListable.Caption Like FilterString
     Else
-        DoFilter = UCase(StateListable.Caption) Like UCase(FilterString)
+        DoFilter = UCase$(StateListable.Caption) Like UCase$(FilterString)
     End If
     
+    Dim State As ColumnsState2
+    Set State = StateListable
+        
     If Not DoShowOrphanStates Then
-        Dim State As ColumnsState2
-        Set State = StateListable
         If State.Orphan Then
+            DoFilter = False
+        End If
+    End If
+    
+    If Not DoShowPartialMatch Then
+        If State.Match <> FULL_MATCH Then
             DoFilter = False
         End If
     End If
@@ -141,6 +162,33 @@ Public Sub RemoveOrphans(ByVal Model As StatesModel)
     Next State
 End Sub
 
+Private Sub UpdateMatchTarget()
+    Dim MatchCount As Long
+    Dim TotalCount As Long
+        
+    Dim State As ColumnsState2
+    For Each State In This.Items
+        MatchCount = 0
+        TotalCount = 0
+        
+        Dim Child As ColumnState2
+        For Each Child In State.Items
+            Child.Orphan = Not ListObjectHelpers.HasListColumn(This.Target, Child.Name)
+            If Not Child.Orphan Then MatchCount = MatchCount + 1
+            TotalCount = TotalCount + 1
+        Next Child
+        
+        If MatchCount = TotalCount Then
+            State.Match = FULL_MATCH
+        ElseIf MatchCount = 0 Then
+            State.Match = NO_MATCH
+        Else
+            State.Match = PARTIAL_MATCH
+        End If
+    Next State
+End Sub
+
+' Options
 Private Function DoMatchCase() As Boolean
     DoMatchCase = This.Options.GetFlag(modOptionsConst.DO_SEARCH_CASE)
 End Function
@@ -153,3 +201,6 @@ Private Function DoShowOrphanStates() As Boolean
     DoShowOrphanStates = This.Options.GetFlag(modOptionsConst.DO_SHOW_ORPHAN_STATES)
 End Function
 
+Private Function DoShowPartialMatch() As Boolean
+    DoShowPartialMatch = This.Options.GetFlag(modOptionsConst.DO_SHOW_PARTIAL_MATCH)
+End Function

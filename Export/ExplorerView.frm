@@ -150,7 +150,7 @@ End Sub
 Private Sub UpdateListViewRHS()
     If This.ViewModel.Selected.State Is Nothing Then
         If Me.tvStates.SelectedItem Is Nothing Then
-            Me.lblSelectedState.Caption = ""
+            Me.lblSelectedState.Caption = vbNullString
         Else
             Me.lblSelectedState.Caption = "Contents of '" & Me.tvStates.SelectedItem.Text & "'"
         End If
@@ -172,6 +172,9 @@ Private Sub TryApply()
     UpdateListViewLHS
     UpdateListViewRHS
     UpdateButtons
+    If This.ViewModel.CloseOnApply Then
+        Me.Hide
+    End If
 End Sub
 
 Private Sub TryPrune()

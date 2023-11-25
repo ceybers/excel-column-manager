@@ -37,17 +37,20 @@ Public Sub Load(ByVal ListView As ListView, ByVal ViewModel As SelectedStateView
     If ViewModel Is Nothing Then Exit Sub
     If ViewModel.State Is Nothing Then Exit Sub
     
+    Dim ShowNonMatchingCols As Boolean
+    ShowNonMatchingCols = ViewModel.ShowNonMatchingCols
+    
     Dim Child As IListable
     For Each Child In ViewModel.Items
-        AddItem ListView, Child
+        AddItem ListView, Child, ShowNonMatchingCols
     Next Child
 End Sub
 
-Private Sub AddItem(ByVal ListView As ListView, ByVal Child As IListable)
+Private Sub AddItem(ByVal ListView As ListView, ByVal Child As IListable, ByVal ShowNonMatchingCols As Boolean)
     If Child.Visible = False Then Exit Sub
     
     Dim ListItem As ListItem
-    Set ListItem = ListView.ListItems.Add(Text:="")
+    Set ListItem = ListView.ListItems.Add(Text:=vbNullString)
     ListItem.Text = ListItem.Index
     ListItem.SmallIcon = IIf(IsOrphan(Child), "NotExists", "Exists")
     
@@ -55,7 +58,7 @@ Private Sub AddItem(ByVal ListView As ListView, ByVal Child As IListable)
         .Add Text:=Child.Caption
 
         If IsColumnHidden(Child) Then
-            .Add Text:=""                        'width
+            .Add Text:=vbNullString                        'width
             .Add Text:="Hidden"
         Else
             .Add Text:=ColumnWidth(Child)
@@ -64,17 +67,22 @@ Private Sub AddItem(ByVal ListView As ListView, ByVal Child As IListable)
     
         .Item(3).ReportIcon = .Item(3).Text
     End With
+    
+    If Not ShowNonMatchingCols Then
+        If IsOrphan(Child) Then
+            ListView.ListItems.Remove ListItem.Index
+        End If
+    End If
 End Sub
 
-Private Function IsColumnHidden(ByVal State As ColumnState2)
+Private Function IsColumnHidden(ByVal State As ColumnState2) As Boolean
     IsColumnHidden = (State.Width = 0)
 End Function
 
-Private Function ColumnWidth(ByVal State As ColumnState2)
-    ColumnWidth = Format(State.Width, "0.00") & "u"
+Private Function ColumnWidth(ByVal State As ColumnState2) As String
+    ColumnWidth = Format$(State.Width, "0.00") & "u"
 End Function
 
-Private Function IsOrphan(ByVal State As ColumnState2)
+Private Function IsOrphan(ByVal State As ColumnState2) As Boolean
     IsOrphan = State.Orphan
 End Function
-

@@ -14,9 +14,15 @@ Private Type TState
     State As ColumnsState2
     HideSmallColumns As Boolean
     Items As Collection
+    
+    Options As OptionsViewModel
 End Type
 
 Private This As TState
+
+Public Property Get ShowNonMatchingCols() As Boolean
+    ShowNonMatchingCols = This.Options.GetFlag(modOptionsConst.DO_SHOW_NONMATCHING_COLS)
+End Property
 
 Public Property Get Items() As Collection
     Set Items = This.Items
@@ -44,6 +50,10 @@ Private Sub Class_Initialize()
     Set This.Items = New Collection
 End Sub
 
+Public Sub Load(ByVal Options As OptionsViewModel)
+    Set This.Options = Options
+End Sub
+
 Private Sub UpdateItems()
     CollectionHelpers.CollectionClear This.Items
     
@@ -62,11 +72,7 @@ Private Sub UpdateHiddenItems()
     For Each Child In This.Items
         Dim State As ColumnState2
         Set State = Child
-        If This.HideSmallColumns And State.Width <= 8# Then
-            Child.Visible = False
-        Else
-            Child.Visible = True
-        End If
+        Child.Visible = Not (This.HideSmallColumns And State.Width <= 8#)
     Next Child
 End Sub
 

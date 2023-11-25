@@ -21,6 +21,7 @@ Private Type TState
     Name As String
     ListColumns As Collection
     Orphan As Boolean
+    Match As ListObjectMatch
     ' IListable
     Key As String
     ParentKey As String
@@ -43,6 +44,14 @@ Public Property Let Name(ByVal vNewValue As String)
     This.ParentKey = LO_KEY_PREFIX & vNewValue
 End Property
 
+Public Property Get Match() As ListObjectMatch
+    Match = This.Match
+End Property
+
+Public Property Let Match(ByVal vNewValue As ListObjectMatch)
+    This.Match = vNewValue
+End Property
+
 '@Description "Returns True if this ListObject of this state cannot be found in the VM's workbook."
 Public Property Get Orphan() As Boolean
     Orphan = This.Orphan
@@ -61,7 +70,7 @@ Public Function ToString() As String
         Result = Result & State.ToString & ", "
     Next State
     
-    Result = Left(Result, Len(Result) - 2) & "."
+    Result = Left$(Result, Len(Result) - 2) & "."
     ToString = Result
 End Function
 
@@ -162,11 +171,11 @@ Private Function DeserializeChildren(ByVal ChildSerials As String) As Boolean
         If Not Child.Deserialize(SplitSerials(i)) Then
             Exit Function
         End If
-        This.ListColumns.Add Item:=Child, Key:="K" & Format(i, "000")
+        This.ListColumns.Add Item:=Child, Key:="K" & Format$(i, "000")
         
         Dim Listable As IListable
         Set Listable = Child
-        Listable.Key = "K" & Format(i, "000")
+        Listable.Key = "K" & Format$(i, "000")
     Next i
     
     DeserializeChildren = True
@@ -239,6 +248,13 @@ Private Function GetCaption() As String
     
     Result = Result & Suffix
     
+    If This.Match = PARTIAL_MATCH Then
+        Result = Result & " (partial)"
+    End If
+    
+    If This.Match = NO_MATCH Then
+        Result = Result & " (no match)"
+    End If
+    
     GetCaption = Result
 End Function
-

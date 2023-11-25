@@ -28,7 +28,7 @@ Public Property Get Settings() As ISettingsModel
     Set Settings = This.Settings
 End Property
 
-Public Property Get Items()
+Public Property Get Items() As Collection
     Set Items = This.Items
 End Property
 
@@ -130,10 +130,8 @@ End Sub
 
 '@Description "Removes all State objects from the model's collection."
 Public Sub RemoveAll()
-    Dim i
+    Dim i As Long
     For i = This.Items.Count To 1 Step -1
         This.Items.Remove (i)
     Next i
 End Sub
-
-
