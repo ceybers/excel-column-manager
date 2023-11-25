@@ -11,10 +11,10 @@ Public Sub InitializeListView(ByVal ListView As ListView)
     With ListView
         .ListItems.Clear
         .ColumnHeaders.Clear
-        .ColumnHeaders.Add text:="#", Width:=24
-        .ColumnHeaders.Add text:="Column Name", Width:=80
-        .ColumnHeaders.Add text:="Width", Width:=40
-        .ColumnHeaders.Add text:="Visible", Width:=64
+        .ColumnHeaders.Add Text:="#", Width:=24
+        .ColumnHeaders.Add Text:="Column Name", Width:=80
+        .ColumnHeaders.Add Text:="Width", Width:=40
+        .ColumnHeaders.Add Text:="Visible", Width:=64
         .Appearance = cc3D
         .BorderStyle = ccNone
         .Gridlines = True
@@ -47,15 +47,15 @@ Private Sub LoadColumnStateToListView(ByVal ListView As ListView, ByVal ColumnSt
     End If
         
     Dim ListItem As ListItem
-    Set ListItem = ListView.ListItems.Add(text:=CStr(ColumnState.Index), SmallIcon:=MSO_COLUMN_EXISTS)
+    Set ListItem = ListView.ListItems.Add(Text:=CStr(ColumnState.Index), SmallIcon:=MSO_COLUMN_EXISTS)
     
-    ListItem.ListSubItems.Add text:=ColumnState.Name
-    ListItem.ListSubItems.Add text:=CStr(ColumnState.Width)
+    ListItem.ListSubItems.Add Text:=ColumnState.Name
+    ListItem.ListSubItems.Add Text:=CStr(ColumnState.Width)
     
     If ColumnState.Hidden = True Then
-        ListItem.ListSubItems.Add text:="Hidden", ReportIcon:=MSO_VISIBLE_FALSE
+        ListItem.ListSubItems.Add Text:="Hidden", ReportIcon:=MSO_VISIBLE_FALSE
     Else
-        ListItem.ListSubItems.Add text:="Visible", ReportIcon:=MSO_VISIBLE_TRUE
+        ListItem.ListSubItems.Add Text:="Visible", ReportIcon:=MSO_VISIBLE_TRUE
     End If
     
     If Not ColumnState.Exists Then

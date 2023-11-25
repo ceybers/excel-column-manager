@@ -16,7 +16,7 @@ Public Function StringtoBase64(ByVal StringValue As String) As String
         .NodeTypedValue = ByteArray
     End With
     
-    StringtoBase64 = Replace(XMLElement.text, vbLf, vbNullString)
+    StringtoBase64 = Replace(XMLElement.Text, vbLf, vbNullString)
     
     Set XMLElement = Nothing
     Set XMLObject = Nothing
@@ -32,7 +32,7 @@ Public Function Base64toString(ByVal Base64Value As String) As String
     Set XMLElement = XMLObject.CreateElement("Base64")
     With XMLElement
         .DataType = "bin.base64"
-        .text = Base64Value
+        .Text = Base64Value
     End With
     
     Base64toString = StrConv(XMLElement.NodeTypedValue, vbUnicode)

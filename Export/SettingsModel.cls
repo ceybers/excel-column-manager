@@ -48,7 +48,6 @@ End Sub
 
 '@Description "Creates a new XMLSettingsModel for the given Workbook and RootNode."
 Public Function Create() As SettingsModel
-Attribute Create.VB_Description = "Creates a new XMLSettingsModel for the given Workbook and RootNode."
     Dim Result As SettingsModel
     Set Result = New SettingsModel
 
@@ -87,3 +86,5 @@ Private Sub AddTable(ByVal TableName As String)
         Key:=TableName, _
         Item:=XMLSettingsFactory.CreateTableSettings(This.WorkbookSettings, TableName)
 End Sub
+
+

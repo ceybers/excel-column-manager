@@ -40,7 +40,7 @@ End Sub
 
 Private Sub LoadWorkbookNode(ByVal ViewModel As ColumnStateViewModel, ByVal TreeView As TreeView)
     Dim Node As Node
-    Set Node = TreeView.Nodes.Add(Key:="ROOT", text:=ViewModel.Workbook.Name, Image:=MSO_WORKBOOK)
+    Set Node = TreeView.Nodes.Add(Key:="ROOT", Text:=ViewModel.Workbook.Name, Image:=MSO_WORKBOOK)
     Node.Expanded = True
 End Sub
 
@@ -79,12 +79,12 @@ Private Sub LoadListObjectNodes(ByVal ViewModel As ColumnStateViewModel, ByVal T
         Set Node = TreeView.Nodes.Add(Relative:=ParentNode, _
                                       Relationship:=tvwChild, _
                                       Key:=ListObjectNameVariant, _
-                                      text:=ListObjectNameVariant, _
+                                      Text:=ListObjectNameVariant, _
                                       Image:=MSO_LISTOBJECT)
         Node.Expanded = True
     Next ListObjectNameVariant
     
-    If Node.text = ORPHAN_LISTOBJECT_NAME Then
+    If Node.Text = ORPHAN_LISTOBJECT_NAME Then
         Node.ForeColor = GREY_TEXT_COLOR
         Node.Image = "WorkflowPending"
     End If
@@ -95,7 +95,7 @@ Private Sub AddUnsavedSortStateNode(ByVal ViewModel As ColumnStateViewModel, ByV
     Set Node = TreeView.Nodes.Add(Relative:=TreeView.Nodes.Item(2), _
                                   Relationship:=tvwChild, _
                                   Key:="UNSAVED", _
-                                  text:=UNSAVED_SORTORDER, _
+                                  Text:=UNSAVED_SORTORDER, _
                                   Image:=MSO_SORTORDER)
     Node.Bold = True
     Node.Selected = True
@@ -120,7 +120,7 @@ Private Sub LoadColumnStateNodes(ByVal ViewModel As ColumnStateViewModel, ByVal 
         Set Node = TreeView.Nodes.Add(Relative:=ParentNode, _
                                       Relationship:=tvwChild, _
                                       Key:=ColumnState.ToBase64, _
-                                      text:=ColumnState.GetCaption, _
+                                      Text:=ColumnState.GetCaption, _
                                       Image:=MSO_SORTORDER)
         If TreeView.SelectedItem Is Nothing Then
             Node.Selected = True
@@ -138,7 +138,7 @@ Private Sub LoadColumnStateNodes(ByVal ViewModel As ColumnStateViewModel, ByVal 
        
         If Not ViewModel.CurrentState Is Nothing Then
             If ColumnState.Equals(ViewModel.CurrentState) Then
-                Node.text = Node.text & SUFFIX_CURRENTLY_ACTIVE
+                Node.Text = Node.Text & SUFFIX_CURRENTLY_ACTIVE
                 Node.Bold = True
                 Node.Selected = True
                 ' Make sure that selecting a sort order to preview will never update the treeview
@@ -163,7 +163,7 @@ End Sub
 Private Sub UpdateListObjectIcons(ByVal TreeView As TreeView)
     ' .Item(2) should always be the target ListObject
     With TreeView.Nodes.Item(2)
-        .text = .text & SUFFIX_SELECTED_LISTOBJECT
+        .Text = .Text & SUFFIX_SELECTED_LISTOBJECT
         .Image = MSO_LISTOBJECT_SELECTED
     End With
 End Sub
@@ -179,7 +179,7 @@ Private Sub CheckNoColumnStatesFound(ByVal TreeView As TreeView)
     Dim Node As Node
     Set Node = TreeView.Nodes.Add(Relative:=TreeView.Nodes.Item("ROOT"), _
                                   Relationship:=tvwChild, _
-                                  text:=NO_STATES_FOUND)
+                                  Text:=NO_STATES_FOUND)
     Node.ForeColor = GREY_TEXT_COLOR
 End Sub
 

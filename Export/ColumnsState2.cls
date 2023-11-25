@@ -32,7 +32,6 @@ End Property
 
 '@DefaultMember
 Public Property Get Name() As String
-Attribute Name.VB_UserMemId = 0
     Name = This.Name
 End Property
 
@@ -123,7 +122,7 @@ Private Function ISerializable_Deserialize(ByVal SerialString As String) As Bool
     SplitText = Split(SerialString, ":")
     If UBound(SplitText) <> 1 Then Exit Function
     
-    This.Name = SplitText(1)
+    This.Name = SplitText(0)
     
     DeserializeChildren SplitText(1)
     
@@ -154,7 +153,7 @@ Private Function IState_Equals(ByVal RHS As IState) As Boolean
 End Function
 
 Private Property Get IListable_Caption() As String
-    IListable_Caption = This.Name
+    IListable_Caption = This.Name & " (" & VisibleCount() & "/" & This.ListColumns.Count & " visible)"
 End Property
 
 Private Property Get IListable_Key() As String
@@ -172,3 +171,12 @@ End Property
 Private Property Let IListable_Visible(ByVal vNewValue As Boolean)
     This.Visible = vNewValue
 End Property
+
+' ---
+Private Function VisibleCount() As Long
+    Dim Child As ColumnState2
+    For Each Child In This.ListColumns
+        If Child.Width > 0 Then VisibleCount = VisibleCount + 1
+    Next Child
+End Function
+
