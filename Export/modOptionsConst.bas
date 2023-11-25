@@ -1,5 +1,5 @@
 Attribute VB_Name = "modOptionsConst"
-'@Folder("ColumnState")
+'@Folder "State.Constants"
 Option Explicit
 
 Public Const DO_SHOW_ORPHAN_STATES As String = "DO_SHOW_ORPHAN_STATES"

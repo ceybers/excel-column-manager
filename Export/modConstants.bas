@@ -1,5 +1,5 @@
 Attribute VB_Name = "modConstants"
-'@Folder("ColumnState")
+'@Folder "State.Constants"
 Option Explicit
 
 Public Const GREY_TEXT_COLOR As Long = 12632256  'RGB(192,192,192)

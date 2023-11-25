@@ -136,6 +136,7 @@ Public Function Create(ByVal Workbook As Workbook, ByVal XPathPrefix As String) 
     Set Create = Result
 End Function
 
+'@Ignore EmptyMethod
 Public Sub Load()
 End Sub
 

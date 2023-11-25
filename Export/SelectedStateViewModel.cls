@@ -11,7 +11,7 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Type TState
-    State As ColumnsState2
+    State As ColumnsState
     HideSmallColumns As Boolean
     Items As Collection
     
@@ -70,14 +70,14 @@ End Sub
 Private Sub UpdateHiddenItems()
     Dim Child As IListable
     For Each Child In This.Items
-        Dim State As ColumnState2
+        Dim State As ColumnState
         Set State = Child
         Child.Visible = Not (This.HideSmallColumns And State.Width <= 8#)
     Next Child
 End Sub
 
 Public Sub UpdateOrphans(ByVal Target As ListObject)
-    Dim Child As ColumnState2
+    Dim Child As ColumnState
     For Each Child In This.Items
         Child.Orphan = Not ListObjectHelpers.HasListColumn(Target, Child.Name)
     Next Child

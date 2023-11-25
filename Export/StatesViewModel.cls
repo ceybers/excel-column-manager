@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+'@IgnoreModule SetAssignmentWithIncompatibleObjectType
 '@Folder("MVVM.ColumnState.ViewModel")
 Option Explicit
 
@@ -116,7 +117,7 @@ Private Function DoFilter(ByVal StateListable As IListable, ByVal FilterString A
         DoFilter = UCase$(StateListable.Caption) Like UCase$(FilterString)
     End If
     
-    Dim State As ColumnsState2
+    Dim State As ColumnsState
     Set State = StateListable
         
     If Not DoShowOrphanStates Then
@@ -135,7 +136,7 @@ End Function
 Public Sub UpdateOrphans(ByVal Workbook As Workbook)
     This.HasOrphans = False
     
-    Dim State As ColumnsState2
+    Dim State As ColumnsState
     For Each State In This.Items
         If Not ListObjectHelpers.ListObjectExists(Workbook, State.Name) Then
             State.Orphan = True
@@ -154,7 +155,7 @@ Public Function HasOrphans() As Boolean
 End Function
 
 Public Sub RemoveOrphans(ByVal Model As StatesModel)
-    Dim State As ColumnsState2
+    Dim State As ColumnsState
     For Each State In This.Items
         If State.Orphan Then
             Model.Remove State
@@ -166,12 +167,12 @@ Private Sub UpdateMatchTarget()
     Dim MatchCount As Long
     Dim TotalCount As Long
         
-    Dim State As ColumnsState2
+    Dim State As ColumnsState
     For Each State In This.Items
         MatchCount = 0
         TotalCount = 0
         
-        Dim Child As ColumnState2
+        Dim Child As ColumnState
         For Each Child In State.Items
             Child.Orphan = Not ListObjectHelpers.HasListColumn(This.Target, Child.Name)
             If Not Child.Orphan Then MatchCount = MatchCount + 1
@@ -204,3 +205,4 @@ End Function
 Private Function DoShowPartialMatch() As Boolean
     DoShowPartialMatch = This.Options.GetFlag(modOptionsConst.DO_SHOW_PARTIAL_MATCH)
 End Function
+

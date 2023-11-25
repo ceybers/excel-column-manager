@@ -24,12 +24,6 @@ End Type
 
 Private This As TState
 
-' ---
-Private Sub OnCancel()
-    This.IsCancelled = True
-    Me.Hide
-End Sub
-
 Private Sub cboHideNonmatchCols_Click()
     TryUpdate DO_HIDE_NONMATCH_COLS, Me.cboHideNonmatchCols.Value
 End Sub
@@ -66,8 +60,9 @@ Private Sub cboCloseOnApply_Click()
     TryUpdate DO_CLOSE_ON_APPLY, Me.cboCloseOnApply.Value
 End Sub
 
+'@Ignore EmptyMethod
 Private Sub cmbApply_Click()
-    ' NYI
+    ' NYI - XMLSettings applies flags immediately. Would need to implement deferred updates.
 End Sub
 
 Private Sub cmbCancel_Click()
@@ -76,6 +71,11 @@ End Sub
 
 Private Sub cmbOK_Click()
     This.ViewModel.Save
+    Me.Hide
+End Sub
+
+Private Sub OnCancel()
+    This.IsCancelled = True
     Me.Hide
 End Sub
 

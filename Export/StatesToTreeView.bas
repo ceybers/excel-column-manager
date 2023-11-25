@@ -36,35 +36,35 @@ Public Sub Initialize(ByVal TreeView As TreeView)
 End Sub
 
 Public Sub Load(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewModel)
-    AddParentNode TreeView, ViewModel
+    AddParentNode TreeView
     AddTables TreeView, ViewModel
     AddUnsavedState TreeView, ViewModel
     AddStates TreeView, ViewModel
-    CheckNoResults TreeView, ViewModel
+    CheckNoResults TreeView
 End Sub
 
-Private Sub AddParentNode(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewModel)
-    Dim ParentNode As Node
+Private Sub AddParentNode(ByVal TreeView As TreeView)
     With TreeView.Nodes
         .Remove (1)
-        Set ParentNode = .Add(Key:=ROOT_KEY, Text:=ROOT_CAPTION, Image:="msoRoot")
+        .Add Key:=ROOT_KEY, Text:=ROOT_CAPTION, Image:="msoRoot"
         .Item(1).Expanded = True
     End With
 End Sub
 
 Private Sub AddTables(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewModel)
-    Dim Workbook As Workbook
-    Set Workbook = ViewModel.Target.Parent.Parent
+    'Dim Workbook As Workbook
+    'Set Workbook = ViewModel.Target.Parent.Parent
+    
     Dim TableNames As Collection
     Set TableNames = New Collection
     
-    Dim Current As ColumnsState2
+    Dim Current As ColumnsState
     Set Current = ViewModel.Current.State
     TableNames.Add Current.Name
     
     Dim HasOrphans As Boolean
     
-    Dim State As ColumnsState2
+    Dim State As ColumnsState
     For Each State In ViewModel.States.CollectionView
         Dim TableName As String
         TableName = State.Name
@@ -99,7 +99,7 @@ Private Sub SetOrphan(ByVal OrphanState As IListable)
 End Sub
 
 Private Sub AddUnsavedState(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewModel)
-    Dim Current As ColumnsState2
+    Dim Current As ColumnsState
     Set Current = ViewModel.Current.State
     
     Dim TableNode As Node
@@ -145,7 +145,7 @@ Private Function MatchesCurrent(ByVal ViewModel As StateManagerViewModel, ByVal 
     MatchesCurrent = State.Equals(ViewModel.Current.State)
 End Function
 
-Private Sub CheckNoResults(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewModel)
+Private Sub CheckNoResults(ByVal TreeView As TreeView)
     If TreeView.Nodes.Count > 2 Then Exit Sub
     
     Dim Node As Node

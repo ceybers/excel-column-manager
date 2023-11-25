@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ColumnState2"
+Attribute VB_Name = "ColumnState"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -73,7 +73,7 @@ End Function
 ' Requires PredeclaredId
 Public Function Create(ByVal ListColumn As ListColumn) As IState
     Dim Result As IState
-    Set Result = New ColumnState2
+    Set Result = New ColumnState
     Result.From ListColumn
     Set Create = Result
 End Function
@@ -105,6 +105,7 @@ Private Function IState_Apply(ByVal Target As Object) As Boolean
     If ListColumnHelpers.TryGetListColumn(Target, This.Name, ListColumn) Then
         ListColumn.Range.ColumnWidth = This.Width
         ListColumn.Range.EntireColumn.Hidden = This.Hidden
+        IState_Apply = True
     End If
 End Function
 
@@ -132,8 +133,8 @@ Private Function ISerializable_Deserialize(ByVal SerialString As String) As Bool
 End Function
 
 Private Function IState_Equals(ByVal RHS As IState) As Boolean
-    If Not TypeOf RHS Is ColumnState2 Then Exit Function
-    Dim State As ColumnState2
+    If Not TypeOf RHS Is ColumnState Then Exit Function
+    Dim State As ColumnState
     Set State = RHS
     IState_Equals = (Me.ToString = State.ToString)
 End Function
@@ -155,6 +156,7 @@ Private Property Get IListable_ParentKey() As String
     IListable_ParentKey = vbNullString
 End Property
 
+'@Ignore EmptyMethod
 Private Property Let IListable_ParentKey(ByVal vNewValue As String)
     'This.ParentKey = vNewValue
 End Property

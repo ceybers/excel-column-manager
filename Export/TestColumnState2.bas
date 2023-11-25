@@ -1,4 +1,5 @@
 Attribute VB_Name = "TestColumnState2"
+'@IgnoreModule SetAssignmentWithIncompatibleObjectType
 Option Explicit
 Option Private Module
 
@@ -60,11 +61,11 @@ Private Sub TestColumnStateToString()
     Set lc = lo.ListColumns.Item(1)
     
     'Act:
-    Dim State As ColumnState2
+    Dim State As ColumnState
     Dim StateString As String
     
     lc.Range.ColumnWidth = 4
-    Set State = ColumnState2.Create(lc)
+    Set State = ColumnState.Create(lc)
     StateString = "ColA.Width = 4"
     If StateString <> State.ToString Then
         Err.Description = "Col.width = 4"
@@ -72,7 +73,7 @@ Private Sub TestColumnStateToString()
     End If
     
     lc.Range.EntireColumn.Hidden = True
-    Set State = ColumnState2.Create(lc)
+    Set State = ColumnState.Create(lc)
     StateString = "ColA.Width = 0"
     If StateString <> State.ToString Then
         Err.Description = "Col.width = 0"
@@ -80,7 +81,7 @@ Private Sub TestColumnStateToString()
     End If
     
     lc.Range.ColumnWidth = 8
-    Set State = ColumnState2.Create(lc)
+    Set State = ColumnState.Create(lc)
     StateString = "ColA.Width = 8"
     If StateString <> State.ToString Then
         Err.Description = "Col.width = 8"
@@ -115,7 +116,7 @@ Private Sub TestColumnStateSerialize()
     
     SerialString = "Q29sQQ==,4,0"
     lc.Range.ColumnWidth = 4
-    Set State = ColumnState2.Create(lc)
+    Set State = ColumnState.Create(lc)
     If SerialString <> State.Serialize Then
         Err.Description = "Serialize 4,0"
         GoTo TestFail
@@ -123,7 +124,7 @@ Private Sub TestColumnStateSerialize()
     
     SerialString = "Q29sQQ==,0,-1"
     lc.Range.EntireColumn.Hidden = True
-    Set State = ColumnState2.Create(lc)
+    Set State = ColumnState.Create(lc)
     If SerialString <> State.Serialize Then
         Err.Description = "Serialize 0,-1"
         GoTo TestFail
@@ -131,7 +132,7 @@ Private Sub TestColumnStateSerialize()
     
     SerialString = "Q29sQQ==,8,0"
     lc.Range.ColumnWidth = 8
-    Set State = ColumnState2.Create(lc)
+    Set State = ColumnState.Create(lc)
     If SerialString <> State.Serialize Then
         Err.Description = "Serialize 8,0"
         GoTo TestFail
@@ -164,7 +165,7 @@ Private Sub TestColumnStateDeserialize()
     
     SerialString = "Q29sQQ==,0,-1"
     lc.Range.EntireColumn.Hidden = True
-    Set State = ColumnState2.Create(lc)
+    Set State = ColumnState.Create(lc)
     
     If Not State.Deserialize(SerialString) Then
         Err.Description = "Deserialize a hidden column - routine failed"
@@ -181,7 +182,7 @@ Private Sub TestColumnStateDeserialize()
     
     SerialString = "Q29sQQ==,8,0"
     lc.Range.ColumnWidth = 8
-    Set State = ColumnState2.Create(lc)
+    Set State = ColumnState.Create(lc)
     
     If Not State.Deserialize(SerialString) Then
         Err.Description = "Deserialize a visible column - routine failed"
@@ -222,12 +223,12 @@ Private Sub TestColumnStateApply()
     Dim SerialString As String
     Dim State As IState
     
-    Set SerialState = New ColumnState2
+    Set SerialState = New ColumnState
     SerialString = "Q29sQQ==,0,-1"
     SerialState.Deserialize SerialString
     Set State = SerialState
     
-    If Not State.Apply(lo) Then                  ' ColumnState2.Apply must be applied to ListObject!
+    If Not State.Apply(lo) Then                  ' ColumnState.Apply must be applied to ListObject!
         Err.Description = "Apply a hidden column - routine failed"
     End If
     If lc.Range.EntireColumn.Hidden = False Then
@@ -239,12 +240,12 @@ Private Sub TestColumnStateApply()
         GoTo TestFail
     End If
     
-    Set SerialState = New ColumnState2
+    Set SerialState = New ColumnState
     SerialString = "Q29sQQ==,8,0"
     SerialState.Deserialize SerialString
     Set State = SerialState
     
-    If Not State.Apply(lo) Then                  ' ColumnState2.Apply must be applied to ListObject!
+    If Not State.Apply(lo) Then                  ' ColumnState.Apply must be applied to ListObject!
         Err.Description = "Apply a visible column - routine failed"
     End If
     If lc.Range.EntireColumn.Hidden = True Then

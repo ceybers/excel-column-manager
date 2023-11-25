@@ -8,7 +8,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "MVVM Model that stores serialized State objects in a Workbook's CustomXML"
-'@NoIndent
 '@ModuleDescription "MVVM Model that stores serialized State objects in a Workbook's CustomXML"
 '@Folder "MVVM.ColumnState.Models"
 Option Explicit
@@ -62,7 +61,7 @@ End Sub
 
 Private Sub LoadOne(ByVal SerialString As String)
     Dim State As ISerializable
-    Set State = New ColumnsState2
+    Set State = New ColumnsState
     State.Deserialize SerialString
     This.Items.Add State
 End Sub
@@ -110,7 +109,7 @@ End Function
 
 '@Description "Adds a State object to the model's collection if it is not already there."
 Public Sub Add(ByVal State As IState)
-    If Not Exists(ColumnsState2) Then
+    If Not Exists(ColumnsState) Then
         This.Items.Add State
     End If
 End Sub
@@ -135,3 +134,5 @@ Public Sub RemoveAll()
         This.Items.Remove (i)
     Next i
 End Sub
+
+

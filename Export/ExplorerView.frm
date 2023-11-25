@@ -15,6 +15,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'@IgnoreModule SetAssignmentWithIncompatibleObjectType
 '@Folder "MVVM.ColumnState.Views"
 Option Explicit
 Implements IView
@@ -121,7 +122,9 @@ Private Function IView_ShowDialog(ByVal ViewModel As Object) As Boolean
 End Function
 
 Private Sub InitializeControls()
+    '@Ignore ArgumentWithIncompatibleObjectType
     StatesToTreeView.Initialize Me.tvStates
+    '@Ignore ArgumentWithIncompatibleObjectType
     SelectedStateToListView.Initialize Me.lvState
 End Sub
 
@@ -135,13 +138,14 @@ Private Sub UpdateButtons()
 End Sub
 
 Private Sub UpdateCurrentState()
-    Dim ListableState As ColumnsState2
+    Dim ListableState As ColumnsState
     Set ListableState = This.ViewModel.Current.State
     
     Me.cbbTarget.Text = ListableState.Name
 End Sub
 
 Private Sub UpdateListViewLHS()
+    '@Ignore ArgumentWithIncompatibleObjectType
     StatesToTreeView.Load Me.tvStates, This.ViewModel
     If Me.tvStates.SelectedItem Is Nothing Then Exit Sub
     This.ViewModel.TrySelect Me.tvStates.SelectedItem.Key
@@ -157,6 +161,7 @@ Private Sub UpdateListViewRHS()
     Else
         Me.lblSelectedState.Caption = "Contents of '" & This.ViewModel.Selected.State.Caption & "'"
     End If
+    '@Ignore ArgumentWithIncompatibleObjectType
     SelectedStateToListView.Load Me.lvState, This.ViewModel.Selected
 End Sub
 

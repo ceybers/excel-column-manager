@@ -1,5 +1,5 @@
 Attribute VB_Name = "MatchType"
-'@Folder("State.Abstract")
+'@Folder "State.Constants"
 Option Explicit
 
 Public Enum ListObjectMatch
@@ -8,3 +8,4 @@ Public Enum ListObjectMatch
     PARTIAL_MATCH
     FULL_MATCH
 End Enum
+

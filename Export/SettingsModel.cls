@@ -74,6 +74,7 @@ Private Sub AddTables()
     Dim Worksheet As Worksheet
     Dim ListObject As ListObject
     
+    '@Ignore ImplicitActiveWorkbookReference
     For Each Worksheet In XMLSettings.Workbook.Worksheets
         For Each ListObject In Worksheet.ListObjects
             AddTable ListObject.Name

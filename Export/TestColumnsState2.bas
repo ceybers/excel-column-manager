@@ -1,4 +1,5 @@
 Attribute VB_Name = "TestColumnsState2"
+'@IgnoreModule SetAssignmentWithIncompatibleObjectType
 Option Explicit
 Option Private Module
 
@@ -68,11 +69,11 @@ Private Sub TestColumnsStateToString()
     Set lc = lo.ListColumns.Item(1)
     
     'Act:
-    Dim State As ColumnsState2
+    Dim State As ColumnsState
     Dim StateString As String
     
     lc.Range.ColumnWidth = 4
-    Set State = ColumnsState2.Create(lo)
+    Set State = ColumnsState.Create(lo)
     StateString = "Table1 has 3 column(s). ColA.Width = 4, ColB.Width = 8, ColC.Width = 8."
     If StateString <> State.ToString Then
         Err.Description = "Col.width = 4"
@@ -80,7 +81,7 @@ Private Sub TestColumnsStateToString()
     End If
     
     lc.Range.EntireColumn.Hidden = True
-    Set State = ColumnsState2.Create(lo)
+    Set State = ColumnsState.Create(lo)
     StateString = "Table1 has 3 column(s). ColA.Width = 0, ColB.Width = 8, ColC.Width = 8."
     If StateString <> State.ToString Then
         Err.Description = "Col.width = 0"
@@ -88,7 +89,7 @@ Private Sub TestColumnsStateToString()
     End If
     
     lc.Range.ColumnWidth = 8
-    Set State = ColumnsState2.Create(lo)
+    Set State = ColumnsState.Create(lo)
     StateString = "Table1 has 3 column(s). ColA.Width = 8, ColB.Width = 8, ColC.Width = 8."
     If StateString <> State.ToString Then
         Err.Description = "Col.width = 8"
@@ -123,7 +124,7 @@ Private Sub TestColumnsStateSerialize()
     
     SerialString = "Table1:Q29sQQ==,4,0;Q29sQg==,8,0;Q29sQw==,8,0"
     lc.Range.ColumnWidth = 4
-    Set State = ColumnsState2.Create(lo)
+    Set State = ColumnsState.Create(lo)
     If SerialString <> State.Serialize Then
         Err.Description = "Serialize 4,0"
         GoTo TestFail
@@ -131,7 +132,7 @@ Private Sub TestColumnsStateSerialize()
     
     SerialString = "Table1:Q29sQQ==,0,-1;Q29sQg==,8,0;Q29sQw==,8,0"
     lc.Range.EntireColumn.Hidden = True
-    Set State = ColumnsState2.Create(lo)
+    Set State = ColumnsState.Create(lo)
     If SerialString <> State.Serialize Then
         Err.Description = "Serialize 0,-1"
         GoTo TestFail
@@ -139,7 +140,7 @@ Private Sub TestColumnsStateSerialize()
     
     SerialString = "Table1:Q29sQQ==,8,0;Q29sQg==,8,0;Q29sQw==,8,0"
     lc.Range.ColumnWidth = 8
-    Set State = ColumnsState2.Create(lo)
+    Set State = ColumnsState.Create(lo)
     If SerialString <> State.Serialize Then
         Err.Description = "Serialize 8,0"
         GoTo TestFail
@@ -172,7 +173,7 @@ Private Sub TestColumnsStateDeserialize()
     
     SerialString = "Table1:Q29sQQ==,0,-1;Q29sQg==,8,0;Q29sQw==,8,0"
     lc.Range.EntireColumn.Hidden = True
-    Set State = ColumnsState2.Create(lo)
+    Set State = ColumnsState.Create(lo)
     
     If Not State.Deserialize(SerialString) Then
         Err.Description = "Deserialize a hidden column - routine failed"
@@ -189,7 +190,7 @@ Private Sub TestColumnsStateDeserialize()
     
     SerialString = "Table1:Q29sQQ==,8,0;Q29sQg==,8,0;Q29sQw==,8,0"
     lc.Range.ColumnWidth = 8
-    Set State = ColumnsState2.Create(lo)
+    Set State = ColumnsState.Create(lo)
     
     If Not State.Deserialize(SerialString) Then
         Err.Description = "Deserialize a visible column - routine failed"
@@ -231,7 +232,7 @@ Private Sub TestColumnsStateApply()
     Dim State As IState
     
     SerialString = "Table1:Q29sQQ==,0,-1;Q29sQg==,8,0;Q29sQw==,8,0"
-    Set SerialState = New ColumnsState2
+    Set SerialState = New ColumnsState
     SerialState.Deserialize SerialString
     Set State = SerialState
     
@@ -248,7 +249,7 @@ Private Sub TestColumnsStateApply()
     End If
     
     SerialString = "Table1:Q29sQQ==,8,0;Q29sQg==,8,0;Q29sQw==,8,0"
-    Set SerialState = New ColumnsState2
+    Set SerialState = New ColumnsState
     SerialState.Deserialize SerialString
     Set State = SerialState
     

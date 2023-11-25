@@ -8,6 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "ViewModel that contains VMs for Current, Select, and Browsing States."
+'@IgnoreModule SetAssignmentWithIncompatibleObjectType
 '@ModuleDescription "ViewModel that contains VMs for Current, Select, and Browsing States."
 '@Folder("MVVM.ColumnState.ViewModel")
 Option Explicit
@@ -83,7 +84,7 @@ Public Sub TrySelect(ByVal Key As String)
 End Sub
 
 Private Sub UpdateCurrent()
-    Set This.Current.State = ColumnsState2.Create(This.Target)
+    Set This.Current.State = ColumnsState.Create(This.Target)
     This.States.UpdateOrphans Target.Parent.Parent
 End Sub
 
@@ -105,7 +106,7 @@ Public Function CanApply() As Boolean
     CanApply = True
 End Function
 
-Private Function ApplyAllowed(ByVal State As ColumnsState2) As Boolean
+Private Function ApplyAllowed(ByVal State As ColumnsState) As Boolean
     If State.Match = FULL_MATCH Then
         ApplyAllowed = True
     ElseIf This.Options.GetFlag(modOptionsConst.DO_ALLOW_APPLY_PARTIAL_MATCH) Then
@@ -132,11 +133,11 @@ Private Sub ApplyStateToTarget(ByVal State As IState)
     UpdateCurrent
 End Sub
 
-Private Sub TryAssociateOrphan(ByVal State As ColumnsState2)
+Private Sub TryAssociateOrphan(ByVal State As ColumnsState)
     If Not State.Orphan Then Exit Sub
     If Not This.Options.GetFlag(modOptionsConst.DO_ASSOCIATE_ORPHAN_STATES) Then Exit Sub
     
-    Dim NewState As ColumnsState2
+    Dim NewState As ColumnsState
     Set NewState = CloneState(State)
     NewState.Name = This.Target.Name
     
@@ -146,9 +147,9 @@ Private Sub TryAssociateOrphan(ByVal State As ColumnsState2)
     SaveAndReload
 End Sub
 
-Private Function CloneState(ByVal OrphanState As ISerializable) As ColumnsState2
+Private Function CloneState(ByVal OrphanState As ISerializable) As ColumnsState
     Dim Result As ISerializable
-    Set Result = New ColumnsState2
+    Set Result = New ColumnsState
     Result.Deserialize OrphanState.Serialize
     Set CloneState = Result
 End Function
@@ -168,25 +169,25 @@ Public Function CanRemove() As Boolean
     CanRemove = True
 End Function
 
-Public Function Remove() As Boolean
+Public Sub Remove()
     This.Model.Remove This.Selected.State
     Set This.Selected.State = Nothing
     
     SaveAndReload
-End Function
+End Sub
 
 Public Function CanRemoveAll() As Boolean
     If This.States.Count = 0 Then Exit Function
     CanRemoveAll = True
 End Function
 
-Public Function RemoveAll() As Boolean
+Public Sub RemoveAll()
     This.Model.RemoveAll
     
     Set This.Selected.State = Nothing
     
     SaveAndReload
-End Function
+End Sub
 
 Public Function CanExport() As Boolean
     CanExport = Not This.Selected.State Is Nothing
@@ -194,7 +195,7 @@ End Function
 
 Public Function TryImport(ByVal SerialString As String, ByRef OutState As IState) As Boolean
     Dim State As ISerializable
-    Set State = New ColumnsState2
+    Set State = New ColumnsState
     If Not State.Deserialize(SerialString) Then
         Exit Function
     End If
@@ -223,3 +224,4 @@ Private Sub SaveAndReload()
     This.Model.Save
     This.States.Reload
 End Sub
+

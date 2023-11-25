@@ -2,12 +2,13 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ColumnsState2"
+Attribute VB_Name = "ColumnsState"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Attribute VB_Description = "Stores the state of multiple ListColumns from a single ListObject."
+'@IgnoreModule SetAssignmentWithIncompatibleObjectType
 '@ModuleDescription "Stores the state of multiple ListColumns from a single ListObject."
 '@PredeclaredId
 '@Folder("State.Entities")
@@ -65,7 +66,7 @@ Public Function ToString() As String
     Dim Result As String
     Result = This.Name & " has " & This.ListColumns.Count & " column(s). "
     
-    Dim State As ColumnState2
+    Dim State As ColumnState
     For Each State In This.ListColumns
         Result = Result & State.ToString & ", "
     Next State
@@ -81,7 +82,7 @@ End Sub
 ' Requires PredeclaredId annotation
 Public Function Create(ByVal ListObject As ListObject) As IState
     Dim Result As IState
-    Set Result = New ColumnsState2
+    Set Result = New ColumnsState
     Result.From ListObject
     Set Create = Result
 End Function
@@ -95,7 +96,7 @@ Private Function IState_From(ByVal Object As Object) As Boolean
     
     Dim ListColumn As ListColumn
     For Each ListColumn In This.ListObject.ListColumns
-        This.ListColumns.Add ColumnState2.Create(ListColumn)
+        This.ListColumns.Add ColumnState.Create(ListColumn)
     Next ListColumn
     
     IState_From = True
@@ -167,7 +168,7 @@ Private Function DeserializeChildren(ByVal ChildSerials As String) As Boolean
     Dim i As Long
     For i = 0 To UBound(SplitSerials)
         Dim Child As ISerializable
-        Set Child = New ColumnState2
+        Set Child = New ColumnState
         If Not Child.Deserialize(SplitSerials(i)) Then
             Exit Function
         End If
@@ -183,7 +184,7 @@ End Function
 
 Private Function IState_Equals(ByVal RHS As IState) As Boolean
     If RHS Is Nothing Then Exit Function
-    If Not TypeOf RHS Is ColumnsState2 Then Exit Function
+    If Not TypeOf RHS Is ColumnsState Then Exit Function
     
     Dim LHSSerializable As ISerializable
     Set LHSSerializable = Me
@@ -223,7 +224,7 @@ End Property
 
 ' ---
 Private Function VisibleCount() As Long
-    Dim Child As ColumnState2
+    Dim Child As ColumnState
     For Each Child In This.ListColumns
         If Child.Width > 0 Then VisibleCount = VisibleCount + 1
     Next Child
@@ -232,7 +233,7 @@ End Function
 Private Function GetCaption() As String
     Dim Result As String
     
-    Dim Child As ColumnState2
+    Dim Child As ColumnState
     For Each Child In This.ListColumns
         If Child.Width > 0 Then
             Result = Result & Child.Name & ","
@@ -258,3 +259,4 @@ Private Function GetCaption() As String
     
     GetCaption = Result
 End Function
+
