@@ -14,15 +14,12 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
 '@Folder "MVVM.ColumnState.Views"
 Option Explicit
 
 Private Sub cmbClose_Click()
     Me.Hide
-End Sub
-
-Private Sub Label1_Click()
-
 End Sub
 
 Private Sub UserForm_Activate()

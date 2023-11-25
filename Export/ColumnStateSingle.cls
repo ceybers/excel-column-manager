@@ -65,7 +65,7 @@ Public Sub Load(ByVal ListColumn As ListColumn)
         This.Width = ListColumn.DataBodyRange.ColumnWidth
     End If
     This.Index = ListColumn.Index
-    This.Exists = True ' Loaded from actual ListColumn
+    This.Exists = True                           ' Loaded from actual ListColumn
 End Sub
 
 Public Function ToString() As String
@@ -99,3 +99,4 @@ End Sub
 Public Sub UpdateExists(ByVal ListObject As ListObject)
     This.Exists = ListObjectHelpers.HasListColumn(ListObject, This.Name)
 End Sub
+

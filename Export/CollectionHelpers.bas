@@ -1,23 +1,10 @@
 Attribute VB_Name = "CollectionHelpers"
-'@Folder "MVVM.ColumnState.Helpers"
+'@Folder("Helpers")
 Option Explicit
 
-Public Function ConcatCollection(ByVal Collection As Collection, ByVal Delimiter As String) As String
-    Dim Result As String
-    
-    Dim Item As Variant
-    For Each Item In Collection
-        Result = Result & Item & Delimiter
-    Next Item
-    
-    If Len(Result) > 1 Then
-        Result = Left$(Result, Len(Result) - 1)
-    End If
-    
-    ConcatCollection = Result
-End Function
-
+'@Description "Returns True if the given Value exists in a Collection."
 Public Function ExistsInCollection(ByVal Collection As Object, ByVal Value As Variant) As Boolean
+Attribute ExistsInCollection.VB_Description = "Returns True if the given Value exists in a Collection."
     Debug.Assert Not Collection Is Nothing
     
     Dim ThisValue As Variant
@@ -31,7 +18,9 @@ Public Function ExistsInCollection(ByVal Collection As Object, ByVal Value As Va
     Next ThisValue
 End Function
 
+'@Description "Removes all items in a Collection."
 Public Sub CollectionClear(ByVal Collection As Collection)
+Attribute CollectionClear.VB_Description = "Removes all items in a Collection."
     Debug.Assert Not Collection Is Nothing
     
     Dim i As Long
@@ -40,3 +29,11 @@ Public Sub CollectionClear(ByVal Collection As Collection)
     Next i
 End Sub
 
+'@Description "Copies all items in collection LHS to RHS. Does not copy keys."
+Public Sub Clone(ByVal LHS As Collection, ByVal RHS As Collection)
+Attribute Clone.VB_Description = "Copies all items in collection LHS to RHS. Does not copy keys."
+    Dim Item As Variant
+    For Each Item In LHS
+        RHS.Add Item
+    Next Item
+End Sub

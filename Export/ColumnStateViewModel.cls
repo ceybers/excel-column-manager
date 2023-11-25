@@ -220,7 +220,7 @@ Public Sub RemoveAll()
 End Sub
 
 Public Function CanSave() As Boolean
-    CanSave = True 'Not Exists(This.CurrentState)
+    CanSave = True                               'Not Exists(This.CurrentState)
 End Function
 
 Private Function Exists(ByVal ColumnState As ColumnStateTable) As Boolean
@@ -357,3 +357,5 @@ Private Sub SaveStates()
     This.Settings.Workbook.SetCollection SETTING_COLLECTION_NAME, NewCollection
     This.Settings.Workbook.SetSetting SETTING_LAST_UPDATED, CStr(Now())
 End Sub
+
+

@@ -99,7 +99,7 @@ Private Sub AddUnsavedSortStateNode(ByVal ViewModel As ColumnStateViewModel, ByV
                                   Image:=MSO_SORTORDER)
     Node.Bold = True
     Node.Selected = True
-    Node.Image = "TableStyleBandedColumns" ' TODO Convert to Const
+    Node.Image = "TableStyleBandedColumns"       ' TODO Convert to Const
     ViewModel.TrySelect "UNSAVED"
 End Sub
 
@@ -205,7 +205,5 @@ Private Sub TrySelectSelectedNode(ByVal ViewModel As ColumnStateViewModel, ByVal
         ViewModel.TrySelect TreeView.SelectedItem.Key
     End If
 End Sub
-
-
 
 

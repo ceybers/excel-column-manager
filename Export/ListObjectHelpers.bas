@@ -1,9 +1,10 @@
 Attribute VB_Name = "ListObjectHelpers"
-'@Folder "MVVM.ColumnState.Helpers"
+'@Folder "Helpers"
 Option Explicit
 
 '@Description "Returns a Collection containing all the ListObjects in the given Workbook."
 Public Function GetAllListObjects(ByVal Workbook As Workbook) As Collection
+Attribute GetAllListObjects.VB_Description = "Returns a Collection containing all the ListObjects in the given Workbook."
     Dim Result As Collection
     Set Result = New Collection
     Set GetAllListObjects = Result
@@ -21,6 +22,7 @@ End Function
 
 '@Description "Returns True if a ListObject with the given name exists in the given Workbook."
 Public Function ListObjectExists(ByVal Workbook As Workbook, ByVal ListObjectName As String) As Boolean
+Attribute ListObjectExists.VB_Description = "Returns True if a ListObject with the given name exists in the given Workbook."
     Dim AllListObjects As Collection
     Set AllListObjects = GetAllListObjects(Workbook)
     
@@ -35,6 +37,7 @@ End Function
 
 '@Description "Returns True if the given ListObject contains a ListColumn with the given name."
 Public Function HasListColumn(ByVal ListObject As ListObject, ByVal ListColumnName As String) As Boolean
+Attribute HasListColumn.VB_Description = "Returns True if the given ListObject contains a ListColumn with the given name."
     Dim ListColumn As ListColumn
     For Each ListColumn In ListObject.ListColumns
         If ListColumn.Name = ListColumnName Then
@@ -43,4 +46,3 @@ Public Function HasListColumn(ByVal ListObject As ListObject, ByVal ListColumnNa
         End If
     Next ListColumn
 End Function
-

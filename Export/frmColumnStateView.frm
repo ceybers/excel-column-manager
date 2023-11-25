@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 '@Folder "MVVM.ColumnState.Views"
 Option Explicit
 Implements IView
@@ -62,7 +63,6 @@ Private Sub cmbImport_Click()
     This.ViewModel.TryImport StateString
     UpdateControls
 End Sub
-
 
 Private Sub cmbApply_Click()
     This.ViewModel.Apply
@@ -242,3 +242,5 @@ End Sub
 Private Sub InitalizeLabelPicture(ByVal Label As MSForms.Label, ByVal ImageMsoName As String)
     Set Label.Picture = Application.CommandBars.GetImageMso(ImageMsoName, 24, 24)
 End Sub
+
+

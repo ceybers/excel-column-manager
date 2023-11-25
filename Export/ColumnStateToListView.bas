@@ -63,4 +63,3 @@ Private Sub LoadColumnStateToListView(ByVal ListView As ListView, ByVal ColumnSt
     End If
 End Sub
 
-

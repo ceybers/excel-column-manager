@@ -132,7 +132,7 @@ Public Function GetCaption() As String
     GetCaption = Result
 End Function
 
-Public Function CanApply(ByVal ListObject As ListObject)
+Public Function CanApply(ByVal ListObject As ListObject) As Boolean
     Dim ColumnStateSingle As ColumnStateSingle
     
     For Each ColumnStateSingle In This.ColumnStates
@@ -166,7 +166,7 @@ Public Function Apply(ByVal ListObject As ListObject) As Boolean
     Apply = True
 End Function
 
-Private Sub ApplyState(ByVal ColumnStateSingle As ColumnStateSingle, ListObject As ListObject)
+Private Sub ApplyState(ByVal ColumnStateSingle As ColumnStateSingle, ByVal ListObject As ListObject)
     If ColumnStateSingle.Exists = False Then Exit Sub
     
     Dim ListColumn As ListColumn
@@ -182,7 +182,8 @@ Private Sub ApplyState(ByVal ColumnStateSingle As ColumnStateSingle, ListObject 
     End With
 End Sub
 
-Public Function Equals(ByVal RHS As ColumnStateTable)
+Public Function Equals(ByVal RHS As ColumnStateTable) As Boolean
     Debug.Assert Not RHS Is Nothing
     Equals = (Me.ToBase64 = RHS.ToBase64)
 End Function
+
