@@ -19,6 +19,8 @@ Attribute VB_Exposed = False
 Option Explicit
 Implements IView
 
+Private Const MSG_TITLE As String = "Column State Manager"
+
 Private Type TState
     ViewModel As StateManagerViewModel
     IsCancelled As Boolean
@@ -44,10 +46,7 @@ Private Sub cmbImport_Click()
 End Sub
 
 Private Sub cmbPrune_Click()
-    This.ViewModel.Prune
-    UpdateListViewLHS
-    UpdateListViewRHS
-    UpdateButtons
+    TryPrune
 End Sub
 
 Private Sub cmbRemove_Click()
@@ -128,6 +127,7 @@ Private Sub UpdateButtons()
     Me.cmbExport.Enabled = This.ViewModel.CanExport
     Me.cmbPrune.Enabled = This.ViewModel.CanPrune
     Me.cmbRemove.Enabled = This.ViewModel.CanRemove
+    Me.cmbRemoveAll.Enabled = This.ViewModel.CanRemoveAll
 End Sub
 
 Private Sub UpdateCurrentState()
@@ -170,8 +170,19 @@ Private Sub TryApply()
     UpdateButtons
 End Sub
 
+Private Sub TryPrune()
+    If vbNo = MsgBox(MSG_PRUNE_STATES, vbExclamation + vbYesNo + vbDefaultButton2, MSG_TITLE) Then
+        Exit Sub
+    End If
+    
+    This.ViewModel.Prune
+    UpdateListViewLHS
+    UpdateListViewRHS
+    UpdateButtons
+End Sub
+
 Private Sub TryRemove()
-    If vbNo = MsgBox("Are you sure?", vbYesNo + vbDefaultButton2) Then
+    If vbNo = MsgBox(MSG_REMOVE_STATE, vbExclamation + vbYesNo + vbDefaultButton2, MSG_TITLE) Then
         Exit Sub
     End If
     
@@ -182,7 +193,7 @@ Private Sub TryRemove()
 End Sub
 
 Private Sub TryRemoveAll()
-    If vbNo = MsgBox("Are you sure?", vbYesNo + vbDefaultButton2) Then
+    If vbNo = MsgBox(MSG_REMOVE_STATES, vbExclamation + vbYesNo + vbDefaultButton2, MSG_TITLE) Then
         Exit Sub
     End If
     
@@ -200,6 +211,29 @@ Private Sub TryExport()
 End Sub
 
 Private Sub TryImport()
-
+    
+    Dim SerialString As String
+    SerialString = InputBox("Serial string for selected state", "Export State to Serial String", _
+                            "Table1:Q29sRA==,8,0;Q29sQg==,16,0;Q29sQw==,102,0")
+    
+    Dim State As IListable
+    If This.ViewModel.TryImport(SerialString, State) Then
+        MsgBox "Import OK!", vbInformation + vbOKOnly, MSG_TITLE
+        UpdateListViewLHS
+        
+        ' TODO This is a bad idea
+        Me.tvStates.Nodes.Item(State.Key).Selected = True ' Simulates the click to update control state
+        This.ViewModel.TrySelect State.Key       ' Simulates the click event
+        
+        UpdateListViewRHS
+        UpdateButtons
+    Else
+        If State Is Nothing Then
+            MsgBox "Import FAIL! serial malformed", vbCritical + vbOKOnly, MSG_TITLE
+        Else
+            MsgBox "Import FAIL! Already exists", vbCritical + vbOKOnly, MSG_TITLE
+        End If
+    End If
 End Sub
+
 

@@ -8,11 +8,6 @@ Private Const UNSAVED_CAPTION As String = "(current)"
 Private Const ORPHANS_CAPTION As String = "Orphans"
 Private Const NO_STATES_CAPTION As String = "No saved Column States found."
 
-Private Const ROOT_KEY As String = "::ROOT"
-Private Const ORPHAN_KEY As String = "::ORPHAN"
-Private Const UNSAVED_KEY As String = "::UNSAVED"
-Private Const NO_STATES_KEY As String = "::NOSTATES"
-
 Public Sub Initialize(ByVal TreeView As TreeView)
     Dim il As ImageList
     Set il = New ImageList
@@ -74,11 +69,10 @@ Private Sub AddTables(ByVal TreeView As TreeView, ByVal ViewModel As StateManage
         Dim TableName As String
         TableName = State.Name
         If Not CollectionHelpers.ExistsInCollection(TableNames, TableName) Then
-            If ListObjectHelpers.ListObjectExists(Workbook, TableName) Then
-                TableNames.Add TableName
-            Else
-                SetOrphan State
+            If State.Orphan Then
                 HasOrphans = True
+            Else
+                TableNames.Add TableName
             End If
         End If
     Next State

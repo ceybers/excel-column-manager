@@ -13,11 +13,16 @@ Option Explicit
 Private Type TState
     Items As Collection
     CollectionView As Collection
+    HasOrphans As Boolean
     
     Filter As String
 End Type
 
 Private This As TState
+
+Public Property Get Count() As Long
+    Count = This.Items.Count
+End Property
 
 Public Property Get CollectionView() As Collection
     Set CollectionView = This.CollectionView
@@ -73,5 +78,35 @@ Private Sub UpdateCollectionView()
             This.CollectionView.Add Item:=StateListable, Key:=StateListable.Key
         End If
     Next StateListable
+End Sub
+
+Public Sub UpdateOrphans(ByVal Workbook As Workbook)
+    This.HasOrphans = False
+    
+    Dim State As ColumnsState2
+    For Each State In This.Items
+        If Not ListObjectHelpers.ListObjectExists(Workbook, State.Name) Then
+            State.Orphan = True
+            SetOrphan State
+            This.HasOrphans = True
+        End If
+    Next State
+End Sub
+
+Private Sub SetOrphan(ByVal State As IListable)
+    State.ParentKey = ORPHAN_KEY
+End Sub
+
+Public Function HasOrphans() As Boolean
+    HasOrphans = This.HasOrphans
+End Function
+
+Public Sub RemoveOrphans(ByVal Model As StatesModel)
+    Dim State As ColumnsState2
+    For Each State In This.Items
+        If State.Orphan Then
+            Model.Remove State
+        End If
+    Next State
 End Sub
 

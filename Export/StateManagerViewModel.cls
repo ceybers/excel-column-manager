@@ -57,16 +57,20 @@ Public Sub Load(ByVal Model As StatesModel)
 End Sub
 
 Public Sub TrySelect(ByVal Key As String)
-    If Left$(Key, 1) <> "K" Then
+    If Key = UNSAVED_KEY Then
+        Set This.Selected.State = This.Current.State
+    ElseIf Left$(Key, 1) <> "K" Then
         Set This.Selected.State = Nothing
         Exit Sub
+    Else
+        Set This.Selected.State = This.States.CollectionView.Item(Key)
+        This.Selected.UpdateOrphans This.Target
     End If
-    Set This.Selected.State = This.States.CollectionView.Item(Key)
-    This.Selected.UpdateOrphans This.Target
 End Sub
 
 Private Sub UpdateCurrent()
     Set This.Current.State = ColumnsState2.Create(This.Target)
+    This.States.UpdateOrphans Target.Parent.Parent
 End Sub
 
 Public Function CanSave() As Boolean
@@ -75,7 +79,7 @@ End Function
 
 Public Sub Save()
     This.Model.Add This.Current.State
-    ' DEBUG This.Model.Save
+    This.Model.Save
     This.States.Load This.Model
 End Sub
 
@@ -96,11 +100,13 @@ Private Function ApplyStateToTarget(ByVal State As IState)
 End Function
 
 Public Function CanPrune() As Boolean
-    CanPrune = False
+    CanPrune = This.States.HasOrphans
 End Function
 
 Public Sub Prune()
-    ' NYI
+    This.States.RemoveOrphans This.Model
+    This.Model.Save
+    This.States.Load This.Model
 End Sub
 
 Public Function CanRemove() As Boolean
@@ -110,19 +116,45 @@ End Function
 
 Public Function Remove() As Boolean
     This.Model.Remove This.Selected.State
-    ' DEBUG This.Model.Save
+    This.Model.Save
     Set This.Selected.State = Nothing
     This.States.Load This.Model
 End Function
 
+Public Function CanRemoveAll() As Boolean
+    If This.States.Count = 0 Then Exit Function
+    CanRemoveAll = True
+End Function
+
 Public Function RemoveAll() As Boolean
     This.Model.RemoveAll
-    ' DEBUG This.Model.Save
+    This.Model.Save
     Set This.Selected.State = Nothing
     This.States.Load This.Model
 End Function
 
 Public Function CanExport() As Boolean
     CanExport = Not This.Selected.State Is Nothing
+End Function
+
+Public Function TryImport(ByVal SerialString As String, ByRef OutState As IState) As Boolean
+    Dim State As ISerializable
+    Set State = New ColumnsState2
+    If Not State.Deserialize(SerialString) Then
+        Exit Function
+    End If
+    
+    Set OutState = State
+    
+    If This.Model.Exists(State) Then
+        Exit Function
+    End If
+    
+    This.Model.Add State
+    This.Model.Save
+    Set This.Selected.State = State
+    This.States.Load This.Model
+
+    TryImport = True
 End Function
 

@@ -20,6 +20,8 @@ Private Type TState
     ListObject As ListObject
     Name As String
     ListColumns As Collection
+    Orphan As Boolean
+    ' IListable
     Key As String
     ParentKey As String
     Visible As Boolean
@@ -35,6 +37,16 @@ End Property
 Public Property Get Name() As String
 Attribute Name.VB_UserMemId = 0
     Name = This.Name
+End Property
+
+'@Description "Returns True if this ListObject of this state cannot be found in the VM's workbook."
+Public Property Get Orphan() As Boolean
+Attribute Orphan.VB_Description = "Returns True if this ListObject of this state cannot be found in the VM's workbook."
+    Orphan = This.Orphan
+End Property
+
+Public Property Let Orphan(ByVal RHS As Boolean)
+    This.Orphan = RHS
 End Property
 
 Public Function ToString() As String
@@ -128,12 +140,14 @@ Private Function ISerializable_Deserialize(ByVal SerialString As String) As Bool
     This.Name = SplitText(0)
     This.ParentKey = "lo::" & This.Name
     
-    DeserializeChildren SplitText(1)
+    If Not DeserializeChildren(SplitText(1)) Then
+        Exit Function
+    End If
     
     ISerializable_Deserialize = True
 End Function
 
-Private Sub DeserializeChildren(ByVal ChildSerials As String)
+Private Function DeserializeChildren(ByVal ChildSerials As String) As Boolean
     CollectionHelpers.CollectionClear This.ListColumns
     
     Dim SplitSerials() As String
@@ -143,14 +157,18 @@ Private Sub DeserializeChildren(ByVal ChildSerials As String)
     For i = 0 To UBound(SplitSerials)
         Dim Child As ISerializable
         Set Child = New ColumnState2
-        Child.Deserialize SplitSerials(i)
+        If Not Child.Deserialize(SplitSerials(i)) Then
+            Exit Function
+        End If
         This.ListColumns.Add Item:=Child, Key:="K" & Format(i, "000")
         
         Dim Listable As IListable
         Set Listable = Child
         Listable.Key = "K" & Format(i, "000")
     Next i
-End Sub
+    
+    DeserializeChildren = True
+End Function
 
 Private Function IState_Equals(ByVal RHS As IState) As Boolean
     If RHS Is Nothing Then Exit Function

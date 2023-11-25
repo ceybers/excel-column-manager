@@ -50,7 +50,7 @@ Private Sub UpdateItems()
     If Not This.State Is Nothing Then
         Dim Child As IListable
         For Each Child In This.State.Items
-            This.Items.Add Item:=Child           ' No keys needed
+            This.Items.Add Item:=Child           ', Key:=Child.Key           ' No keys needed
         Next Child
     End If
     

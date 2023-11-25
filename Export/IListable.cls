@@ -32,7 +32,3 @@ End Property
 Public Property Let Visible(ByVal vNewValue As Boolean)
 End Property
 
-' Selected
-' Checked
-' Enabled
-' Visible

@@ -17,8 +17,9 @@
 ## Features
 - [ ] Give states names, defaulting to e.g., "(x/y) Untitled state (2023/01/01 09:00)".
 - [x] Apply selected state.
-- [ ] Import/export manually using Base64 string.
-- [ ] Prune orphaned states.
+- [x] Import manually using Base64 string.
+- [x] Export manually using Base64 string.
+- [x] Prune orphaned states.
 - [x] Remove selected state.
 - [x] Remove all states.
 ## Options (sub UserForm)

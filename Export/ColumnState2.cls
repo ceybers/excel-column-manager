@@ -120,6 +120,7 @@ Private Function ISerializable_Deserialize(ByVal SerialString As String) As Bool
     Dim SplitText() As String
     SplitText = Split(SerialString, ",")
     If UBound(SplitText) <> 2 Then Exit Function
+    If Not IsNumeric(SplitText(2)) Then Exit Function
     
     With This
         Set .ListColumn = Nothing
