@@ -8,7 +8,9 @@ Private Const MSG_TITLE As String = "Persistent Column State Tool"
 '@EntryPoint "Open UserForm for PersistentColumnStateTool"
 Public Sub PersistentColumnStateTool()
     ' DEBUG
-    ThisWorkbook.Worksheets.Item(1).Range("A2").Activate
+    If Selection.ListObject Is Nothing Then
+        ThisWorkbook.Worksheets.Item(1).Range("A2").Activate
+    End If
     
     If Selection.ListObject Is Nothing Then
         MsgBox MSG_NO_TABLE_SELECTED, vbExclamation, MSG_TITLE

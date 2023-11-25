@@ -8,7 +8,8 @@
 - [x] Auto-selects a saved state if it matches the current state.
 - [x] Target ListObject is top of the tree.
 - [x] Orphaned items are bottom of the tree.
-- [ ] Consider adding meta states for "Show all (default)", "Show all (autofit)", and "Show first only".
+- [ ] Entering search Text Box should remove watermark text.
+- [x] Consider adding meta states for "Show all (default)", "Show all (autofit)", and "Show first only".
 ## Selected (RHS)
 - [x] Show list of columns in a stored State.
 - [x] Indicate Hidden property with icon.

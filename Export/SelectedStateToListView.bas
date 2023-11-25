@@ -44,6 +44,12 @@ Public Sub Load(ByVal ListView As ListView, ByVal ViewModel As SelectedStateView
     For Each Child In ViewModel.Items
         AddItem ListView, Child, ShowNonMatchingCols
     Next Child
+    
+    Dim BuiltinState As IListable
+    Set BuiltinState = ViewModel.State
+    If BuiltinState.ParentKey = modConstants.BUILTIN_KEY Then
+        AddBuiltinItem ListView, ViewModel.State
+    End If
 End Sub
 
 Private Sub AddItem(ByVal ListView As ListView, ByVal Child As IListable, ByVal ShowNonMatchingCols As Boolean)
@@ -86,4 +92,10 @@ End Function
 Private Function IsOrphan(ByVal State As ColumnState) As Boolean
     IsOrphan = State.Orphan
 End Function
+
+Private Sub AddBuiltinItem(ByVal ListView As ListView, ByVal State As IListable)
+    Dim ListItem As ListItem
+    Set ListItem = ListView.ListItems.Add(Text:=vbNullString)
+    ListItem.ListSubItems.Add Text:=State.Caption
+End Sub
 

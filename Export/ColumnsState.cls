@@ -174,9 +174,9 @@ Private Function DeserializeChildren(ByVal ChildSerials As String) As Boolean
         End If
         This.ListColumns.Add Item:=Child, Key:="K" & Format$(i, "000")
         
-        Dim Listable As IListable
-        Set Listable = Child
-        Listable.Key = "K" & Format$(i, "000")
+        Dim listable As IListable
+        Set listable = Child
+        listable.Key = "K" & Format$(i, "000")
     Next i
     
     DeserializeChildren = True

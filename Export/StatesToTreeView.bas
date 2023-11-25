@@ -6,6 +6,7 @@ Private Const ROOT_CAPTION As String = "Column States"
 Private Const CURRENT_SUFFIX_CAPTION As String = " (current)"
 Private Const UNSAVED_CAPTION As String = "(current)"
 Private Const ORPHANS_CAPTION As String = "Orphans"
+Private Const BUILTIN_CAPTION As String = "Built-in"
 Private Const NO_STATES_CAPTION As String = "No saved Column States found."
 
 Public Sub Initialize(ByVal TreeView As TreeView)
@@ -14,6 +15,7 @@ Public Sub Initialize(ByVal TreeView As TreeView)
     With il
         .ImageWidth = 16
         .ImageHeight = 16
+        .ListImages.Add Key:="msoBuiltin", Picture:=Application.CommandBars.GetImageMso("AddToFavorites", 16, 16)
         .ListImages.Add Key:="msoUnsaved", Picture:=Application.CommandBars.GetImageMso("TableStyleBandedColumns", 16, 16)
         .ListImages.Add Key:="msoTable", Picture:=Application.CommandBars.GetImageMso("TableInsert", 16, 16)
         .ListImages.Add Key:="msoOrphan", Picture:=Application.CommandBars.GetImageMso("Help", 16, 16)
@@ -37,6 +39,7 @@ End Sub
 
 Public Sub Load(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewModel)
     AddParentNode TreeView
+    AddBuiltin TreeView
     AddTables TreeView, ViewModel
     AddUnsavedState TreeView, ViewModel
     AddStates TreeView, ViewModel
@@ -47,6 +50,18 @@ Private Sub AddParentNode(ByVal TreeView As TreeView)
     With TreeView.Nodes
         .Remove (1)
         .Add Key:=ROOT_KEY, Text:=ROOT_CAPTION, Image:="msoRoot"
+        .Item(1).Expanded = True
+    End With
+End Sub
+
+Private Sub AddBuiltin(ByVal TreeView As TreeView)
+    Dim ParentNode As Node
+    Set ParentNode = TreeView.Nodes.Item(1)
+    
+    With TreeView.Nodes
+        .Add Relative:=ParentNode, relationship:=tvwChild, _
+             Key:=BUILTIN_KEY, Text:=BUILTIN_CAPTION, _
+             Image:="msoBuiltin"
         .Item(1).Expanded = True
     End With
 End Sub
@@ -64,35 +79,43 @@ Private Sub AddTables(ByVal TreeView As TreeView, ByVal ViewModel As StateManage
     
     Dim HasOrphans As Boolean
     
-    Dim State As ColumnsState
-    For Each State In ViewModel.States.CollectionView
-        Dim TableName As String
-        TableName = State.Name
-        If Not CollectionHelpers.ExistsInCollection(TableNames, TableName) Then
-            If State.Orphan Then
-                HasOrphans = True
-            Else
-                TableNames.Add TableName
+    Dim Item As Object
+    For Each Item In ViewModel.States.CollectionView
+        If TypeOf Item Is ColumnsState Then
+            Dim State As ColumnsState
+            Set State = Item
+            If IsOrphan(TableNames, State) Then
+                If State.Orphan Then
+                    HasOrphans = True
+                Else
+                    TableNames.Add State.Name
+                End If
             End If
         End If
-    Next State
+    Next Item
     
     Dim ParentNode As Node
     Set ParentNode = TreeView.Nodes.Item(1)
     
     Dim TableToCreate As Variant
     For Each TableToCreate In TableNames
-        TreeView.Nodes.Add Relative:=ParentNode, Relationship:=tvwChild, _
+        TreeView.Nodes.Add Relative:=ParentNode, relationship:=tvwChild, _
                            Key:=LO_KEY_PREFIX & TableToCreate, Text:=TableToCreate, _
                            Image:="msoTable"
     Next TableToCreate
         
     If HasOrphans Then
-        TreeView.Nodes.Add Relative:=ParentNode, Relationship:=tvwChild, _
+        TreeView.Nodes.Add Relative:=ParentNode, relationship:=tvwChild, _
                            Key:=ORPHAN_KEY, Text:=ORPHANS_CAPTION, _
                            Image:="msoOrphan"
     End If
 End Sub
+
+Private Function IsOrphan(ByVal TableNames As Collection, ByVal State As IListable)
+    Dim StateCast As ColumnsState
+    Set StateCast = State
+    IsOrphan = Not CollectionHelpers.ExistsInCollection(TableNames, StateCast.Name)
+End Function
 
 Private Sub SetOrphan(ByVal OrphanState As IListable)
     OrphanState.ParentKey = ORPHAN_KEY
@@ -106,7 +129,7 @@ Private Sub AddUnsavedState(ByVal TreeView As TreeView, ByVal ViewModel As State
     Set TableNode = TreeView.Nodes.Item(LO_KEY_PREFIX & Current.Name)
     
     Dim Node As Node
-    Set Node = TreeView.Nodes.Add(Relative:=TableNode, Relationship:=tvwChild, _
+    Set Node = TreeView.Nodes.Add(Relative:=TableNode, relationship:=tvwChild, _
                                   Key:=UNSAVED_KEY, Text:=UNSAVED_CAPTION, _
                                   Image:="msoItem", SelectedImage:="msoUnsaved")
     Node.Bold = True
@@ -125,7 +148,7 @@ Private Sub AddStates(ByVal TreeView As TreeView, ByVal ViewModel As StateManage
         TableNode.Expanded = True
         
         Dim Node As Node
-        Set Node = TreeView.Nodes.Add(Relative:=TableNode, Relationship:=tvwChild, _
+        Set Node = TreeView.Nodes.Add(Relative:=TableNode, relationship:=tvwChild, _
                                       Key:=State.Key, Text:=State.Caption, _
                                       Image:="msoItem", SelectedImage:="msoSelected")
                            
@@ -149,7 +172,7 @@ Private Sub CheckNoResults(ByVal TreeView As TreeView)
     If TreeView.Nodes.Count > 2 Then Exit Sub
     
     Dim Node As Node
-    Set Node = TreeView.Nodes.Add(Relative:=TreeView.Nodes.Item(1), Relationship:=tvwChild, _
+    Set Node = TreeView.Nodes.Add(Relative:=TreeView.Nodes.Item(1), relationship:=tvwChild, _
                                   Key:=NO_STATES_KEY, Text:=NO_STATES_CAPTION)
     Node.ForeColor = modConstants.GREY_TEXT_COLOR
 End Sub

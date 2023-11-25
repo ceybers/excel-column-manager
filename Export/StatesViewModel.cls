@@ -111,6 +111,11 @@ Private Sub UpdateCollectionView()
 End Sub
 
 Private Function DoFilter(ByVal StateListable As IListable, ByVal FilterString As String) As Boolean
+    If StateListable.ParentKey = modConstants.BUILTIN_KEY Then
+        DoFilter = True
+        Exit Function
+    End If
+    
     If DoMatchCase Then
         DoFilter = StateListable.Caption Like FilterString
     Else
@@ -136,14 +141,21 @@ End Function
 Public Sub UpdateOrphans(ByVal Workbook As Workbook)
     This.HasOrphans = False
     
-    Dim State As ColumnsState
+    Dim State As Object
     For Each State In This.Items
-        If Not ListObjectHelpers.ListObjectExists(Workbook, State.Name) Then
-            State.Orphan = True
-            SetOrphan State
-            This.HasOrphans = True
-        End If
+        UpdateOrphan State, Workbook
     Next State
+End Sub
+
+Private Sub UpdateOrphan(ByVal State As IState, ByVal Workbook As Workbook)
+    If Not TypeOf State Is ColumnsState Then Exit Sub
+    Dim ColumnsState As ColumnsState
+    Set ColumnsState = State
+    If Not ListObjectHelpers.ListObjectExists(Workbook, ColumnsState.Name) Then
+        ColumnsState.Orphan = True
+        SetOrphan ColumnsState
+        This.HasOrphans = True
+    End If
 End Sub
 
 Private Sub SetOrphan(ByVal State As IListable)
@@ -164,29 +176,34 @@ Public Sub RemoveOrphans(ByVal Model As StatesModel)
 End Sub
 
 Private Sub UpdateMatchTarget()
-    Dim MatchCount As Long
-    Dim TotalCount As Long
-        
-    Dim State As ColumnsState
+    Dim State As Object
     For Each State In This.Items
-        MatchCount = 0
-        TotalCount = 0
-        
-        Dim Child As ColumnState
-        For Each Child In State.Items
-            Child.Orphan = Not ListObjectHelpers.HasListColumn(This.Target, Child.Name)
-            If Not Child.Orphan Then MatchCount = MatchCount + 1
-            TotalCount = TotalCount + 1
-        Next Child
-        
-        If MatchCount = TotalCount Then
-            State.Match = FULL_MATCH
-        ElseIf MatchCount = 0 Then
-            State.Match = NO_MATCH
-        Else
-            State.Match = PARTIAL_MATCH
+        If TypeOf State Is ColumnsState Then
+            UpdateMatchTargetOne State
         End If
     Next State
+End Sub
+
+Private Sub UpdateMatchTargetOne(ByVal State As ColumnsState)
+    Dim MatchCount As Long
+    Dim TotalCount As Long
+    MatchCount = 0
+    TotalCount = 0
+    
+    Dim Child As ColumnState
+    For Each Child In State.Items
+        Child.Orphan = Not ListObjectHelpers.HasListColumn(This.Target, Child.Name)
+        If Not Child.Orphan Then MatchCount = MatchCount + 1
+        TotalCount = TotalCount + 1
+    Next Child
+    
+    If MatchCount = TotalCount Then
+        State.Match = FULL_MATCH
+    ElseIf MatchCount = 0 Then
+        State.Match = NO_MATCH
+    Else
+        State.Match = PARTIAL_MATCH
+    End If
 End Sub
 
 ' Options

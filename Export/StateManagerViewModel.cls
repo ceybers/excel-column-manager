@@ -74,6 +74,8 @@ End Sub
 Public Sub TrySelect(ByVal Key As String)
     If Key = UNSAVED_KEY Then
         Set This.Selected.State = This.Current.State
+    ElseIf Left$(Key, 3) = "B::" Then            ' TODO Const builtin prefix
+        Set This.Selected.State = This.States.CollectionView.Item(Key)
     ElseIf Left$(Key, 1) <> "K" Then
         Set This.Selected.State = Nothing
         Exit Sub
@@ -106,8 +108,15 @@ Public Function CanApply() As Boolean
     CanApply = True
 End Function
 
-Private Function ApplyAllowed(ByVal State As ColumnsState) As Boolean
-    If State.Match = FULL_MATCH Then
+Private Function ApplyAllowed(ByVal State As IState) As Boolean
+    If Not TypeOf State Is ColumnsState Then     ' TODO This is a bad idea
+        ApplyAllowed = True
+        Exit Function
+    End If
+    
+    Dim StateCast As ColumnsState
+    Set StateCast = State
+    If StateCast.Match = FULL_MATCH Then
         ApplyAllowed = True
     ElseIf This.Options.GetFlag(modOptionsConst.DO_ALLOW_APPLY_PARTIAL_MATCH) Then
         ApplyAllowed = True
@@ -128,7 +137,10 @@ End Sub
 
 Private Sub ApplyStateToTarget(ByVal State As IState)
     State.Apply This.Target
-    TryAssociateOrphan State
+    
+    If TypeOf State Is ColumnsState Then
+        TryAssociateOrphan State
+    End If
 
     UpdateCurrent
 End Sub

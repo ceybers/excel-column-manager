@@ -57,6 +57,8 @@ Public Sub Load(ByVal Workbook As Workbook)
     For Each SerialString In SerialStrings
         LoadOne SerialString
     Next SerialString
+    
+    LoadBuiltinStates
 End Sub
 
 Private Sub LoadOne(ByVal SerialString As String)
@@ -64,6 +66,12 @@ Private Sub LoadOne(ByVal SerialString As String)
     Set State = New ColumnsState
     State.Deserialize SerialString
     This.Items.Add State
+End Sub
+
+Private Sub LoadBuiltinStates()
+    This.Items.Add StandardColumnsState.Create
+    This.Items.Add AutofitColumnsState.Create
+    This.Items.Add FirstOnlyColumnsState.Create
 End Sub
 
 Private Sub ApplyDefaultSettings()
@@ -85,9 +93,14 @@ Public Sub Save()
     Dim SerialStrings As Collection
     Set SerialStrings = New Collection
     
+    Dim SerialString As String
+    
     Dim Item As ISerializable
     For Each Item In This.Items
-        SerialStrings.Add Item.Serialize
+        SerialString = Item.Serialize
+        If SerialString <> vbNullString Then
+            SerialStrings.Add SerialString
+        End If
     Next Item
     
     This.Settings.Workbook.SetCollection SETTING_COLLECTION_NAME, SerialStrings
