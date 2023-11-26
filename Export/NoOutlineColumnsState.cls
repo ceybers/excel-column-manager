@@ -2,23 +2,22 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "FirstOnlyColumnsState"
+Attribute VB_Name = "NoOutlineColumnsState"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Attribute VB_Description = "Built-in state that displays only the first ListColumns in a single ListObject."
 '@PredeclaredId
 '@IgnoreModule SetAssignmentWithIncompatibleObjectType
-'@ModuleDescription "Built-in state that displays only the first ListColumns in a single ListObject."
+'@ModuleDescription "Built-in state that removes outline levels from all ListColumns in a single ListObject. Will unhide hidden columns."
 '@Folder "State.Builtin"
 Option Explicit
 Implements IState
 Implements ISerializable
 Implements IListable
 
-Private Const BUILTIN_NAME As String = "(Show first column only)"
-Private Const THIS_KEY As String = "B::FirstOnly"
+Private Const BUILTIN_NAME As String = "(Remove all outline levels)"
+Private Const THIS_KEY As String = "B::NoOutline"
 
 Private Type TState
     'ListObject As ListObject
@@ -62,7 +61,7 @@ End Function
 
 ' Requires PredeclaredId annotation
 Public Function Create() As IState
-    Set Create = New FirstOnlyColumnsState
+    Set Create = New NoOutlineColumnsState
 End Function
 
 ' IState
@@ -83,12 +82,9 @@ Private Function IState_Apply(ByVal Target As Object) As Boolean
     
     Dim ListColumn As ListColumn
     For Each ListColumn In ListObject.ListColumns
-        ListColumn.Range.EntireColumn.Hidden = True
+        ListColumn.Range.EntireColumn.OutlineLevel = 1
+        ListColumn.Range.EntireColumn.Hidden = False
     Next ListColumn
-    
-    ListObject.ListColumns.Item(1).Range.EntireColumn.Hidden = False
-    
-    FreezePaneState.ApplyNone
     
     IState_Apply = True
 End Function
@@ -131,4 +127,5 @@ End Property
 Private Property Let IListable_Visible(ByVal vNewValue As Boolean)
     This.Visible = vNewValue
 End Property
+
 

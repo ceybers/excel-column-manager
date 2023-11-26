@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+Attribute VB_Description = "Built-in state that shows all ListColumns in a single ListObject."
 '@PredeclaredId
 '@IgnoreModule SetAssignmentWithIncompatibleObjectType
 '@ModuleDescription "Built-in state that shows all ListColumns in a single ListObject."
@@ -80,6 +81,8 @@ Private Function IState_Apply(ByVal Target As Object) As Boolean
     Dim ListObject As ListObject
     Set ListObject = Target
     ListObject.Range.EntireColumn.Hidden = False
+    
+    FreezePaneState.ApplyTopLeft
     
     IState_Apply = True
 End Function

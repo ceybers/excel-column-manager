@@ -65,7 +65,7 @@ Private Sub UpdateItems()
     
     Dim Child As IListable
     For Each Child In StateCast.Items
-        This.Items.Add Item:=Child           ', Key:=Child.Key           ' No keys needed
+        This.Items.Add Item:=Child               ', Key:=Child.Key           ' No keys needed
     Next Child
     
     UpdateHiddenItems

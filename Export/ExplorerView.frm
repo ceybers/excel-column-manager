@@ -6,7 +6,6 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ExplorerView
    ClientTop       =   465
    ClientWidth     =   7395
    OleObjectBlob   =   "ExplorerView.frx":0000
-   ShowModal       =   0   'False
    StartUpPosition =   1  'CenterOwner
    WhatsThisHelp   =   -1  'True
 End
@@ -21,8 +20,8 @@ Option Explicit
 Implements IView
 
 Private Const MSG_TITLE As String = "Column State Manager"
-Private Const RESIZE_WIDTH As Long = 480 '380
-Private Const RESIZE_HEIGHT As Long = 320 '260
+Private Const RESIZE_WIDTH As Long = 480         '380
+Private Const RESIZE_HEIGHT As Long = 320        '260
 Private Const SEARCH_WATERMARK As String = "Search..."
 
 Private Type TState
@@ -169,6 +168,7 @@ Private Sub ResizeWindow()
     Me.lblSelectedState.Width = Me.lblSelectedState.Width + DeltaX2
     Me.lvState.Height = Me.lvState.Height + DeltaY
 End Sub
+
 Private Sub InitializeControls()
     Me.txtFilterStates.ForeColor = modConstants.GREY_TEXT_COLOR
     

@@ -20,6 +20,8 @@ Implements IListable
 Private Type TState
     ListObject As ListObject
     Name As String
+    Freeze As FreezePaneState
+    Outline As OutlineState
     ListColumns As Collection
     Orphan As Boolean
     Match As ListObjectMatch
@@ -37,7 +39,6 @@ End Property
 
 '@DefaultMember
 Public Property Get Name() As String
-Attribute Name.VB_UserMemId = 0
     Name = This.Name
 End Property
 
@@ -56,7 +57,6 @@ End Property
 
 '@Description "Returns True if this ListObject of this state cannot be found in the VM's workbook."
 Public Property Get Orphan() As Boolean
-Attribute Orphan.VB_Description = "Returns True if this ListObject of this state cannot be found in the VM's workbook."
     Orphan = This.Orphan
 End Property
 
@@ -78,6 +78,8 @@ Public Function ToString() As String
 End Function
 
 Private Sub Class_Initialize()
+    Set This.Freeze = New FreezePaneState
+    Set This.Outline = New OutlineState
     Set This.ListColumns = New Collection
 End Sub
 
@@ -95,6 +97,9 @@ Private Function IState_From(ByVal Object As Object) As Boolean
     
     Set This.ListObject = Object
     Name = This.ListObject.Name
+    
+    Set This.Freeze = FreezePaneState.Create
+    Set This.Outline = OutlineState.Create(This.ListObject.Parent)
     
     Dim ListColumn As ListColumn
     For Each ListColumn In This.ListObject.ListColumns
@@ -128,6 +133,14 @@ Private Function IState_Apply(ByVal Target As Object) As Boolean
         State.Apply TargetListObject
     Next State
     
+    Dim Freeze As IState
+    Set Freeze = This.Freeze
+    Freeze.Apply Nothing
+    
+    Dim Outline As IState
+    Set Outline = This.Outline
+    Outline.Apply TargetListObject.Parent
+    
     IState_Apply = True
 End Function
 
@@ -135,6 +148,14 @@ End Function
 Private Function ISerializable_Serialize() As String
     Dim Result As String
     Result = Result & This.Name & ":"
+    
+    Dim Freeze As ISerializable
+    Set Freeze = This.Freeze
+    Result = Result & Freeze.Serialize & ":"
+    
+    Dim Outline As ISerializable
+    Set Outline = This.Outline
+    Result = Result & Outline.Serialize & ":"
     
     Dim Child As ISerializable
     For Each Child In This.ListColumns
@@ -149,12 +170,20 @@ End Function
 Private Function ISerializable_Deserialize(ByVal SerialString As String) As Boolean
     Dim SplitText() As String
     SplitText = Split(SerialString, ":")
-    If UBound(SplitText) <> 1 Then Exit Function
+    If UBound(SplitText) <> 3 Then Exit Function
     
     This.Name = SplitText(0)
     This.ParentKey = "lo::" & This.Name
     
-    If Not DeserializeChildren(SplitText(1)) Then
+    Dim Freeze As ISerializable
+    Set Freeze = This.Freeze
+    Freeze.Deserialize SplitText(1)
+    
+    Dim Outline As ISerializable
+    Set Outline = This.Outline
+    Outline.Deserialize SplitText(2)
+    
+    If Not DeserializeChildren(SplitText(3)) Then
         Exit Function
     End If
     
@@ -188,12 +217,11 @@ Private Function IState_Equals(ByVal RHS As IState) As Boolean
     If RHS Is Nothing Then Exit Function
     If Not TypeOf RHS Is ColumnsState Then Exit Function
     
-    Dim LHSSerializable As ISerializable
-    Set LHSSerializable = Me
-    Dim RHSSerializable As ISerializable
-    Set RHSSerializable = RHS
-    
-    IState_Equals = (LHSSerializable.Serialize = RHSSerializable.Serialize)
+    IState_Equals = SerializableEquals(Me, RHS)
+End Function
+
+Private Function SerializableEquals(ByVal LHS As ISerializable, ByVal RHS As ISerializable)
+    SerializableEquals = (LHS.Serialize = RHS.Serialize)
 End Function
 
 Private Property Get IListable_Caption() As String
@@ -261,3 +289,4 @@ Private Function GetCaption() As String
     
     GetCaption = Result
 End Function
+

@@ -23,9 +23,10 @@
 - [x] Prune orphaned states.
 - [x] Remove selected state.
 - [x] Remove all states.
-- [ ] Serialize Width of hidden columns.
+- [x] Serialize Width of hidden columns.
 ## Bugs
-- [ ] Closing Options UserForm closes main Explorer UserForm.
+- [x] Closing Options UserForm closes main Explorer UserForm.
+  - Main UserForm was accidentally set to non-modal.
 ## Options (sub UserForm)
 - [x] Create child ViewModel to contain all these flags.
 - [x] Show/hide orphaned states.
@@ -41,10 +42,10 @@
 - [x] Search Match Whole Word
 - [x] Default values for all options if no CustomXML found.
 ## Nice-to-Haves
+- [x] Serialize Freeze Pane state of worksheet.
+- [x] Consider serializing Outline levels.
 - [ ] Inform user if search returned no results instead of just showing an empty tree/list.
 - [ ] Use nicer icons. Probably use .PNG and store them in a hidden UserForm.
-- [ ] Serialize Freeze Pane state of worksheet.
-- [ ] Consider serializing Outline levels.
 - [ ] Store generic (non-Workbook specific) column states in User-level persistence
   - (i.e., for applying to new/unsaved file)
 - [ ] Status bar with history log.

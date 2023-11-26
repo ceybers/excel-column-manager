@@ -21,6 +21,7 @@ Private Type TState
     Name As String
     Width As Double
     Hidden As Boolean
+    OutlineLevel As Long
     Orphan As Boolean
     ' IListable
     Key As String
@@ -31,7 +32,6 @@ Private This As TState
 
 '@DefaultMember
 Public Property Get Name() As String
-Attribute Name.VB_UserMemId = 0
     Name = This.Name
 End Property
 
@@ -96,7 +96,9 @@ Private Function IState_From(ByVal Object As Object) As Boolean
         This.ListColumn.Range.EntireColumn.Hidden = True
         Application.ScreenUpdating = True
     End If
+    
     This.Orphan = False
+    This.OutlineLevel = This.ListColumn.Range.EntireColumn.OutlineLevel
     
     IState_From = True
 End Function
@@ -114,6 +116,7 @@ Private Function IState_Apply(ByVal Target As Object) As Boolean
     If ListColumnHelpers.TryGetListColumn(Target, This.Name, ListColumn) Then
         ListColumn.Range.ColumnWidth = This.Width
         ListColumn.Range.EntireColumn.Hidden = This.Hidden
+        ListColumn.Range.EntireColumn.OutlineLevel = This.OutlineLevel
         IState_Apply = True
     End If
 End Function
@@ -121,21 +124,22 @@ End Function
 ' ISerializable
 Private Function ISerializable_Serialize() As String
     Dim Result As String
-    Result = StringtoBase64(Name) & "," & CDbl(Width) & "," & CStr(CLng(This.Hidden))
+    Result = StringtoBase64(Name) & "," & CDbl(Width) & "," & CStr(CLng(This.Hidden)) & "," & CLng(This.OutlineLevel)
     ISerializable_Serialize = Result
 End Function
 
 Private Function ISerializable_Deserialize(ByVal SerialString As String) As Boolean
     Dim SplitText() As String
     SplitText = Split(SerialString, ",")
-    If UBound(SplitText) <> 2 Then Exit Function
-    If Not IsNumeric(SplitText(2)) Then Exit Function
+    If UBound(SplitText) <> 3 Then Exit Function
+    If Not IsNumeric(SplitText(2)) Then Exit Function ' Test for .Hidden
     
     With This
         Set .ListColumn = Nothing
         .Name = Base64toString(SplitText(0))
         .Width = CDbl(SplitText(1))
         .Hidden = CBool(CLng(SplitText(2)))
+        .OutlineLevel = CLng(SplitText(3))
     End With
     
     ISerializable_Deserialize = True
@@ -177,3 +181,4 @@ End Property
 Private Property Let IListable_Visible(ByVal vNewValue As Boolean)
     This.Visible = vNewValue
 End Property
+
