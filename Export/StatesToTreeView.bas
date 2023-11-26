@@ -7,7 +7,9 @@ Private Const CURRENT_SUFFIX_CAPTION As String = " (active)"
 Private Const UNSAVED_CAPTION As String = "(current unsaved state)"
 Private Const ORPHANS_CAPTION As String = "Orphans"
 Private Const BUILTIN_CAPTION As String = "Built-in"
+Private Const SEARCH_CAPTION As String = "Search results"
 Private Const NO_STATES_CAPTION As String = "No saved Column States found."
+Private Const NO_RESULTS_COUNT As Long = 5 ' This is the number of built-ins
 
 Public Sub Initialize(ByVal TreeView As TreeView)
     Dim il As ImageList
@@ -15,6 +17,7 @@ Public Sub Initialize(ByVal TreeView As TreeView)
     With il
         .ImageWidth = 16
         .ImageHeight = 16
+        .ListImages.Add Key:="msoSearch", Picture:=Application.CommandBars.GetImageMso("FindDialog", 16, 16)
         .ListImages.Add Key:="msoBuiltin", Picture:=Application.CommandBars.GetImageMso("AddToFavorites", 16, 16)
         .ListImages.Add Key:="msoUnsaved", Picture:=Application.CommandBars.GetImageMso("TableStyleBandedColumns", 16, 16)
         .ListImages.Add Key:="msoTable", Picture:=Application.CommandBars.GetImageMso("TableInsert", 16, 16)
@@ -41,9 +44,10 @@ Public Sub Load(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewM
     AddParentNode TreeView
     AddBuiltin TreeView
     AddTables TreeView, ViewModel
+    AddNoSearchResults TreeView, ViewModel
     AddUnsavedState TreeView, ViewModel
     AddStates TreeView, ViewModel
-    CheckNoResults TreeView
+    CheckNoResults TreeView, ViewModel
 End Sub
 
 Private Sub AddParentNode(ByVal TreeView As TreeView)
@@ -115,6 +119,23 @@ Private Sub AddTables(ByVal TreeView As TreeView, ByVal ViewModel As StateManage
                            Key:=ORPHAN_KEY, Text:=ORPHANS_CAPTION, _
                            Image:="msoOrphan"
     End If
+    
+End Sub
+
+Private Sub AddNoSearchResults(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewModel)
+    Dim ParentNode As Node
+    Set ParentNode = TreeView.Nodes.Item(1)
+    
+    Dim FolderNode As Node
+    Set FolderNode = TreeView.Nodes.Add(Relative:=ParentNode, relationship:=tvwChild, _
+                   Key:=SEARCH_KEY, Text:=SEARCH_CAPTION, _
+                   Image:="msoSearch")
+    FolderNode.Expanded = True
+                       
+    Dim Node As Node
+    Set Node = TreeView.Nodes.Add(Relative:=FolderNode, relationship:=tvwChild, _
+                                  Key:=NO_STATES_KEY, Text:=NO_STATES_CAPTION)
+    Node.ForeColor = modConstants.GREY_TEXT_COLOR
 End Sub
 
 Private Function IsOrphan(ByVal TableNames As Collection, ByVal State As IListable)
@@ -176,13 +197,11 @@ Private Function MatchesCurrent(ByVal ViewModel As StateManagerViewModel, ByVal 
     MatchesCurrent = State.Equals(ViewModel.Current.State)
 End Function
 
-Private Sub CheckNoResults(ByVal TreeView As TreeView)
-    If TreeView.Nodes.Count > 2 Then Exit Sub
+Private Sub CheckNoResults(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewModel)
+    If ViewModel.States.CollectionView.Count <= NO_RESULTS_COUNT Then Exit Sub
     
-    Dim Node As Node
-    Set Node = TreeView.Nodes.Add(Relative:=TreeView.Nodes.Item(1), relationship:=tvwChild, _
-                                  Key:=NO_STATES_KEY, Text:=NO_STATES_CAPTION)
-    Node.ForeColor = modConstants.GREY_TEXT_COLOR
+    With TreeView.Nodes
+        .Remove NO_STATES_KEY
+        .Remove SEARCH_KEY
+    End With
 End Sub
-
-

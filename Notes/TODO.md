@@ -44,7 +44,7 @@
 ## Nice-to-Haves
 - [x] Serialize Freeze Pane state of worksheet.
 - [x] Consider serializing Outline levels.
-- [ ] Inform user if search returned no results instead of just showing an empty tree/list.
+- [x] Inform user if search returned no results instead of just showing an empty tree/list.
 - [ ] Use nicer icons. Probably use .PNG and store them in a hidden UserForm.
 - [ ] Store generic (non-Workbook specific) column states in User-level persistence
   - (i.e., for applying to new/unsaved file)
