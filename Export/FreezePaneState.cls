@@ -38,7 +38,7 @@ Public Function Create() As IState
     Set Create = Result
 End Function
 
-Public Function ApplyTopLeft()
+Public Sub ApplyTopLeft()
     Dim SerialState As ISerializable
     Set SerialState = New FreezePaneState
     SerialState.Deserialize "-1.1.1"
@@ -46,9 +46,9 @@ Public Function ApplyTopLeft()
     Dim State As IState
     Set State = SerialState
     State.Apply Nothing
-End Function
+End Sub
 
-Public Function ApplyNone()
+Public Sub ApplyNone()
     Dim SerialState As ISerializable
     Set SerialState = New FreezePaneState
     SerialState.Deserialize "0.0.0"
@@ -56,7 +56,7 @@ Public Function ApplyNone()
     Dim State As IState
     Set State = SerialState
     State.Apply Nothing
-End Function
+End Sub
 
 ' IState
 Private Function IState_From(ByVal Object As Object) As Boolean
@@ -80,7 +80,7 @@ Private Function IState_Apply(ByVal Target As Object) As Boolean
         .SplitColumn = This.Column
         .FreezePanes = This.Enabled
     End With
-    Application.ScreenUpdating = True 'Doesn't seem to help much
+    Application.ScreenUpdating = True            'Doesn't seem to help much
     
     IState_Apply = True
 End Function
@@ -115,7 +115,7 @@ Private Function IState_Equals(ByVal RHS As IState) As Boolean
     IState_Equals = SerializableEquals(Me, RHS)
 End Function
 
-Private Function SerializableEquals(ByVal LHS As ISerializable, ByVal RHS As ISerializable)
+Private Function SerializableEquals(ByVal LHS As ISerializable, ByVal RHS As ISerializable) As Boolean
     SerializableEquals = (LHS.Serialize = RHS.Serialize)
 End Function
 

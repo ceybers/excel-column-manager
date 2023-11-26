@@ -16,7 +16,7 @@
 - [x] Indicate Width property.
 - [x] Indicate whether column exists in target ListObject.
 ## Features
-- [ ] Give states names, defaulting to e.g., "(x/y) Untitled state (2023/01/01 09:00)".
+- [x] Give states names, defaulting to e.g., "(x/y) Untitled state (2023/01/01 09:00)".
 - [x] Apply selected state.
 - [x] Import manually using Base64 string.
 - [x] Export manually using Base64 string.
@@ -44,9 +44,10 @@
 ## Nice-to-Haves
 - [x] Serialize Freeze Pane state of worksheet.
 - [x] Consider serializing Outline levels.
+  - [ ] Check if it is necessary to set all Outline Levels to 1 before applying them from a state, i.e. to prevent a malformed Outline state midway through Applying.
 - [x] Inform user if search returned no results instead of just showing an empty tree/list.
 - [x] Cancel on pressing Escape key (hidden Cancel=true button). 
-- [ ] Use nicer icons. Probably use .PNG and store them in a hidden UserForm.
+- [x] Use nicer icons. Probably use .PNG and store them in a hidden UserForm.
 - [ ] Store generic (non-Workbook specific) column states in User-level persistence
   - (i.e., for applying to new/unsaved file)
 - [ ] Status bar with history log.

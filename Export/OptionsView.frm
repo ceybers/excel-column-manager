@@ -81,7 +81,6 @@ End Sub
 
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
     If CloseMode = VbQueryClose.vbFormControlMenu Then
-        Stop
         Cancel = True
         OnCancel
     End If

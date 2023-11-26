@@ -239,3 +239,20 @@ Private Sub SaveAndReload()
     This.States.Reload
 End Sub
 
+Public Function CanRename() As Boolean
+    If This.Selected.State Is Nothing Then Exit Function
+    If This.Selected.State.ParentKey = modConstants.BUILTIN_KEY Then Exit Function
+    
+    CanRename = True
+End Function
+
+Public Function Rename() As Boolean
+    If Not CanRename Then Exit Function
+    
+    If This.Selected.TryRename(vbNullString) Then
+        This.Model.Save
+        This.States.Reload
+        Rename = True
+    End If
+End Function
+

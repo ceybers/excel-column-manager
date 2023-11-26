@@ -22,13 +22,15 @@
 - `Activesheet.Outline.SummaryColumn = xlSummaryOnRight`
 - `Activesheet.Outline.SummaryRow = xlSummaryBelow`
 - `Selection.EntireColumn.OutlineLevel`
-- Default OutlineLevel is 1, not 0. This can be set while selection is inside a ListObject.
+- Default OutlineLevel of a column is 1, not 0. This can be set while selection is inside a ListObject.
 - For setting ActiveSheet Summary Row/Col, remember to move the selection outside of any ListObject or it will throw an error.
 >```vb
 >    Dim UsedRange As Range
 >    Set UsedRange = Target.UsedRange
 >    Target.Cells(1, UsedRange.Columns.Count + 1).Select
 >```
+- Won't work in the edge case where two ListObjects are placed right next to each other, but it is good enough for now.
+
 ## 📖API References
 - [Range.ColumnWidth property (Excel) | Microsoft Learn](https://learn.microsoft.com/en-us/office/vba/api/excel.range.columnwidth)
 - [Range.Hidden property (Excel) | Microsoft Learn](https://learn.microsoft.com/en-us/office/vba/api/excel.range.hidden)

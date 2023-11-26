@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+Attribute VB_Description = "Built-in state that removes outline levels from all ListColumns in a single ListObject. Will unhide hidden columns."
 '@PredeclaredId
 '@IgnoreModule SetAssignmentWithIncompatibleObjectType
 '@ModuleDescription "Built-in state that removes outline levels from all ListColumns in a single ListObject. Will unhide hidden columns."
@@ -127,5 +128,4 @@ End Property
 Private Property Let IListable_Visible(ByVal vNewValue As Boolean)
     This.Visible = vNewValue
 End Property
-
 

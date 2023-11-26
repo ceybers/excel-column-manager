@@ -21,19 +21,3 @@ Private Sub cmbClose_Click()
     Me.Hide
 End Sub
 
-Private Sub Label4_Click()
-
-End Sub
-
-Private Sub lblCopyright_Click()
-
-End Sub
-
-Private Sub UserForm_Activate()
-    Dim Picture As IPictureDisp
-    Set Picture = Application.CommandBars.GetImageMso("CreateTableInDesignView", 32, 32)
-    Set Me.lblPicHeader.Picture = Picture
-    
-    Me.lblVersion.Caption = "Version 0.9"
-End Sub
-

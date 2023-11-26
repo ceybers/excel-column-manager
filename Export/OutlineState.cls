@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+Attribute VB_Description = "Stores the state of multiple ListColumns from a single ListObject."
 '@IgnoreModule SetAssignmentWithIncompatibleObjectType
 '@ModuleDescription "Stores the state of multiple ListColumns from a single ListObject."
 '@PredeclaredId
@@ -109,6 +110,7 @@ Private Function IState_Equals(ByVal RHS As IState) As Boolean
     IState_Equals = SerializableEquals(Me, RHS)
 End Function
 
-Private Function SerializableEquals(ByVal LHS As ISerializable, ByVal RHS As ISerializable)
+Private Function SerializableEquals(ByVal LHS As ISerializable, ByVal RHS As ISerializable) As Boolean
     SerializableEquals = (LHS.Serialize = RHS.Serialize)
 End Function
+

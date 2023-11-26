@@ -87,3 +87,18 @@ Public Sub UpdateOrphans(ByVal Target As ListObject)
     Next Child
 End Sub
 
+Public Function TryRename(ByVal NewName As String) As Boolean
+    Dim StateCast As ColumnsState
+    Set StateCast = This.State
+    
+    Dim CurrentName As String
+    CurrentName = StateCast.Caption
+    
+    NewName = InputBox("Rename selected state:", "Rename state", CurrentName)
+    
+    If NewName = CurrentName Then Exit Function
+    
+    StateCast.Caption = NewName
+    TryRename = True
+End Function
+

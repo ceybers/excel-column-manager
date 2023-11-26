@@ -9,7 +9,7 @@ Private Const ORPHANS_CAPTION As String = "Orphans"
 Private Const BUILTIN_CAPTION As String = "Built-in"
 Private Const SEARCH_CAPTION As String = "Search results"
 Private Const NO_STATES_CAPTION As String = "No saved Column States found."
-Private Const NO_RESULTS_COUNT As Long = 5 ' This is the number of built-ins
+Private Const NO_RESULTS_COUNT As Long = 5       ' This is the number of built-ins
 
 Public Sub Initialize(ByVal TreeView As TreeView)
     Dim il As ImageList
@@ -17,14 +17,15 @@ Public Sub Initialize(ByVal TreeView As TreeView)
     With il
         .ImageWidth = 16
         .ImageHeight = 16
-        .ListImages.Add Key:="msoSearch", Picture:=Application.CommandBars.GetImageMso("FindDialog", 16, 16)
-        .ListImages.Add Key:="msoBuiltin", Picture:=Application.CommandBars.GetImageMso("AddToFavorites", 16, 16)
-        .ListImages.Add Key:="msoUnsaved", Picture:=Application.CommandBars.GetImageMso("TableStyleBandedColumns", 16, 16)
-        .ListImages.Add Key:="msoTable", Picture:=Application.CommandBars.GetImageMso("TableInsert", 16, 16)
-        .ListImages.Add Key:="msoOrphan", Picture:=Application.CommandBars.GetImageMso("Help", 16, 16)
-        .ListImages.Add Key:="msoItem", Picture:=Application.CommandBars.GetImageMso("TableRowSelect", 16, 16)
-        .ListImages.Add Key:="msoSelected", Picture:=Application.CommandBars.GetImageMso("TableSelect", 16, 16)
-        .ListImages.Add Key:="msoRoot", Picture:=Application.CommandBars.GetImageMso("TableAutoFitFixedColumnWidth", 16, 16)
+        .ListImages.Add Key:="msoSearch", Picture:=frmPictures.lblSearch.Picture
+        .ListImages.Add Key:="msoBuiltin", Picture:=frmPictures.lblTableBuiltin.Picture
+        .ListImages.Add Key:="msoBuiltinItem", Picture:=frmPictures.lblMethod.Picture
+        .ListImages.Add Key:="msoUnsaved", Picture:=frmPictures.lblFieldFriend.Picture
+        .ListImages.Add Key:="msoTable", Picture:=frmPictures.lblTable.Picture
+        .ListImages.Add Key:="msoOrphan", Picture:=frmPictures.lblTableOrphans.Picture
+        .ListImages.Add Key:="msoItem", Picture:=frmPictures.lblField.Picture
+        .ListImages.Add Key:="msoSelected", Picture:=frmPictures.lblField.Picture ' Selected field, not table
+        .ListImages.Add Key:="msoRoot", Picture:=frmPictures.lblRoot.Picture
     End With
     
     With TreeView
@@ -36,7 +37,7 @@ Public Sub Initialize(ByVal TreeView As TreeView)
         .HideSelection = False
         .Indentation = 16
         .Style = tvwTreelinesPictureText
-        .LabelEdit = tvwManual
+        .LabelEdit = tvwAutomatic
     End With
 End Sub
 
@@ -128,8 +129,8 @@ Private Sub AddNoSearchResults(ByVal TreeView As TreeView, ByVal ViewModel As St
     
     Dim FolderNode As Node
     Set FolderNode = TreeView.Nodes.Add(Relative:=ParentNode, relationship:=tvwChild, _
-                   Key:=SEARCH_KEY, Text:=SEARCH_CAPTION, _
-                   Image:="msoSearch")
+                                        Key:=SEARCH_KEY, Text:=SEARCH_CAPTION, _
+                                        Image:="msoSearch")
     FolderNode.Expanded = True
                        
     Dim Node As Node
@@ -138,7 +139,7 @@ Private Sub AddNoSearchResults(ByVal TreeView As TreeView, ByVal ViewModel As St
     Node.ForeColor = modConstants.GREY_TEXT_COLOR
 End Sub
 
-Private Function IsOrphan(ByVal TableNames As Collection, ByVal State As IListable)
+Private Function IsOrphan(ByVal TableNames As Collection, ByVal State As IListable) As Boolean
     Dim StateCast As ColumnsState
     Set StateCast = State
     IsOrphan = Not CollectionHelpers.ExistsInCollection(TableNames, StateCast.Name)
@@ -158,7 +159,7 @@ Private Sub AddUnsavedState(ByVal TreeView As TreeView, ByVal ViewModel As State
     Dim Node As Node
     Set Node = TreeView.Nodes.Add(Relative:=TableNode, relationship:=tvwChild, _
                                   Key:=UNSAVED_KEY, Text:=UNSAVED_CAPTION, _
-                                  Image:="msoItem", SelectedImage:="msoUnsaved")
+                                  Image:="msoUnsaved", SelectedImage:="msoUnsaved")
     Node.Bold = True
     Node.Selected = True
 End Sub
@@ -179,6 +180,10 @@ Private Sub AddStates(ByVal TreeView As TreeView, ByVal ViewModel As StateManage
                                       Key:=State.Key, Text:=State.Caption, _
                                       Image:="msoItem", SelectedImage:="msoSelected")
                            
+        If State.ParentKey = modConstants.BUILTIN_KEY Then
+            Node.Image = "msoBuiltinItem"
+            Node.SelectedImage = "msoBuiltinItem"
+        End If
         If RemoveUnsaved = False Then
             If MatchesCurrent(ViewModel, State) Then
                 RemoveUnsaved = True
@@ -205,3 +210,5 @@ Private Sub CheckNoResults(ByVal TreeView As TreeView, ByVal ViewModel As StateM
         .Remove SEARCH_KEY
     End With
 End Sub
+
+

@@ -20,9 +20,17 @@ Option Explicit
 Implements IView
 
 Private Const MSG_TITLE As String = "Column State Manager"
-Private Const RESIZE_WIDTH As Long = 480         '380
-Private Const RESIZE_HEIGHT As Long = 320        '260
+Private Const RESIZE_WIDTH As Long = 640         '380
+Private Const RESIZE_HEIGHT As Long = 480        '260
 Private Const SEARCH_WATERMARK As String = "Search..."
+
+Private Const MSG_TITLE_EXPORT As String = "Export Column State to Serial String"
+Private Const MSG_TITLE_IMPORT As String = "Import Column State from Serial String"
+Private Const MSG_EXPORT As String = "This is a Base64 serialized string that represents a Column State."
+Private Const MSG_IMPORT As String = "Please input a Base64 serialized string that represents a Column State."
+Private Const MSG_IMPORT_SUCCEEDED As String = "Column State imported successfully from Base64 serial string."
+Private Const MSG_IMPORT_FAILED_MALFORMED As String = "Column State could not be imported!" & vbCrLf & "Serialized string could be not be deserialized."
+Private Const MSG_IMPORT_FAILED_DUPLICATE As String = "Column State was not imported as it already exists!"
 
 Private Type TState
     ViewModel As StateManagerViewModel
@@ -78,6 +86,10 @@ Private Sub OnCancel()
     Me.Hide
 End Sub
 
+Private Sub tvStates_DblClick()
+    TryRename
+End Sub
+
 Private Sub tvStates_NodeClick(ByVal Node As MSComctlLib.Node)
     This.ViewModel.TrySelect Node.Key
     UpdateListViewRHS
@@ -113,16 +125,16 @@ Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
 End Sub
 
 Private Sub UserForm_Activate()
-    Set Me.lblTargetIcon.Picture = Application.CommandBars.GetImageMso("CreateTableInDesignView", 16, 16)
-    Set Me.cmbSave.Picture = Application.CommandBars.GetImageMso("DataFormAddRecord", 16, 16)
-    Set Me.cmbApply.Picture = Application.CommandBars.GetImageMso("QueryBuilder", 16, 16)
-    Set Me.cmbExport.Picture = Application.CommandBars.GetImageMso("Copy", 16, 16)
-    Set Me.cmbImport.Picture = Application.CommandBars.GetImageMso("Paste", 16, 16)
-    Set Me.cmbPrune.Picture = Application.CommandBars.GetImageMso("TextBoxLinkBreak", 16, 16) 'Prune
-    Set Me.cmbRemove.Picture = Application.CommandBars.GetImageMso("TableRowsDelete", 16, 16) ' Remove
-    Set Me.cmbRemoveAll.Picture = Application.CommandBars.GetImageMso("TableDelete", 16, 16) ' Remove All
-    Set Me.cmbOptions.Picture = Application.CommandBars.GetImageMso("OmsViewAccountSetting", 16, 16)
-    Set Me.cmbAbout.Picture = Application.CommandBars.GetImageMso("Help", 16, 16)
+    Set Me.lblTargetIcon.Picture = frmPictures.lblTarget.Picture
+    Set Me.cmbSave.Picture = frmPictures.lblSave.Picture
+    Set Me.cmbApply.Picture = frmPictures.lblApply.Picture
+    Set Me.cmbExport.Picture = frmPictures.lblCopy.Picture
+    Set Me.cmbImport.Picture = frmPictures.lblPaste.Picture
+    Set Me.cmbPrune.Picture = frmPictures.lblPrune.Picture
+    Set Me.cmbRemove.Picture = frmPictures.lblRemove.Picture
+    Set Me.cmbRemoveAll.Picture = frmPictures.lblRemoveAll.Picture
+    Set Me.cmbOptions.Picture = frmPictures.lblOptions.Picture
+    Set Me.cmbAbout.Picture = frmPictures.lblHelp.Picture
 End Sub
 
 Private Function IView_ShowDialog(ByVal ViewModel As Object) As Boolean
@@ -273,17 +285,17 @@ Private Sub TryExport()
     Dim State As ISerializable
     Set State = This.ViewModel.Selected.State
     If State Is Nothing Then Exit Sub
-    InputBox "Serial string for selected state", "Export State to Serial String", State.Serialize
+    InputBox MSG_EXPORT, MSG_TITLE_EXPORT, State.Serialize
 End Sub
 
 Private Sub TryImport()
     Dim SerialString As String
-    SerialString = InputBox("Serial string for selected state", "Export State to Serial String", _
-                            "Table1:Q29sRA==,8,0;Q29sQg==,16,0;Q29sQw==,102,0")
+    SerialString = InputBox(MSG_IMPORT, MSG_TITLE_IMPORT, _
+                            "")                  ' TODO Implement watermark text and or example
     
     Dim State As IListable
     If This.ViewModel.TryImport(SerialString, State) Then
-        MsgBox "Import OK!", vbInformation + vbOKOnly, MSG_TITLE
+        MsgBox MSG_IMPORT_SUCCEEDED, vbInformation + vbOKOnly, MSG_TITLE_IMPORT
         UpdateListViewLHS
         
         ' TODO This is a bad idea
@@ -294,20 +306,34 @@ Private Sub TryImport()
         UpdateButtons
     Else
         If State Is Nothing Then
-            MsgBox "Import FAIL! serial malformed", vbCritical + vbOKOnly, MSG_TITLE
+            MsgBox MSG_IMPORT_FAILED_MALFORMED, vbCritical + vbOKOnly, MSG_TITLE_IMPORT
         Else
-            MsgBox "Import FAIL! Already exists", vbCritical + vbOKOnly, MSG_TITLE
+            MsgBox MSG_IMPORT_FAILED_DUPLICATE, vbCritical + vbOKOnly, MSG_TITLE_IMPORT
         End If
     End If
 End Sub
 
 Private Sub TryShowOptions()
-    'Me.Hide
     This.ViewModel.ShowOptions
-    'Me.Show ' Doesn't help
-    'UpdateListViewLHS
-    'UpdateListViewRHS
-    'UpdateButtons
+    UpdateListViewLHS
+    UpdateListViewRHS
+    UpdateButtons
+End Sub
+
+Private Sub TryRename()
+    Dim CurrentKey As String
+    If Not This.ViewModel.Selected Is Nothing Then
+        CurrentKey = This.ViewModel.Selected.State.Key
+    End If
+    If This.ViewModel.Rename() Then
+        UpdateListViewLHS
+        UpdateListViewRHS
+        If CurrentKey <> vbNullString Then
+            ' TODO FIX Bad idea
+            Me.tvStates.Nodes.Item(CurrentKey).Selected = True
+            This.ViewModel.TrySelect CurrentKey
+        End If
+    End If
 End Sub
 
 

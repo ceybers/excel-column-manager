@@ -20,6 +20,7 @@ Implements IListable
 Private Type TState
     ListObject As ListObject
     Name As String
+    Caption As String
     Freeze As FreezePaneState
     Outline As OutlineState
     ListColumns As Collection
@@ -45,6 +46,17 @@ End Property
 Public Property Let Name(ByVal vNewValue As String)
     This.Name = vNewValue
     This.ParentKey = LO_KEY_PREFIX & vNewValue
+End Property
+
+Public Property Get Caption() As String
+    Caption = This.Caption
+End Property
+
+Public Property Let Caption(ByVal vNewValue As String)
+    This.Caption = vNewValue
+    If vNewValue = vbNullString Then
+        SetAutoCaption
+    End If
 End Property
 
 Public Property Get Match() As ListObjectMatch
@@ -106,6 +118,8 @@ Private Function IState_From(ByVal Object As Object) As Boolean
         This.ListColumns.Add ColumnState.Create(ListColumn)
     Next ListColumn
     
+    SetAutoCaption
+    
     IState_From = True
 End Function
 
@@ -148,14 +162,10 @@ End Function
 Private Function ISerializable_Serialize() As String
     Dim Result As String
     Result = Result & This.Name & ":"
-    
-    Dim Freeze As ISerializable
-    Set Freeze = This.Freeze
-    Result = Result & Freeze.Serialize & ":"
-    
-    Dim Outline As ISerializable
-    Set Outline = This.Outline
-    Result = Result & Outline.Serialize & ":"
+
+    Result = Result & StringtoBase64(This.Caption) & ":"
+    Result = Result & ToSerializable(This.Freeze) & ":"
+    Result = Result & ToSerializable(This.Outline) & ":"
     
     Dim Child As ISerializable
     For Each Child In This.ListColumns
@@ -167,23 +177,29 @@ Private Function ISerializable_Serialize() As String
     ISerializable_Serialize = Result
 End Function
 
+Private Function ToSerializable(ByVal State As ISerializable) As String
+    ToSerializable = State.Serialize
+End Function
+
 Private Function ISerializable_Deserialize(ByVal SerialString As String) As Boolean
     Dim SplitText() As String
     SplitText = Split(SerialString, ":")
-    If UBound(SplitText) <> 3 Then Exit Function
+    If UBound(SplitText) <> 4 Then Exit Function
     
     This.Name = SplitText(0)
-    This.ParentKey = "lo::" & This.Name
+    This.ParentKey = modConstants.LO_KEY_PREFIX & This.Name
+    
+    This.Caption = Base64toString(SplitText(1))
     
     Dim Freeze As ISerializable
     Set Freeze = This.Freeze
-    Freeze.Deserialize SplitText(1)
+    Freeze.Deserialize SplitText(2)
     
     Dim Outline As ISerializable
     Set Outline = This.Outline
-    Outline.Deserialize SplitText(2)
+    Outline.Deserialize SplitText(3)
     
-    If Not DeserializeChildren(SplitText(3)) Then
+    If Not DeserializeChildren(SplitText(4)) Then
         Exit Function
     End If
     
@@ -220,12 +236,12 @@ Private Function IState_Equals(ByVal RHS As IState) As Boolean
     IState_Equals = SerializableEquals(Me, RHS)
 End Function
 
-Private Function SerializableEquals(ByVal LHS As ISerializable, ByVal RHS As ISerializable)
+Private Function SerializableEquals(ByVal LHS As ISerializable, ByVal RHS As ISerializable) As Boolean
     SerializableEquals = (LHS.Serialize = RHS.Serialize)
 End Function
 
 Private Property Get IListable_Caption() As String
-    IListable_Caption = GetCaption
+    IListable_Caption = This.Caption             'GetCaption
 End Property
 
 Private Property Get IListable_Key() As String
@@ -260,7 +276,7 @@ Private Function VisibleCount() As Long
     Next Child
 End Function
 
-Private Function GetCaption() As String
+Public Sub SetAutoCaption()
     Dim Result As String
     
     Dim Child As ColumnState
@@ -287,6 +303,8 @@ Private Function GetCaption() As String
         Result = Result & " (no match)"
     End If
     
-    GetCaption = Result
-End Function
+    Result = Result & " (" & Now() & ")"
+    
+    This.Caption = Result
+End Sub
 
