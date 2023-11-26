@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmAbout 
    Caption         =   "About Excel Column State Tool"
-   ClientHeight    =   1845
+   ClientHeight    =   3255
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   3990
+   ClientWidth     =   4560
    OleObjectBlob   =   "frmAbout.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -21,11 +21,19 @@ Private Sub cmbClose_Click()
     Me.Hide
 End Sub
 
+Private Sub Label4_Click()
+
+End Sub
+
+Private Sub lblCopyright_Click()
+
+End Sub
+
 Private Sub UserForm_Activate()
     Dim Picture As IPictureDisp
     Set Picture = Application.CommandBars.GetImageMso("CreateTableInDesignView", 32, 32)
     Set Me.lblPicHeader.Picture = Picture
     
-    Me.Label1.Caption = "Version 0.9" & vbCrLf & "Copyright © 2023 Craig Eybers"
+    Me.lblVersion.Caption = "Version 0.9"
 End Sub
 

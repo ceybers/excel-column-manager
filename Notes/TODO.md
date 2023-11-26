@@ -45,6 +45,7 @@
 - [x] Serialize Freeze Pane state of worksheet.
 - [x] Consider serializing Outline levels.
 - [x] Inform user if search returned no results instead of just showing an empty tree/list.
+- [x] Cancel on pressing Escape key (hidden Cancel=true button). 
 - [ ] Use nicer icons. Probably use .PNG and store them in a hidden UserForm.
 - [ ] Store generic (non-Workbook specific) column states in User-level persistence
   - (i.e., for applying to new/unsaved file)

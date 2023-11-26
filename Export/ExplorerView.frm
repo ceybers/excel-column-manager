@@ -31,6 +31,10 @@ End Type
 
 Private This As TState
 
+Private Sub cmbCancel_Click()
+    OnCancel
+End Sub
+
 ' Buttons for Actions
 Private Sub cmbSave_Click()
     TrySave

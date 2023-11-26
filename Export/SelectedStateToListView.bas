@@ -10,10 +10,14 @@ Public Sub Initialize(ByVal ListView As ListView)
     With il
         .ImageWidth = 16
         .ImageHeight = 16
-        .ListImages.Add Key:="Visible", Picture:=Application.CommandBars.GetImageMso("VisibilityVisible", 16, 16)
-        .ListImages.Add Key:="Hidden", Picture:=Application.CommandBars.GetImageMso("VisibilityHidden", 16, 16)
-        .ListImages.Add Key:="Exists", Picture:=Application.CommandBars.GetImageMso("AcceptInvitation", 16, 16)
-        .ListImages.Add Key:="NotExists", Picture:=Application.CommandBars.GetImageMso("DeclineInvitation", 16, 16)
+        '.ListImages.Add Key:="Visible", Picture:=Application.CommandBars.GetImageMso("VisibilityVisible", 16, 16)
+        '.ListImages.Add Key:="Hidden", Picture:=Application.CommandBars.GetImageMso("VisibilityHidden", 16, 16)
+        '.ListImages.Add Key:="Exists", Picture:=Application.CommandBars.GetImageMso("AcceptInvitation", 16, 16)
+        '.ListImages.Add Key:="NotExists", Picture:=Application.CommandBars.GetImageMso("DeclineInvitation", 16, 16)
+        .ListImages.Add Key:="Visible", Picture:=frmPictures.lblVisible.Picture
+        .ListImages.Add Key:="Hidden", Picture:=frmPictures.lblHidden.Picture
+        .ListImages.Add Key:="Exists", Picture:=frmPictures.lblExists.Picture
+        .ListImages.Add Key:="NotExists", Picture:=frmPictures.lblNotExists.Picture
     End With
         
     With ListView
