@@ -17,6 +17,9 @@ Implements IState
 Implements ISerializable
 Implements IListable
 
+Private Const MAX_CHILDREN_IN_CAPTION As Long = 5
+Private Const MAX_COLUMN_CAPTION As Long = 12
+
 Private Type TState
     ListObject As ListObject
     Name As String
@@ -40,6 +43,7 @@ End Property
 
 '@DefaultMember
 Public Property Get Name() As String
+Attribute Name.VB_UserMemId = 0
     Name = This.Name
 End Property
 
@@ -69,6 +73,7 @@ End Property
 
 '@Description "Returns True if this ListObject of this state cannot be found in the VM's workbook."
 Public Property Get Orphan() As Boolean
+Attribute Orphan.VB_Description = "Returns True if this ListObject of this state cannot be found in the VM's workbook."
     Orphan = This.Orphan
 End Property
 
@@ -279,12 +284,25 @@ End Function
 Public Sub SetAutoCaption()
     Dim Result As String
     
-    Dim Child As ColumnState
-    For Each Child In This.ListColumns
-        If Child.Width > 0 Then
-            Result = Result & Child.Name & ","
+    Dim MaxChildren As Long
+    MaxChildren = This.ListColumns.Count
+    If MaxChildren > MAX_CHILDREN_IN_CAPTION Then MaxChildren = MAX_CHILDREN_IN_CAPTION
+    
+    Dim i As Long
+    For i = 1 To MaxChildren
+        Dim Child As ColumnState
+        Set Child = This.ListColumns.Item(i)
+        Dim ChildName As String
+        ChildName = Child.Name
+        If Len(ChildName) > MAX_COLUMN_CAPTION Then
+            ChildName = Left$(ChildName, MAX_COLUMN_CAPTION - 3) & "..."
         End If
-    Next Child
+        Result = Result & ChildName & ","
+    Next i
+    If This.ListColumns.Count > MAX_CHILDREN_IN_CAPTION Then
+        ' Adds a second comma if there are more elements, e.g. foo..., bar..., xyz...,,
+        Result = Result & ","
+    End If
     
     If Len(Result) > 2 Then
         Result = Left$(Result, Len(Result) - 1)
@@ -307,4 +325,3 @@ Public Sub SetAutoCaption()
     
     This.Caption = Result
 End Sub
-

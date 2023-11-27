@@ -6,7 +6,7 @@ Private Const ROOT_CAPTION As String = "Column States"
 Private Const CURRENT_SUFFIX_CAPTION As String = " (active)"
 Private Const UNSAVED_CAPTION As String = "(current unsaved state)"
 Private Const ORPHANS_CAPTION As String = "Orphans"
-Private Const BUILTIN_CAPTION As String = "Built-in"
+Private Const BUILTIN_CAPTION As String = "Built-in States"
 Private Const SEARCH_CAPTION As String = "Search results"
 Private Const NO_STATES_CAPTION As String = "No saved Column States found."
 Private Const NO_RESULTS_COUNT As Long = 5       ' This is the number of built-ins
@@ -203,7 +203,7 @@ Private Function MatchesCurrent(ByVal ViewModel As StateManagerViewModel, ByVal 
 End Function
 
 Private Sub CheckNoResults(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewModel)
-    If ViewModel.States.CollectionView.Count <= NO_RESULTS_COUNT Then Exit Sub
+    If ViewModel.States.HasNoSearchResults Then Exit Sub
     
     With TreeView.Nodes
         .Remove NO_STATES_KEY

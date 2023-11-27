@@ -167,13 +167,19 @@ Public Function HasOrphans() As Boolean
 End Function
 
 Public Sub RemoveOrphans(ByVal Model As StatesModel)
-    Dim State As ColumnsState
-    For Each State In This.Items
-        If State.Orphan Then
-            Model.Remove State
+    Dim Item As Variant
+    For Each Item In This.Items
+        If TypeOf Item Is ColumnsState Then
+            TryRemoveOrphan Model, Item
         End If
-    Next State
+    Next Item
 End Sub
+
+Private Function TryRemoveOrphan(ByVal Model As StatesModel, ByVal State As ColumnsState)
+    If State.Orphan Then
+        Model.Remove State
+    End If
+End Function
 
 Private Sub UpdateMatchTarget()
     Dim State As Object
@@ -221,5 +227,18 @@ End Function
 
 Private Function DoShowPartialMatch() As Boolean
     DoShowPartialMatch = This.Options.GetFlag(modOptionsConst.DO_SHOW_PARTIAL_MATCH)
+End Function
+
+Public Function HasNoSearchResults() As Boolean
+    If This.Filter = vbNullString Then Exit Function
+
+    Dim Item As Variant
+    For Each Item In This.CollectionView
+        If TypeOf Item Is ColumnsState Then
+            Exit Function
+        End If
+    Next Item
+    
+    HasNoSearchResults = True
 End Function
 

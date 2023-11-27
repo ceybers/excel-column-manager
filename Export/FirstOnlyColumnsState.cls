@@ -17,7 +17,7 @@ Implements IState
 Implements ISerializable
 Implements IListable
 
-Private Const BUILTIN_NAME As String = "(Show first column only)"
+Private Const BUILTIN_NAME As String = "Show first column only"
 Private Const THIS_KEY As String = "B::FirstOnly"
 
 Private Type TState
@@ -33,6 +33,7 @@ Private This As TState
 
 '@DefaultMember
 Public Property Get Name() As String
+Attribute Name.VB_UserMemId = 0
     Name = This.Name
 End Property
 
@@ -50,6 +51,7 @@ End Property
 
 '@Description "Returns True if this ListObject of this state cannot be found in the VM's workbook."
 Public Property Get Orphan() As Boolean
+Attribute Orphan.VB_Description = "Returns True if this ListObject of this state cannot be found in the VM's workbook."
     Orphan = False
 End Property
 
@@ -131,4 +133,3 @@ End Property
 Private Property Let IListable_Visible(ByVal vNewValue As Boolean)
     This.Visible = vNewValue
 End Property
-

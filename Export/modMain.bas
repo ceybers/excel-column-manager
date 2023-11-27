@@ -45,6 +45,8 @@ Private Function TryGetSingleListObject(ByRef OutListObject As ListObject) As Bo
 End Function
 
 Private Sub RunPersistentColumnStateTool(ByVal ListObject As ListObject)
+    Application.ScreenUpdating = False
+    
     Dim Model As StatesModel
     Set Model = New StatesModel
     Model.Load ThisWorkbook
@@ -57,6 +59,8 @@ Private Sub RunPersistentColumnStateTool(ByVal ListObject As ListObject)
     Set View = New ExplorerView
     
     View.ShowDialog ViewModel
+    
+    Application.ScreenUpdating = True
 End Sub
 
 Public Sub ResetModel()

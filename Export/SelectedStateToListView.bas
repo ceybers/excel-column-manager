@@ -25,7 +25,7 @@ Public Sub Initialize(ByVal ListView As ListView)
         Set .SmallIcons = il
         .ListItems.Clear
         .ColumnHeaders.Clear
-        .ColumnHeaders.Add Text:="#", Width:=24
+        .ColumnHeaders.Add Text:="#", Width:=32
         .ColumnHeaders.Add Text:="Column Name", Width:=70
         .ColumnHeaders.Add Text:="Width", Width:=40
         .ColumnHeaders.Add Text:="Visible", Width:=64

@@ -102,3 +102,12 @@ Public Function TryRename(ByVal NewName As String) As Boolean
     TryRename = True
 End Function
 
+Public Function IsBuiltin() As Boolean
+    If This.State Is Nothing Then Exit Function
+    
+    Dim StateListable As IListable
+    Set StateListable = This.State
+    If StateListable.ParentKey = modConstants.BUILTIN_KEY Then
+        IsBuiltin = True
+    End If
+End Function

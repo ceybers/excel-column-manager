@@ -27,6 +27,14 @@
 ## Bugs
 - [x] Closing Options UserForm closes main Explorer UserForm.
   - Main UserForm was accidentally set to non-modal.
+- [x] RemoveOrphan fails - check if we're trying to cast a Builtin State to a normal state.
+- [x] "No search results" is displayed when there are no saved states, even if the user is not searching.
+- [ ] Production build includes testing states even in a blank new Workbook.
+- [x] Default caption (comma separated list of Column names) on Tables with many columns is unusuable.
+  - Only list visible columns, trim ellipsis each column name, limit to first `n` columns.
+- [x] Increase width of ListView column for the index of a column so it can contain double digits.
+- [x] RemoveAll removes Built-in States.
+- [ ] Check if Worksheet is Protected before trying to make changes.
 ## Options (sub UserForm)
 - [x] Create child ViewModel to contain all these flags.
 - [x] Show/hide orphaned states.
@@ -38,6 +46,7 @@
   - (i.e., hide unless specifically stated to Show).
   - Default behaviour is to leave columns not in the state as-is.
 - [x] Show/hide non-existing columns in State preview.
+- [ ] Show/hide matching but hidden columns in States.
 - [x] Search Match Case
 - [x] Search Match Whole Word
 - [x] Default values for all options if no CustomXML found.
@@ -48,6 +57,9 @@
 - [x] Inform user if search returned no results instead of just showing an empty tree/list.
 - [x] Cancel on pressing Escape key (hidden Cancel=true button). 
 - [x] Use nicer icons. Probably use .PNG and store them in a hidden UserForm.
+- [x] Use `ScreenUpdating` when Applying a state for speed.
+- [x] Use `ScreenUpdating` when creating ViewModel (initial show of UI) for speed.
+- [x] Double-clicking a Built-in State will Apply it (since we can't rename them).
 - [ ] Store generic (non-Workbook specific) column states in User-level persistence
   - (i.e., for applying to new/unsaved file)
 - [ ] Status bar with history log.

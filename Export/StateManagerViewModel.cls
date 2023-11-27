@@ -124,6 +124,8 @@ Private Function ApplyAllowed(ByVal State As IState) As Boolean
 End Function
 
 Public Sub Apply()
+    Application.ScreenUpdating = False
+    
     If This.Options.GetFlag(modOptionsConst.DO_HIDE_NONMATCH_COLS) Then
         Target.Range.EntireColumn.Hidden = True
     End If
@@ -133,6 +135,8 @@ Public Sub Apply()
     
     ActiveWindow.ScrollColumn = 1
     ActiveWindow.ScrollRow = 1
+    
+    Application.ScreenUpdating = True
 End Sub
 
 Private Sub ApplyStateToTarget(ByVal State As IState)
@@ -255,4 +259,3 @@ Public Function Rename() As Boolean
         Rename = True
     End If
 End Function
-

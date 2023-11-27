@@ -321,6 +321,11 @@ Private Sub TryShowOptions()
 End Sub
 
 Private Sub TryRename()
+    If This.ViewModel.Selected.IsBuiltin Then
+        This.ViewModel.Apply
+        Exit Sub
+    End If
+    
     Dim CurrentKey As String
     If Not This.ViewModel.Selected Is Nothing Then
         CurrentKey = This.ViewModel.Selected.State.Key
