@@ -29,17 +29,17 @@
   - Main UserForm was accidentally set to non-modal.
 - [x] RemoveOrphan fails - check if we're trying to cast a Builtin State to a normal state.
 - [x] "No search results" is displayed when there are no saved states, even if the user is not searching.
-- [ ] Production build includes testing states even in a blank new Workbook.
+- [x] Production build includes testing states even in a blank new Workbook.
 - [x] Default caption (comma separated list of Column names) on Tables with many columns is unusuable.
   - Only list visible columns, trim ellipsis each column name, limit to first `n` columns.
 - [x] Increase width of ListView column for the index of a column so it can contain double digits.
 - [x] RemoveAll removes Built-in States.
-- [ ] CHK Check if Worksheet is Protected before trying to make changes.
+- [x] Check if Worksheet is Protected before trying to make changes.
 - [ ] v1.1 Production still has DEBUG_MODE flag set to true
 - [x] Pressing Esc from the Rename State dialog resets caption to `GetAutoCaption`.
 - [x] Pressing Esc in "Import Serial State" dialog returns error (malformed serial).
-- [ ] CHK Auto-fit ListView column width (i.e., Parent.Width - 4) still causes a Horizontal scrollbar if there is a Vertical Scrollbar active.
-- [ ] CHK Freeze panes in Built-in states assume ListObject starts at cell A1.
+- [x] Auto-fit ListView column width (i.e., Parent.Width - 4) still causes a Horizontal scrollbar if there is a Vertical Scrollbar active.
+- [x] Freeze panes in Built-in states assume ListObject starts at cell A1.
 ## Options (sub UserForm)
 - [x] Create child ViewModel to contain all these flags.
 - [x] Show/hide orphaned states.
