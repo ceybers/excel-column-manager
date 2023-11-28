@@ -105,17 +105,20 @@ Public Function CanApply() As Boolean
 End Function
 
 Private Function ApplyAllowed(ByVal State As IState) As Boolean
-    If Not TypeOf State Is ColumnsState Then     ' TODO This is a bad idea
+    If State.StateType = BUILTIN_STATE Then
         ApplyAllowed = True
-        Exit Function
+    ElseIf TypeOf State Is ColumnsState Then
+        ApplyAllowed = ApplyAllowedColumnsState(State)
+    Else
+        Stop
     End If
-    
-    Dim StateCast As ColumnsState
-    Set StateCast = State
-    If StateCast.Match = FULL_MATCH Then
-        ApplyAllowed = True
+End Function
+
+Private Function ApplyAllowedColumnsState(ByVal State As ColumnsState)
+    If State.Match = FULL_MATCH Then
+        ApplyAllowedColumnsState = True
     ElseIf This.Options.GetFlag(modOptionsConst.DO_ALLOW_APPLY_PARTIAL_MATCH) Then
-        ApplyAllowed = True
+        ApplyAllowedColumnsState = True
     End If
 End Function
 
@@ -172,7 +175,6 @@ End Function
 
 Public Sub Prune()
     This.States.RemoveOrphans This.Model
-    
     SaveAndReload
 End Sub
 
@@ -184,20 +186,19 @@ End Function
 Public Sub Remove()
     This.Model.Remove This.Selected.State
     Set This.Selected.State = Nothing
-    
     SaveAndReload
 End Sub
 
 Public Function CanRemoveAll() As Boolean
+    ' This will evaluate to true in the case where there are builtin states
+    ' and zero workbook states.
     If This.States.Count = 0 Then Exit Function
     CanRemoveAll = True
 End Function
 
 Public Sub RemoveAll()
     This.Model.RemoveAll
-    
     Set This.Selected.State = Nothing
-    
     SaveAndReload
 End Sub
 
@@ -205,21 +206,23 @@ Public Function CanExport() As Boolean
     CanExport = Not This.Selected.State Is Nothing
 End Function
 
+'@Description "Tries to import a state from a serial string. If the string cannot be parsed, returns false and OutState is nothing. If already exists, returns false and a reference to the existing state."
 Public Function TryImport(ByVal SerialString As String, ByRef OutState As IState) As Boolean
-    Dim State As ISerializable
-    Set State = New ColumnsState
-    If Not State.Deserialize(SerialString) Then
+Attribute TryImport.VB_Description = "Tries to import a state from a serial string. If the string cannot be parsed, returns false and OutState is nothing. If already exists, returns false and a reference to the existing state."
+    Dim NewState As ISerializable
+    Set NewState = New ColumnsState
+    If Not NewState.Deserialize(SerialString) Then
         Exit Function
     End If
     
-    Set OutState = State
+    Set OutState = NewState
     
-    If This.Model.Exists(State) Then
+    If This.Model.Exists(NewState) Then
         Exit Function
     End If
     
-    This.Model.Add State
-    Set This.Selected.State = State
+    This.Model.Add NewState
+    Set This.Selected.State = NewState
     SaveAndReload
 
     TryImport = True
@@ -264,4 +267,3 @@ Public Function IsTargetProtected() As Boolean
 
     IsTargetProtected = Worksheet.ProtectContents
 End Function
-

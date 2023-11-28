@@ -35,7 +35,6 @@
 - [x] Increase width of ListView column for the index of a column so it can contain double digits.
 - [x] RemoveAll removes Built-in States.
 - [x] Check if Worksheet is Protected before trying to make changes.
-- [ ] v1.1 Production still has DEBUG_MODE flag set to true
 - [x] Pressing Esc from the Rename State dialog resets caption to `GetAutoCaption`.
 - [x] Pressing Esc in "Import Serial State" dialog returns error (malformed serial).
 - [x] Auto-fit ListView column width (i.e., Parent.Width - 4) still causes a Horizontal scrollbar if there is a Vertical Scrollbar active.

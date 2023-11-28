@@ -11,6 +11,9 @@ Attribute VB_Exposed = False
 '@Folder "State.Abstract"
 Option Explicit
 
+Public Property Get StateType() As StateType
+End Property
+
 Public Function From(ByVal Target As Object) As Boolean
 End Function
 

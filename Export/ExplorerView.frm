@@ -218,8 +218,6 @@ End Sub
 Private Sub UpdateListViewLHS()
     '@Ignore ArgumentWithIncompatibleObjectType
     StatesToTreeView.Load Me.tvStates, This.ViewModel
-    If Me.tvStates.SelectedItem Is Nothing Then Exit Sub
-    This.ViewModel.TrySelect Me.tvStates.SelectedItem.Key
 End Sub
 
 Private Sub UpdateListViewRHS()
@@ -340,7 +338,9 @@ Private Sub TryRename()
     
     Dim CurrentKey As String
     If Not This.ViewModel.Selected Is Nothing Then
-        CurrentKey = This.ViewModel.Selected.State.Key
+        If Not This.ViewModel.Selected.State Is Nothing Then
+            CurrentKey = This.ViewModel.Selected.State.Key
+        End If
     End If
     If This.ViewModel.Rename() Then
         UpdateListViewLHS

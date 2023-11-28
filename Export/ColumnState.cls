@@ -32,6 +32,7 @@ Private This As TState
 
 '@DefaultMember
 Public Property Get Name() As String
+Attribute Name.VB_UserMemId = 0
     Name = This.Name
 End Property
 
@@ -65,6 +66,10 @@ End Property
 
 Public Property Get IsSmallColumn() As Boolean
     IsSmallColumn = False
+End Property
+
+Private Property Get IState_StateType() As StateType
+    IState_StateType = StateType.UNDEFINED
 End Property
 
 Public Function ToString() As String
@@ -179,4 +184,3 @@ End Property
 Private Property Let IListable_Visible(ByVal vNewValue As Boolean)
     This.Visible = vNewValue
 End Property
-

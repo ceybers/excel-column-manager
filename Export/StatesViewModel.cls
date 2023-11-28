@@ -143,7 +143,7 @@ Public Sub UpdateOrphans(ByVal Workbook As Workbook)
     
     Dim State As Object
     For Each State In This.Items
-        UpdateOrphan State, Workbook
+        If TypeOf State Is ColumnsState Then UpdateOrphan State, Workbook
     Next State
 End Sub
 
@@ -232,9 +232,9 @@ End Function
 Public Function HasNoSearchResults() As Boolean
     If This.Filter = vbNullString Then Exit Function
 
-    Dim Item As Variant
+    Dim Item As IState
     For Each Item In This.CollectionView
-        If TypeOf Item Is ColumnsState Then
+        If Item.StateType = WORKBOOK_STATE Then
             Exit Function
         End If
     Next Item

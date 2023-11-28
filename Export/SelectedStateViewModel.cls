@@ -15,7 +15,7 @@ Private Const RENAME_TITLE As String = "Rename Column State"
     
 Private Type TState
     State As IState
-    HideSmallColumns As Boolean
+    'HideSmallColumns As Boolean
     Items As Collection
     
     Options As OptionsViewModel
@@ -40,14 +40,14 @@ Public Property Set State(ByVal vNewValue As IListable)
     UpdateItems
 End Property
 
-Public Property Get HideSmallColumns() As Boolean
-    HideSmallColumns = This.HideSmallColumns
-End Property
+'Public Property Get HideSmallColumns() As Boolean
+'    HideSmallColumns = This.HideSmallColumns
+'End Property
 
-Public Property Let HideSmallColumns(ByVal vNewValue As Boolean)
-    This.HideSmallColumns = vNewValue
-    UpdateHiddenItems
-End Property
+'Public Property Let HideSmallColumns(ByVal vNewValue As Boolean)
+'    This.HideSmallColumns = vNewValue
+'    UpdateHiddenItems
+'End Property
 
 Private Sub Class_Initialize()
     Set This.Items = New Collection
@@ -61,17 +61,17 @@ Private Sub UpdateItems()
     CollectionHelpers.CollectionClear This.Items
     
     If This.State Is Nothing Then Exit Sub
-    If Not TypeOf This.State Is ColumnsState Then Exit Sub
     
-    Dim StateCast As ColumnsState
-    Set StateCast = This.State
-    
-    Dim Child As IListable
-    For Each Child In StateCast.Items
-        This.Items.Add Item:=Child
-    Next Child
+    If TypeOf This.State Is ColumnsState Then AddChildren This.State
     
     UpdateHiddenItems
+End Sub
+
+Private Sub AddChildren(ByVal State As ColumnsState)
+    Dim Child As IListable
+    For Each Child In State.Items
+        This.Items.Add Item:=Child
+    Next Child
 End Sub
 
 Private Sub UpdateHiddenItems()
@@ -91,11 +91,14 @@ Public Sub UpdateOrphans(ByVal Target As ListObject)
 End Sub
 
 Public Function TryRename() As Boolean
-    Dim StateCast As ColumnsState
-    Set StateCast = This.State
-    
+    If TypeOf This.State Is ColumnsState Then
+        TryRename = TryRenameColumnsState(This.State)
+    End If
+End Function
+
+Private Function TryRenameColumnsState(ByVal State As ColumnsState) As Boolean
     Dim CurrentName As String
-    CurrentName = StateCast.Caption
+    CurrentName = State.Caption
     
     Dim NewName As String
     NewName = InputBox(RENAME_MESSAGE, RENAME_TITLE, CurrentName)
@@ -103,17 +106,18 @@ Public Function TryRename() As Boolean
     If NewName = vbNullString Then Exit Function
     If NewName = CurrentName Then Exit Function
     
-    StateCast.Caption = NewName
-    TryRename = True
+    State.Caption = NewName
+    TryRenameColumnsState = True
 End Function
 
 Public Function IsBuiltin() As Boolean
     If This.State Is Nothing Then Exit Function
+    IsBuiltin = (This.State.StateType = BUILTIN_STATE)
     
-    Dim StateListable As IListable
-    Set StateListable = This.State
-    If StateListable.ParentKey = BUILTIN_KEY Then
-        IsBuiltin = True
-    End If
+    'Dim StateListable As IListable
+    'Set StateListable = This.State
+    'If StateListable.ParentKey = BUILTIN_KEY Then
+    '    IsBuiltin = True
+    'End If
 End Function
 

@@ -51,6 +51,7 @@ Public Sub Load(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewM
     AddUnsavedState TreeView, ViewModel
     AddStates TreeView, ViewModel
     CheckNoResults TreeView, ViewModel
+    TrySelectSelectedItem TreeView, ViewModel
 End Sub
 
 Private Sub AddParentNode(ByVal TreeView As TreeView)
@@ -138,10 +139,8 @@ Private Sub AddNoSearchResults(ByVal TreeView As TreeView, ByVal ViewModel As St
     Node.ForeColor = modConstants.GREY_TEXT_COLOR
 End Sub
 
-Private Function IsOrphan(ByVal TableNames As Collection, ByVal State As IListable) As Boolean
-    Dim StateCast As ColumnsState
-    Set StateCast = State
-    IsOrphan = Not CollectionHelpers.ExistsInCollection(TableNames, StateCast.Name)
+Private Function IsOrphan(ByVal TableNames As Collection, ByVal State As ColumnsState) As Boolean
+    IsOrphan = Not CollectionHelpers.ExistsInCollection(TableNames, State.Name)
 End Function
 
 Private Sub SetOrphan(ByVal OrphanState As IListable)
@@ -207,6 +206,11 @@ Private Sub CheckNoResults(ByVal TreeView As TreeView, ByVal ViewModel As StateM
         .Remove NO_SEARCH_RESULT_KEY
         .Remove SEARCH_FOLDER_KEY
     End With
+End Sub
+
+Private Sub TrySelectSelectedItem(ByVal TreeView As TreeView, ByVal ViewModel As StateManagerViewModel)
+    If TreeView.SelectedItem Is Nothing Then Exit Sub
+    ViewModel.TrySelect TreeView.SelectedItem.Key
 End Sub
 
 

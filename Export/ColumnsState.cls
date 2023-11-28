@@ -29,6 +29,7 @@ Private Type TState
     ListColumns As Collection
     Orphan As Boolean
     Match As ListObjectMatch
+    StateType As StateType
     ' IListable
     Key As String
     ParentKey As String
@@ -43,6 +44,7 @@ End Property
 
 '@DefaultMember
 Public Property Get Name() As String
+Attribute Name.VB_UserMemId = 0
     Name = This.Name
 End Property
 
@@ -72,11 +74,16 @@ End Property
 
 '@Description "Returns True if this ListObject of this state cannot be found in the VM's workbook."
 Public Property Get Orphan() As Boolean
+Attribute Orphan.VB_Description = "Returns True if this ListObject of this state cannot be found in the VM's workbook."
     Orphan = This.Orphan
 End Property
 
 Public Property Let Orphan(ByVal RHS As Boolean)
     This.Orphan = RHS
+End Property
+
+Private Property Get IState_StateType() As StateType
+    IState_StateType = This.StateType
 End Property
 
 Public Function ToString() As String
@@ -120,6 +127,8 @@ Private Function IState_From(ByVal Object As Object) As Boolean
     Next ListColumn
     
     SetAutoCaption
+    
+    This.StateType = UNSAVED_STATE
     
     IState_From = True
 End Function
@@ -202,6 +211,8 @@ Private Function ISerializable_Deserialize(ByVal SerialString As String) As Bool
     If Not DeserializeChildren(SplitText(4)) Then
         Exit Function
     End If
+    
+    This.StateType = WORKBOOK_STATE
     
     ISerializable_Deserialize = True
 End Function
@@ -321,4 +332,3 @@ Public Sub SetAutoCaption()
     
     This.Caption = Result
 End Sub
-

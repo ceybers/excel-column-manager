@@ -24,6 +24,10 @@ End Type
 
 Private This As TState
 
+Private Property Get IState_StateType() As StateType
+    IState_StateType = StateType.UNDEFINED
+End Property
+
 Public Function ToString() As String
     Dim Result As String
     Result = This.Enabled & ", R" & This.Row & "C" & This.Column
