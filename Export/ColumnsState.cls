@@ -43,7 +43,6 @@ End Property
 
 '@DefaultMember
 Public Property Get Name() As String
-Attribute Name.VB_UserMemId = 0
     Name = This.Name
 End Property
 
@@ -73,7 +72,6 @@ End Property
 
 '@Description "Returns True if this ListObject of this state cannot be found in the VM's workbook."
 Public Property Get Orphan() As Boolean
-Attribute Orphan.VB_Description = "Returns True if this ListObject of this state cannot be found in the VM's workbook."
     Orphan = This.Orphan
 End Property
 
@@ -100,7 +98,6 @@ Private Sub Class_Initialize()
     Set This.ListColumns = New Collection
 End Sub
 
-' Requires PredeclaredId annotation
 Public Function Create(ByVal ListObject As ListObject) As IState
     Dim Result As IState
     Set Result = New ColumnsState
@@ -108,7 +105,6 @@ Public Function Create(ByVal ListObject As ListObject) As IState
     Set Create = Result
 End Function
 
-' IState
 Private Function IState_From(ByVal Object As Object) As Boolean
     If Not TypeOf Object Is ListObject Then Exit Function
     
@@ -163,7 +159,6 @@ Private Function IState_Apply(ByVal Target As Object) As Boolean
     IState_Apply = True
 End Function
 
-' ISerializable
 Private Function ISerializable_Serialize() As String
     Dim Result As String
     Result = Result & This.Name & ":"
@@ -246,7 +241,7 @@ Private Function SerializableEquals(ByVal LHS As ISerializable, ByVal RHS As ISe
 End Function
 
 Private Property Get IListable_Caption() As String
-    IListable_Caption = This.Caption             'GetCaption
+    IListable_Caption = This.Caption
 End Property
 
 Private Property Get IListable_Key() As String
@@ -300,7 +295,8 @@ Public Sub SetAutoCaption()
         Result = Result & ChildName & ","
     Next i
     If This.ListColumns.Count > MAX_CHILDREN_IN_CAPTION Then
-        ' Adds a second comma if there are more elements, e.g. foo..., bar..., xyz...,,
+        ' Adds a second comma if there are more elements
+        ' e.g. foo..., bar..., xyz...,,
         Result = Result & ","
     End If
     
@@ -325,3 +321,4 @@ Public Sub SetAutoCaption()
     
     This.Caption = Result
 End Sub
+

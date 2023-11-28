@@ -50,6 +50,7 @@ Private Property Let IListable_Visible(ByVal vNewValue As Boolean)
 End Property
 
 Public Sub Load(ByVal Object As Object)
+    Debug.Assert Not Object Is Nothing
     If TypeOf Object Is ListObject Then LoadListObject Object
     If TypeOf Object Is Worksheet Then LoadWorksheet Object
     If TypeOf Object Is Workbook Then LoadWorkbook Object
@@ -57,17 +58,16 @@ End Sub
 
 Private Sub LoadListObject(ByVal ListObject As ListObject)
     This.Caption = ListObject.Name
-    This.ParentKey = "wb::" & ListObject.Parent.Name
+    This.ParentKey = WB_KEY_PREFIX & ListObject.Parent.Name
 End Sub
 
 Private Sub LoadWorksheet(ByVal Worksheet As Worksheet)
     This.Caption = Worksheet.Name
-    This.ParentKey = "ws::" & Worksheet.Parent.Name
+    This.ParentKey = WS_KEY_PREFIX & Worksheet.Parent.Name
 End Sub
 
 Private Sub LoadWorkbook(ByVal Workbook As Workbook)
     This.Caption = Workbook.Name
-    This.ParentKey = "ROOT"
 End Sub
 
 Public Function Create(ByVal Object As Object) As IListable

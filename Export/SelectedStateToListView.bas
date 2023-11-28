@@ -3,41 +3,51 @@ Attribute VB_Name = "SelectedStateToListView"
 Option Explicit
 
 Private Const WIDTH_TO_AVOID_SCROLLBAR As Long = 8
-private Const VERTICAL_SCROLLBAR_WIDTH as long = 18
+Private Const VERTICAL_SCROLLBAR_WIDTH As Long = 16 ' 8 works as well
+Private Const VISIBLE_COLUMN As String = "Visible"
+Private Const HIDDEN_COLUMN As String = "Hidden"
+Private Const ICON_SIZE As Long = 16
 
 Public Sub Initialize(ByVal ListView As ListView)
-    Dim il As ImageList
-    Set il = New ImageList
-    With il
-        .ImageWidth = 16
-        .ImageHeight = 16
-        '.ListImages.Add Key:="Visible", Picture:=Application.CommandBars.GetImageMso("VisibilityVisible", 16, 16)
-        '.ListImages.Add Key:="Hidden", Picture:=Application.CommandBars.GetImageMso("VisibilityHidden", 16, 16)
-        '.ListImages.Add Key:="Exists", Picture:=Application.CommandBars.GetImageMso("AcceptInvitation", 16, 16)
-        '.ListImages.Add Key:="NotExists", Picture:=Application.CommandBars.GetImageMso("DeclineInvitation", 16, 16)
+    Dim ListViewImageList As ImageList
+    Set ListViewImageList = GetImageList
+        
+    With ListView
+        .ListItems.Clear
+        .View = lvwReport
+        .FullRowSelect = True
+        .Gridlines = True
+        .LabelEdit = lvwManual
+        Set .Icons = ListViewImageList
+        Set .SmallIcons = ListViewImageList
+    End With
+    
+    SetColumnHeaders ListView
+    
+    FillColumnHeaderWidth ListView, 2
+End Sub
+
+Private Function GetImageList() As ImageList
+    Set GetImageList = New ImageList
+    With GetImageList
+        .ImageWidth = ICON_SIZE
+        .ImageHeight = ICON_SIZE
         .ListImages.Add Key:="Visible", Picture:=frmPictures.lblColumnVisible.Picture
         .ListImages.Add Key:="Hidden", Picture:=frmPictures.lblColumnHidden.Picture
         .ListImages.Add Key:="Exists", Picture:=frmPictures.lblComplete.Picture
         .ListImages.Add Key:="NotExists", Picture:=frmPictures.lblWarning.Picture
     End With
-        
+End Function
+
+Private Sub SetColumnHeaders(ByVal ListView As ListView)
     With ListView
-        Set .Icons = il
-        Set .SmallIcons = il
-        .ListItems.Clear
         .ColumnHeaders.Clear
         .ColumnHeaders.Add Text:="#", Width:=32
         .ColumnHeaders.Add Text:="Column Name", Width:=70
         .ColumnHeaders.Add Text:="Width", Width:=40
-        .ColumnHeaders.Add Text:="Visible", Width:=64
         .ColumnHeaders.Item(3).Alignment = lvwColumnRight
-        .View = lvwReport
-        .FullRowSelect = True
-        .Gridlines = True
-        .LabelEdit = lvwManual
+        .ColumnHeaders.Add Text:="Visible", Width:=64
     End With
-    
-    FillColumnHeaderWidth ListView, 2
 End Sub
 
 Private Sub FillColumnHeaderWidth(ByVal ListView As ListView, ByVal ColumnIndex As Long)
@@ -53,7 +63,8 @@ Private Sub FillColumnHeaderWidth(ByVal ListView As ListView, ByVal ColumnIndex 
     Dim TargetColumnHeader As ColumnHeader
     Set TargetColumnHeader = ListView.ColumnHeaders.Item(ColumnIndex)
     
-    TargetColumnHeader.Width = TargetColumnHeader.Width + RemainingWidth - WIDTH_TO_AVOID_SCROLLBAR - VERTICAL_SCROLLBAR_WIDTH
+    TargetColumnHeader.Width = TargetColumnHeader.Width + RemainingWidth _
+                               - WIDTH_TO_AVOID_SCROLLBAR - VERTICAL_SCROLLBAR_WIDTH
 End Sub
 
 Public Sub Load(ByVal ListView As ListView, ByVal ViewModel As SelectedStateViewModel)
@@ -72,7 +83,7 @@ Public Sub Load(ByVal ListView As ListView, ByVal ViewModel As SelectedStateView
     
     Dim BuiltinState As IListable
     Set BuiltinState = ViewModel.State
-    If BuiltinState.ParentKey = modConstants.BUILTIN_KEY Then
+    If BuiltinState.ParentKey = BUILTIN_KEY Then
         AddBuiltinItem ListView, ViewModel.State
     End If
 End Sub
@@ -90,10 +101,10 @@ Private Sub AddItem(ByVal ListView As ListView, ByVal Child As IListable, ByVal 
 
         If IsColumnHidden(Child) Then
             .Add Text:=ColumnWidth(Child)
-            .Add Text:="Hidden"
+            .Add Text:=HIDDEN_COLUMN
         Else
             .Add Text:=ColumnWidth(Child)
-            .Add Text:="Visible"
+            .Add Text:=VISIBLE_COLUMN
         End If
     
         .Item(3).ReportIcon = .Item(3).Text
@@ -123,4 +134,5 @@ Private Sub AddBuiltinItem(ByVal ListView As ListView, ByVal State As IListable)
     Set ListItem = ListView.ListItems.Add(Text:=vbNullString)
     ListItem.ListSubItems.Add Text:=State.Caption
 End Sub
+
 

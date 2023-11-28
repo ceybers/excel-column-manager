@@ -10,8 +10,11 @@ Attribute VB_Exposed = False
 '@Folder("MVVM.ColumnState.ViewModel")
 Option Explicit
 
+Private Const RENAME_MESSAGE As String = "Rename the selected Column State:"
+Private Const RENAME_TITLE As String = "Rename Column State"
+    
 Private Type TState
-    State As IState                              'ColumnsState
+    State As IState
     HideSmallColumns As Boolean
     Items As Collection
     
@@ -65,7 +68,7 @@ Private Sub UpdateItems()
     
     Dim Child As IListable
     For Each Child In StateCast.Items
-        This.Items.Add Item:=Child               ', Key:=Child.Key           ' No keys needed
+        This.Items.Add Item:=Child
     Next Child
     
     UpdateHiddenItems
@@ -76,7 +79,7 @@ Private Sub UpdateHiddenItems()
     For Each Child In This.Items
         Dim State As ColumnState
         Set State = Child
-        Child.Visible = Not (This.HideSmallColumns And State.Width <= 8#)
+        Child.Visible = True                     'Not (This.HideSmallColumns And State.Width <= 8#)
     Next Child
 End Sub
 
@@ -87,16 +90,17 @@ Public Sub UpdateOrphans(ByVal Target As ListObject)
     Next Child
 End Sub
 
-Public Function TryRename(ByVal NewName As String) As Boolean
+Public Function TryRename() As Boolean
     Dim StateCast As ColumnsState
     Set StateCast = This.State
     
     Dim CurrentName As String
     CurrentName = StateCast.Caption
     
-    NewName = InputBox("Rename selected state:", "Rename state", CurrentName)
+    Dim NewName As String
+    NewName = InputBox(RENAME_MESSAGE, RENAME_TITLE, CurrentName)
     
-    If NewName = vbNullString Then Exit Function 
+    If NewName = vbNullString Then Exit Function
     If NewName = CurrentName Then Exit Function
     
     StateCast.Caption = NewName
@@ -108,7 +112,8 @@ Public Function IsBuiltin() As Boolean
     
     Dim StateListable As IListable
     Set StateListable = This.State
-    If StateListable.ParentKey = modConstants.BUILTIN_KEY Then
+    If StateListable.ParentKey = BUILTIN_KEY Then
         IsBuiltin = True
     End If
 End Function
+

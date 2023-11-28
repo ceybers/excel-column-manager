@@ -32,7 +32,6 @@ Private This As TState
 
 '@DefaultMember
 Public Property Get Name() As String
-Attribute Name.VB_UserMemId = 0
     Name = This.Name
 End Property
 
@@ -154,7 +153,6 @@ Private Function IState_Equals(ByVal RHS As IState) As Boolean
 End Function
 
 Private Property Get IListable_Caption() As String
-    'IListable_Caption = This.Name & " (" & This.Key & ")"
     IListable_Caption = This.Name
 End Property
 
@@ -172,7 +170,6 @@ End Property
 
 '@Ignore EmptyMethod
 Private Property Let IListable_ParentKey(ByVal vNewValue As String)
-    'This.ParentKey = vNewValue
 End Property
 
 Private Property Get IListable_Visible() As Boolean
@@ -182,3 +179,4 @@ End Property
 Private Property Let IListable_Visible(ByVal vNewValue As Boolean)
     This.Visible = vNewValue
 End Property
+

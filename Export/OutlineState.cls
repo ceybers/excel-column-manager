@@ -29,7 +29,6 @@ Public Function ToString() As String
     ToString = Result
 End Function
 
-' Requires PredeclaredId annotation
 Public Function Create(ByVal Worksheet As Worksheet) As IState
     Dim Result As IState
     Set Result = New OutlineState
@@ -37,7 +36,6 @@ Public Function Create(ByVal Worksheet As Worksheet) As IState
     Set Create = Result
 End Function
 
-' IState
 Private Function IState_From(ByVal Object As Object) As Boolean
     Debug.Assert TypeOf Object Is Worksheet
     Dim Worksheet As Worksheet
@@ -81,7 +79,6 @@ Private Function IState_Apply(ByVal Target As Object) As Boolean
     IState_Apply = True
 End Function
 
-' ISerializable
 Private Function ISerializable_Serialize() As String
     Dim Result As String
     

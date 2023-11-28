@@ -1,11 +1,12 @@
 Attribute VB_Name = "modMain"
+'@IgnoreModule EmptyIfBlock
 '@Folder "ColumnState"
 Option Explicit
 
 Private Const MSG_NO_TABLE_SELECTED As String = "Select a table before running Persistent Column State Tool."
 Private Const MSG_TITLE As String = "Persistent Column State Tool"
 
-Private Const DEBUG_MODE As Boolean = True
+Private Const DEBUG_MODE As Boolean = False      'True
 
 '@EntryPoint "Open UserForm for PersistentColumnStateTool"
 Public Sub PersistentColumnStateTool()

@@ -21,7 +21,6 @@ Private Const BUILTIN_NAME As String = "Show all columns"
 Private Const THIS_KEY As String = "B::ShowAll"
 
 Private Type TState
-    'ListObject As ListObject
     Name As String
     ' IListable
     Key As String
@@ -33,7 +32,6 @@ Private This As TState
 
 '@DefaultMember
 Public Property Get Name() As String
-Attribute Name.VB_UserMemId = 0
     Name = This.Name
 End Property
 
@@ -42,32 +40,23 @@ Public Property Let Name(ByVal vNewValue As String)
     This.ParentKey = BUILTIN_KEY
 End Property
 
-Public Property Get Match() As ListObjectMatch
-    Match = FULL_MATCH
-End Property
-
-'Public Property Let Match(ByVal vNewValue As ListObjectMatch)
+'Public Property Get Match() As ListObjectMatch
+'    Match = FULL_MATCH
 'End Property
 
 '@Description "Returns True if this ListObject of this state cannot be found in the VM's workbook."
 Public Property Get Orphan() As Boolean
-Attribute Orphan.VB_Description = "Returns True if this ListObject of this state cannot be found in the VM's workbook."
     Orphan = False
 End Property
-
-'Public Property Let Orphan(ByVal RHS As Boolean)
-'End Property
 
 Public Function ToString() As String
     ToString = BUILTIN_NAME
 End Function
 
-' Requires PredeclaredId annotation
 Public Function Create() As IState
     Set Create = New AllVisibleColumnsState
 End Function
 
-' IState
 Private Function IState_From(ByVal Object As Object) As Boolean
     IState_From = False
 End Function
@@ -89,7 +78,6 @@ Private Function IState_Apply(ByVal Target As Object) As Boolean
     IState_Apply = True
 End Function
 
-' ISerializable
 Private Function ISerializable_Serialize() As String
 End Function
 
@@ -127,3 +115,4 @@ End Property
 Private Property Let IListable_Visible(ByVal vNewValue As Boolean)
     This.Visible = vNewValue
 End Property
+

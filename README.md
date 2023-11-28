@@ -21,6 +21,7 @@ It might only save a few minutes of time in your workday, but computers were inv
 ## 📝 Notes
 - 🚧 [TODO List](Notes/TODO.md)
 - ☕ [Dev Notes](Notes/DevNotes.md)
+- 🩹 [Patch Notes](Notes/PatchNotes.md)
 
 # 🙏 Thanks
 - Developed using [Rubberduck VBA](https://github.com/rubberduck-vba/Rubberduck) and greatly inspired by [Mathieu Guindon](https://github.com/retailcoder/)'s blog posts.

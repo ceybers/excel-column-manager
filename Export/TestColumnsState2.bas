@@ -43,10 +43,10 @@ Private Sub TestInitialize()
     ActiveWindow.SplitRow = 0
     ActiveWindow.SplitColumn = 0
     
-    lo.HeaderRowRange.Cells(1, 1).Offset(0, lo.ListColumns.Count).Select
+    lo.HeaderRowRange.Cells.Item(1, 1).Offset(0, lo.ListColumns.Count).Select
     lo.Parent.Outline.SummaryRow = 1
     lo.Parent.Outline.SummaryColumn = -4152
-    lo.DataBodyRange.Cells(1, 1).Select
+    lo.DataBodyRange.Cells.Item(1, 1).Select
     
     Debug.Assert lo.ListColumns.Count = 3
 End Sub

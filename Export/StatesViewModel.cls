@@ -111,7 +111,7 @@ Private Sub UpdateCollectionView()
 End Sub
 
 Private Function DoFilter(ByVal StateListable As IListable, ByVal FilterString As String) As Boolean
-    If StateListable.ParentKey = modConstants.BUILTIN_KEY Then
+    If StateListable.ParentKey = BUILTIN_KEY Then
         DoFilter = True
         Exit Function
     End If
@@ -175,9 +175,9 @@ Public Sub RemoveOrphans(ByVal Model As StatesModel)
     Next Item
 End Sub
 
-Private Function TryRemoveOrphan(ByVal Model As StatesModel, ByVal State As ColumnsState)
+Private Function TryRemoveOrphan(ByVal Model As StatesModel, ByVal State As ColumnsState) As Boolean
     If State.Orphan Then
-        Model.Remove State
+        TryRemoveOrphan = Model.Remove(State)
     End If
 End Function
 

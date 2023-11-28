@@ -14,6 +14,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 '@IgnoreModule SetAssignmentWithIncompatibleObjectType
 '@Folder "MVVM.ColumnState.Views"
 Option Explicit
@@ -38,10 +39,6 @@ Private Type TState
 End Type
 
 Private This As TState
-
-Private Sub cmbCancel_Click()
-    OnCancel
-End Sub
 
 ' Buttons for Actions
 Private Sub cmbSave_Click()
@@ -81,6 +78,10 @@ Private Sub cmbAbout_Click()
 End Sub
 
 ' ---
+Private Sub cmbCancel_Click()
+    OnCancel
+End Sub
+
 Private Sub OnCancel()
     This.IsCancelled = True
     Me.Hide
@@ -209,9 +210,8 @@ Private Sub UpdateCurrentState()
 
     Me.cbbTarget.Text = ListableState.Name
 
-    ' TODO Create a Value Converter for this sub VM to textbox
-    If This.ViewModel.Current.IsProtected Then
-        Me.cbbTarget.Text = Me.cbbTarget.Text & " (locked)"
+    If This.ViewModel.IsTargetProtected Then
+        Me.cbbTarget.Text = Me.cbbTarget.Text & TARGET_LOCKED_SUFFIX
     End If
 End Sub
 
@@ -244,8 +244,8 @@ Private Sub TrySave()
 End Sub
 
 Private Sub TryApply()
-    If This.ViewModel.Current.IsProtected Then
-        MsgBox "The table you are trying to update is protected!", vbCritical + vbOkOnly, MSG_TITLE
+    If This.ViewModel.IsTargetProtected Then
+        MsgBox "The table you are trying to update is protected!", vbCritical + vbOKOnly, MSG_TITLE
         Exit Sub
     End If
     
@@ -301,7 +301,7 @@ End Sub
 Private Sub TryImport()
     Dim SerialString As String
     SerialString = InputBox(MSG_IMPORT, MSG_TITLE_IMPORT, _
-                            "")                  ' TODO Implement watermark text and or example
+                            vbNullString)        ' TODO Implement watermark text and or example
     
     If SerialString = vbNullString Then Exit Sub
 

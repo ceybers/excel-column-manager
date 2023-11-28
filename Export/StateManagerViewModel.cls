@@ -30,14 +30,6 @@ Public Property Get Target() As ListObject
     Set Target = This.Target
 End Property
 
-Public Property Get CloseOnApply() As Boolean
-    CloseOnApply = This.Options.GetFlag(modOptionsConst.DO_CLOSE_ON_APPLY)
-End Property
-
-'Public Property Set Target(ByVal vNewValue As ListObject)
-'    Set This.Target = vNewValue
-'End Property
-
 Public Property Get Current() As CurrentStateViewModel
     Set Current = This.Current
 End Property
@@ -48,6 +40,10 @@ End Property
 
 Public Property Get States() As StatesViewModel
     Set States = This.States
+End Property
+
+Public Property Get CloseOnApply() As Boolean
+    CloseOnApply = This.Options.GetFlag(modOptionsConst.DO_CLOSE_ON_APPLY)
 End Property
 
 Private Sub Class_Initialize()
@@ -245,7 +241,7 @@ End Sub
 
 Public Function CanRename() As Boolean
     If This.Selected.State Is Nothing Then Exit Function
-    If This.Selected.State.ParentKey = modConstants.BUILTIN_KEY Then Exit Function
+    If This.Selected.State.ParentKey = BUILTIN_KEY Then Exit Function
     
     CanRename = True
 End Function
@@ -253,9 +249,19 @@ End Function
 Public Function Rename() As Boolean
     If Not CanRename Then Exit Function
     
-    If This.Selected.TryRename(vbNullString) Then
+    If This.Selected.TryRename() Then
         This.Model.Save
         This.States.Reload
         Rename = True
     End If
 End Function
+
+Public Function IsTargetProtected() As Boolean
+    If This.Target Is Nothing Then Exit Function
+    
+    Dim Worksheet As Worksheet
+    Set Worksheet = This.Target.Parent
+
+    IsTargetProtected = Worksheet.ProtectContents
+End Function
+

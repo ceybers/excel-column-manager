@@ -30,7 +30,6 @@ Public Function ToString() As String
     ToString = Result
 End Function
 
-' Requires PredeclaredId annotation
 Public Function Create() As IState
     Dim Result As IState
     Set Result = New FreezePaneState
@@ -38,11 +37,11 @@ Public Function Create() As IState
     Set Create = Result
 End Function
 
-Public Sub ApplyTopLeft(ByVal ListObject as ListObject)
-    Dim Row as Long
-    Row = ListObject.DataBodyRange.Cells(1, 1).Row - 1
-    Dim Column as Long
-    Column = ListObject.DataBodyRange.Cells(1, 1).Coluumn 
+Public Sub ApplyTopLeft(ByVal ListObject As ListObject)
+    Dim Row As Long
+    Row = ListObject.DataBodyRange.Cells.Item(1, 1).Row - 1
+    Dim Column As Long
+    Column = ListObject.DataBodyRange.Cells.Item(1, 1).Column
 
     Dim SerialState As ISerializable
     Set SerialState = New FreezePaneState
@@ -63,7 +62,6 @@ Public Sub ApplyNone()
     State.Apply Nothing
 End Sub
 
-' IState
 Private Function IState_From(ByVal Object As Object) As Boolean
     With This
         .Enabled = ActiveWindow.Split
@@ -91,7 +89,6 @@ Private Function IState_Apply(ByVal Target As Object) As Boolean
     IState_Apply = True
 End Function
 
-' ISerializable
 Private Function ISerializable_Serialize() As String
     Dim Result As String
     
