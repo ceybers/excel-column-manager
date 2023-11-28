@@ -96,6 +96,7 @@ Public Function TryRename(ByVal NewName As String) As Boolean
     
     NewName = InputBox("Rename selected state:", "Rename state", CurrentName)
     
+    If NewName = vbNullString Then Exit Function 
     If NewName = CurrentName Then Exit Function
     
     StateCast.Caption = NewName

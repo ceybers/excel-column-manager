@@ -88,7 +88,7 @@ Private Function IState_Apply(ByVal Target As Object) As Boolean
         ListColumn.Range.EntireColumn.AutoFit
     Next ListColumn
     
-    FreezePaneState.ApplyTopLeft
+    FreezePaneState.ApplyTopLeft ListObject
     
     IState_Apply = True
 End Function

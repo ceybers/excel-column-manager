@@ -84,7 +84,7 @@ Private Function IState_Apply(ByVal Target As Object) As Boolean
     Set ListObject = Target
     ListObject.Range.EntireColumn.Hidden = False
     
-    FreezePaneState.ApplyTopLeft
+    FreezePaneState.ApplyTopLeft ListObject
     
     IState_Apply = True
 End Function

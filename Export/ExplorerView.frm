@@ -206,8 +206,13 @@ End Sub
 Private Sub UpdateCurrentState()
     Dim ListableState As ColumnsState
     Set ListableState = This.ViewModel.Current.State
-    
+
     Me.cbbTarget.Text = ListableState.Name
+
+    ' TODO Create a Value Converter for this sub VM to textbox
+    If This.ViewModel.Current.IsProtected Then
+        Me.cbbTarget.Text = Me.cbbTarget.Text & " (locked)"
+    End If
 End Sub
 
 Private Sub UpdateListViewLHS()
@@ -239,6 +244,11 @@ Private Sub TrySave()
 End Sub
 
 Private Sub TryApply()
+    If This.ViewModel.Current.IsProtected Then
+        MsgBox "The table you are trying to update is protected!", vbCritical + vbOkOnly, MSG_TITLE
+        Exit Sub
+    End If
+    
     This.ViewModel.Apply
     UpdateListViewLHS
     UpdateListViewRHS
@@ -249,7 +259,7 @@ Private Sub TryApply()
 End Sub
 
 Private Sub TryPrune()
-    If vbNo = MsgBox(MSG_PRUNE_STATES, vbExclamation + vbYesNo + vbDefaultButton2, MSG_TITLE) Then
+    If vbNo = MsgBox(MSG_PRUNE_STATES, vbQuestion + vbYesNo + vbDefaultButton2, MSG_TITLE) Then
         Exit Sub
     End If
     
@@ -260,7 +270,7 @@ Private Sub TryPrune()
 End Sub
 
 Private Sub TryRemove()
-    If vbNo = MsgBox(MSG_REMOVE_STATE, vbExclamation + vbYesNo + vbDefaultButton2, MSG_TITLE) Then
+    If vbNo = MsgBox(MSG_REMOVE_STATE, vbQuestion + vbYesNo + vbDefaultButton2, MSG_TITLE) Then
         Exit Sub
     End If
     
@@ -271,7 +281,7 @@ Private Sub TryRemove()
 End Sub
 
 Private Sub TryRemoveAll()
-    If vbNo = MsgBox(MSG_REMOVE_STATES, vbExclamation + vbYesNo + vbDefaultButton2, MSG_TITLE) Then
+    If vbNo = MsgBox(MSG_REMOVE_STATES, vbQuestion + vbYesNo + vbDefaultButton2, MSG_TITLE) Then
         Exit Sub
     End If
     
@@ -293,6 +303,8 @@ Private Sub TryImport()
     SerialString = InputBox(MSG_IMPORT, MSG_TITLE_IMPORT, _
                             "")                  ' TODO Implement watermark text and or example
     
+    If SerialString = vbNullString Then Exit Sub
+
     Dim State As IListable
     If This.ViewModel.TryImport(SerialString, State) Then
         MsgBox MSG_IMPORT_SUCCEEDED, vbInformation + vbOKOnly, MSG_TITLE_IMPORT

@@ -38,10 +38,15 @@ Public Function Create() As IState
     Set Create = Result
 End Function
 
-Public Sub ApplyTopLeft()
+Public Sub ApplyTopLeft(ByVal ListObject as ListObject)
+    Dim Row as Long
+    Row = ListObject.DataBodyRange.Cells(1, 1).Row - 1
+    Dim Column as Long
+    Column = ListObject.DataBodyRange.Cells(1, 1).Coluumn 
+
     Dim SerialState As ISerializable
     Set SerialState = New FreezePaneState
-    SerialState.Deserialize "-1.1.1"
+    SerialState.Deserialize "-1." & Row & "." & Column
     
     Dim State As IState
     Set State = SerialState
@@ -76,6 +81,7 @@ End Function
 Private Function IState_Apply(ByVal Target As Object) As Boolean
     Application.ScreenUpdating = False
     With ActiveWindow
+        .Split = False
         .SplitRow = This.Row
         .SplitColumn = This.Column
         .FreezePanes = This.Enabled

@@ -3,6 +3,7 @@ Attribute VB_Name = "SelectedStateToListView"
 Option Explicit
 
 Private Const WIDTH_TO_AVOID_SCROLLBAR As Long = 8
+private Const VERTICAL_SCROLLBAR_WIDTH as long = 18
 
 Public Sub Initialize(ByVal ListView As ListView)
     Dim il As ImageList
@@ -52,7 +53,7 @@ Private Sub FillColumnHeaderWidth(ByVal ListView As ListView, ByVal ColumnIndex 
     Dim TargetColumnHeader As ColumnHeader
     Set TargetColumnHeader = ListView.ColumnHeaders.Item(ColumnIndex)
     
-    TargetColumnHeader.Width = TargetColumnHeader.Width + RemainingWidth - WIDTH_TO_AVOID_SCROLLBAR
+    TargetColumnHeader.Width = TargetColumnHeader.Width + RemainingWidth - WIDTH_TO_AVOID_SCROLLBAR - VERTICAL_SCROLLBAR_WIDTH
 End Sub
 
 Public Sub Load(ByVal ListView As ListView, ByVal ViewModel As SelectedStateViewModel)
