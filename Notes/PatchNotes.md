@@ -1,4 +1,6 @@
 # Patch Notes
+## Version 1.3
+- States should now be saved to the correct Workbook.
 ## Version 1.2
 - Freeze pane now respects starting cell of ListObject.
 - Warning when trying to change Protected Tables.

@@ -6,7 +6,7 @@ Option Explicit
 Private Const MSG_NO_TABLE_SELECTED As String = "Select a table before running Persistent Column State Tool."
 Private Const MSG_TITLE As String = "Persistent Column State Tool"
 
-Private Const DEBUG_MODE As Boolean = True
+Private Const DEBUG_MODE As Boolean = False
 
 '@EntryPoint "Open UserForm for PersistentColumnStateTool"
 Public Sub PersistentColumnStateTool()
@@ -48,9 +48,12 @@ End Function
 Private Sub RunPersistentColumnStateTool(ByVal ListObject As ListObject)
     Application.ScreenUpdating = False
     
+    Dim Workbook As Workbook
+    Set Workbook = ListObject.Parent.Parent
+    
     Dim Model As StatesModel
     Set Model = New StatesModel
-    Model.Load ThisWorkbook
+    Model.Load Workbook
     
     Dim ViewModel As StateManagerViewModel
     Set ViewModel = New StateManagerViewModel

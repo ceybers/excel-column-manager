@@ -39,6 +39,7 @@
 - [x] Pressing Esc in "Import Serial State" dialog returns error (malformed serial).
 - [x] Auto-fit ListView column width (i.e., Parent.Width - 4) still causes a Horizontal scrollbar if there is a Vertical Scrollbar active.
 - [x] Freeze panes in Built-in states assume ListObject starts at cell A1.
+- [x] State being saved to Tool's Workbook CustomXML instead of Target Workbook. 
 ## Options (sub UserForm)
 - [x] Create child ViewModel to contain all these flags.
 - [x] Show/hide orphaned states.
